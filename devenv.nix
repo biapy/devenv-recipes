@@ -1,6 +1,8 @@
 { pkgs, lib, config, inputs, ... }:
 
 {
+  name = "devenv recipes";
+
   # https://devenv.sh/basics/
   env.GREET = "devenv";
 
@@ -39,7 +41,10 @@
   '';
 
   # https://devenv.sh/git-hooks/
-  # git-hooks.hooks.shellcheck.enable = true;
+  git-hooks.hooks = {
+    commitizen.enable = true;
+    # shellcheck.enable = true;
+  };
 
   # See full reference at https://devenv.sh/reference/options/
 }
