@@ -1,16 +1,12 @@
-{
-  pkgs,
-  config,
-  inputs,
-  ...
-}:
+{ pkgs, config, ... }:
 let
-  pkgs-unstable = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
+  strict-nixfmt-tree = pkgs.nixfmt-tree.override { settings.formatter.nixfmt.options = "--strict"; };
 in
 {
   # https://devenv.sh/packages/
   packages = with pkgs; [
     alejandra
+    strict-nixfmt-tree
     nixos-anywhere
     nixos-rebuild
   ];
@@ -33,11 +29,6 @@ in
     nil.enable = true;
     statix.enable = true;
 
-    flake-checker = {
-      enable = true;
-      package = pkgs-unstable.flake-checker;
-    };
-
     nixfmt-rfc-style = {
       enable = true;
     };
@@ -47,15 +38,15 @@ in
   tasks = {
     "ci:lint:deadnix" = {
       description = "Lint *.nix files with deadnix";
-      exec = "${pkgs.deadnix}/bin/deadnix --output-format 'json' > $DEVENV_TASK_OUTPUT_FILE";
+      exec = ''${config.git-hooks.hooks.deadnix.package}/bin/deadnix --output-format 'json' > "$DEVENV_TASK_OUTPUT_FILE"'';
     };
     "ci:lint:statix" = {
       description = "Lint *.nix files with statix";
-      exec = "${pkgs.statix}/bin/statix check --format 'json' > $DEVENV_TASK_OUTPUT_FILE";
+      exec = ''${config.git-hooks.hooks.statix.package}/bin/statix check --format 'json' > "$DEVENV_TASK_OUTPUT_FILE"'';
     };
     "ci:format:nixfmt" = {
-      description = "Lint *.nix files with statix";
-      exec = "${pkgs.nixfmt-rfc-style}/bin/nixfmt --strict ${config.env.DEVENV_ROOT}";
+      description = "Format *.nix files with nixfmt";
+      exec = "${strict-nixfmt-tree}/bin/treefmt --tree-root '${config.env.DEVENV_ROOT}'";
     };
   };
 
