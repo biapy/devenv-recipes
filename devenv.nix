@@ -1,7 +1,9 @@
-{ pkgs, lib, config, inputs, ... }:
+{ pkgs, ... }:
 
 {
   name = "devenv recipes";
+
+  imports = [ src/nix.nix ];
 
   # https://devenv.sh/basics/
   env.GREET = "devenv";
