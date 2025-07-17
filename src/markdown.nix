@@ -39,7 +39,7 @@ in
     };
   };
 
-  files.".mdformat".toml = {
+  files.".mdformat.toml".toml = {
     wrap = "keep"; # possible values: {"keep", "no", INTEGER}
     number = true; # possible values: {false, true}
     end_of_line = "lf"; # possible values: {"lf", "crlf", "keep"}
