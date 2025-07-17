@@ -3,7 +3,11 @@
 {
   name = "devenv recipes";
 
-  imports = [ src/nix.nix ];
+  imports = [
+    src/devenv-scripts.nix
+    src/devenv-tasks.nix
+    src/nix.nix
+  ];
 
   # https://devenv.sh/basics/
   env.GREET = "devenv";
