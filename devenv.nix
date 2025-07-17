@@ -5,6 +5,7 @@
 
   imports = [
     src/devenv-scripts.nix
+    src/markdown.nix
     src/gitleaks.nix
     src/nix.nix
   ];
