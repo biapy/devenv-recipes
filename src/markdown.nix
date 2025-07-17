@@ -25,6 +25,16 @@
     };
   };
 
+  # https://devenv.sh/tasks/
+  tasks = {
+    "ci:lint:markdownlint" = {
+      description = "Lint *.md files with markdownlint";
+      exec = "${pkgs.markdownlint}/bin/markdownlint";
+    };
+    "ci:lint".after = [ "ci:lint:markdownlint" ];
+
+  };
+
   files.".mdformat".toml = ''
     # .mdformat.toml
     #
