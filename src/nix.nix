@@ -57,11 +57,6 @@ in
       description = "Lint *.nix files with statix";
       exec = "${pkgs.nixfmt-rfc-style}/bin/nixfmt --strict ${config.env.DEVENV_ROOT}";
     };
-    "ci:lint".after = [
-      "ci:lint:deadnix"
-      "ci:lint:statix"
-    ];
-    "ci:format".after = [ "ci:format:nixfmt" ];
   };
 
 }
