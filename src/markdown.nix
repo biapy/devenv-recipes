@@ -31,10 +31,12 @@ in
   tasks = {
     "ci:lint:markdownlint" = {
       description = "Lint *.md files with markdownlint";
-      exec = "${config.git-hooks.hooks.markdownlint.package}/bin/markdownlint";
+      exec = "${config.git-hooks.hooks.markdownlint.package}/bin/markdownlint --json --output '$DEVENV_TASK_OUTPUT_FILE'";
     };
-    "ci:lint".after = [ "ci:lint:markdownlint" ];
-
+    "ci:format:mdformat" = {
+      description = "Format *.md files with mdformat";
+      exec = "${config.git-hooks.hooks.mdformat.package}/bin/mdformat '${config.env.DEVENV_ROOT}'";
+    };
   };
 
   files.".mdformat".toml = {
