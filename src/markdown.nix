@@ -37,16 +37,9 @@ in
 
   };
 
-  files.".mdformat".toml = ''
-    # .mdformat.toml
-    #
-    # This file shows the default values and is equivalent to having
-    # no configuration file at all. Change the values for non-default
-    # behavior.
-    #
-    wrap = "keep"       # possible values: {"keep", "no", INTEGER}
-    number = true       # possible values: {false, true}
-    end_of_line = "lf"  # possible values: {"lf", "crlf", "keep"}
-
-  '';
+  files.".mdformat".toml = {
+    wrap = "keep"; # possible values: {"keep", "no", INTEGER}
+    number = true; # possible values: {false, true}
+    end_of_line = "lf"; # possible values: {"lf", "crlf", "keep"}
+  };
 }
