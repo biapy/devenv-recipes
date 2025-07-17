@@ -31,7 +31,7 @@ in
   tasks = {
     "ci:lint:markdownlint" = {
       description = "Lint *.md files with markdownlint";
-      exec = "${config.git-hooks.hooks.markdownlint.package}/bin/markdownlint --json --output '$DEVENV_TASK_OUTPUT_FILE'";
+      exec = ''${config.git-hooks.hooks.markdownlint.package}/bin/markdownlint --json --output "$DEVENV_TASK_OUTPUT_FILE"'';
     };
     "ci:format:mdformat" = {
       description = "Format *.md files with mdformat";
