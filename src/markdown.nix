@@ -1,5 +1,7 @@
-{ pkgs, ... }:
-
+{ pkgs, config, ... }:
+let
+  pythonPackages = pkgs.python313Packages;
+in
 {
 
   devcontainer.settings.customizations.vscode = {
@@ -12,8 +14,8 @@
     markdownlint.enable = true;
     mdformat = {
       enable = true;
-      package = pkgs.pythonPackages.mdformat;
-      extraPackages = with pkgs.pythonPackages; [
+      package = pythonPackages.mdformat;
+      extraPackages = with pythonPackages; [
         mdformat-frontmatter
         mdformat-tables
       ];
@@ -29,7 +31,7 @@
   tasks = {
     "ci:lint:markdownlint" = {
       description = "Lint *.md files with markdownlint";
-      exec = "${pkgs.markdownlint}/bin/markdownlint";
+      exec = "${config.git-hooks.hooks.markdownlint.package}/bin/markdownlint";
     };
     "ci:lint".after = [ "ci:lint:markdownlint" ];
 
