@@ -47,11 +47,11 @@ in
   tasks = {
     "ci:lint:deadnix" = {
       description = "Lint *.nix files with deadnix";
-      exec = "${pkgs.deadnix}/bin/deadnix";
+      exec = "${pkgs.deadnix}/bin/deadnix --output-format 'json' > $DEVENV_TASK_OUTPUT_FILE";
     };
     "ci:lint:statix" = {
       description = "Lint *.nix files with statix";
-      exec = "${pkgs.statix}/bin/statix check";
+      exec = "${pkgs.statix}/bin/statix check --format 'json' > $DEVENV_TASK_OUTPUT_FILE";
     };
     "ci:format:nixfmt" = {
       description = "Lint *.nix files with statix";
