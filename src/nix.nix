@@ -1,5 +1,6 @@
 {
   pkgs,
+  config,
   inputs,
   ...
 }:
@@ -41,4 +42,26 @@ in
       enable = true;
     };
   };
+
+  # https://devenv.sh/tasks/
+  tasks = {
+    "ci:lint:deadnix" = {
+      description = "Lint *.nix files with deadnix";
+      exec = "${pkgs.deadnix}/bin/deadnix";
+    };
+    "ci:lint:statix" = {
+      description = "Lint *.nix files with statix";
+      exec = "${pkgs.statix}/bin/statix check";
+    };
+    "ci:format:nixfmt" = {
+      description = "Lint *.nix files with statix";
+      exec = "${pkgs.nixfmt-rfc-style}/bin/nixfmt --strict ${config.env.DEVENV_ROOT}";
+    };
+    "ci:lint".after = [
+      "ci:lint:deadnix"
+      "ci:lint:statix"
+    ];
+    "ci:format".after = [ "ci:format:nixfmt" ];
+  };
+
 }
