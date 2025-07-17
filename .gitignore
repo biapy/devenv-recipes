@@ -8,6 +8,7 @@ result-*
 # Devenv
 .devenv*
 devenv.local.nix
+.mdformat.toml
 
 # direnv
 .direnv
