@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, config, ... }:
 
 {
 
@@ -36,10 +36,17 @@
 
   # https://devenv.sh/tasks/
   tasks = {
-    "ci:lint:tflint" = {
-      description = "Lint *.tf files with tflint";
-      exec = "${pkgs.tflint}/bin/tflint";
-    };
+    "ci:lint:tflint" =
+      let
+        inherit (config.git-hooks.hooks.tflint) package;
+      in
+      {
+        description = "Lint *.tf files with tflint";
+        exec = ''
+          set -o 'errexit'
+          ${package}/bin/tflint '${config.env.DEVENV_ROOT}'
+        '';
+      };
   };
 
 }
