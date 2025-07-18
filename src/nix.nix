@@ -9,6 +9,7 @@ in
     strict-nixfmt-tree
     nixos-anywhere
     nixos-rebuild
+    nixdoc
   ];
 
   # https://devenv.sh/languages/
