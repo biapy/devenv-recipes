@@ -8,10 +8,13 @@ result-*
 # Devenv
 .devenv*
 devenv.local.nix
-.mdformat.toml
 
 # direnv
 .direnv
 
 # pre-commit
 .pre-commit-config.yaml
+
+# Ignore .mdformat.toml, part of the "markdown.nix" Biapy devenv recipe
+.mdformat.toml
+
