@@ -37,17 +37,34 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "ci:lint:deadnix" = {
-      description = "Lint *.nix files with deadnix";
-      exec = ''${config.git-hooks.hooks.deadnix.package}/bin/deadnix --output-format 'json' > "$DEVENV_TASK_OUTPUT_FILE"'';
-    };
-    "ci:lint:statix" = {
-      description = "Lint *.nix files with statix";
-      exec = ''${config.git-hooks.hooks.statix.package}/bin/statix check --format 'json' > "$DEVENV_TASK_OUTPUT_FILE"'';
-    };
+    "ci:lint:deadnix" =
+      let
+        inherit (config.git-hooks.hooks.deadnix) package;
+      in
+      {
+        description = "Lint *.nix files with deadnix";
+        exec = ''
+          set -o 'errexit' -o 'pipefail'
+          ${package}/bin/deadnix --output-format 'json' > "$DEVENV_TASK_OUTPUT_FILE"
+        '';
+      };
+    "ci:lint:statix" =
+      let
+        inherit (config.git-hooks.hooks.statix) package;
+      in
+      {
+        description = "Lint *.nix files with statix";
+        exec = ''
+          set -o 'errexit' -o 'pipefail'
+          ${package}/bin/statix check --format 'json' > "$DEVENV_TASK_OUTPUT_FILE"
+        '';
+      };
     "ci:format:nixfmt" = {
       description = "Format *.nix files with nixfmt";
-      exec = "${strict-nixfmt-tree}/bin/treefmt --tree-root '${config.env.DEVENV_ROOT}'";
+      exec = ''
+        set -o 'errexit' -o 'pipefail'
+        ${strict-nixfmt-tree}/bin/treefmt --tree-root '${config.env.DEVENV_ROOT}'
+      '';
     };
   };
 
