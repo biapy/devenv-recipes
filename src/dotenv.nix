@@ -5,6 +5,7 @@ _:
     enable = true;
     filename = [
       ".env"
+      ".env.dev"
       ".env.local"
     ];
   };
