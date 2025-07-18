@@ -10,11 +10,11 @@ in
   tasks = {
     "devenv-recipes:acceptToCiteParallel" = {
       description = "Accept GNU parallel citation prompt";
+      before = [ "devenv:enterShell" ];
       exec = ''
         set -o 'errexit' -o 'nounset' -o 'pipefail'
         yes 'will cite' | ${parallel}/bin/parallel --citation 2&>'/dev/null'
       '';
-      before = [ "devenv:enterShell" ];
     };
   };
 }
