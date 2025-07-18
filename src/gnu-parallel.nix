@@ -1,0 +1,20 @@
+{ pkgs, ... }:
+let
+  inherit (pkgs) parallel;
+in
+{
+  # https://devenv.sh/packages/
+  packages = [ parallel ];
+
+  # https://devenv.sh/tasks/
+  tasks = {
+    "devenv-recipes:acceptToCiteParallel" = {
+      description = "Accept GNU parallel citation prompt";
+      exec = ''
+        set -o 'errexit' -o 'nounset' -o 'pipefail'
+        yes 'will cite' | ${parallel}/bin/parallel --citation 2&>'/dev/null'
+      '';
+      before = [ "devenv:enterShell" ];
+    };
+  };
+}
