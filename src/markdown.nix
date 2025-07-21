@@ -16,8 +16,17 @@ in
       enable = true;
       package = pythonPackages.mdformat;
       extraPackages = with pythonPackages; [
+        mdformat-admon
+        mdformat-beautysh
+        mdformat-footnote
         mdformat-frontmatter
+        mdformat-gfm
+        mdformat-mkdocs
+        mdformat-myst
+        mdformat-nix-alejandra
+        mdformat-simple-breaks
         mdformat-tables
+        mdformat-wikilink
       ];
     };
 
@@ -67,14 +76,23 @@ in
         end_of_line = "lf"  # possible values: {"lf", "crlf", "keep"}
         validate = true     # options: {false, true}
 
-        # extensions = [      # options: a list of enabled extensions (default: all installed are enabled)
-        #     "gfm",
-        #     "toc",
-        # ]
+        extensions = [      # options: a list of enabled extensions (default: all installed are enabled)
+          # "admon",
+          # "footnote",
+          "frontmatter",
+          "gfm",
+          # "mkdocs",
+          # "myst",
+          # "simple-breaks",
+          "tables",
+          "wikilink",
+        ]
 
         # codeformatters = [  # options: a list of enabled code formatter languages (default: all installed are enabled)
-        #     "python",
+        #     "bash",
         #     "json",
+        #     "nix",
+        #     "python",
         # ]
 
         exclude = []          # options: a list of file path pattern strings
