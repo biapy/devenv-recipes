@@ -3,6 +3,10 @@ let
   pythonPackages = pkgs.python313Packages;
 in
 {
+  # https://devenv.sh/packages/
+  packages = with pkgs; [
+    glow # TUI Markdown file viewer
+  ];
 
   devcontainer.settings.customizations.vscode = {
     extensions = [ "DavidAnson.vscode-markdownlint" ];
