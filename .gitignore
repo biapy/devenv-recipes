@@ -14,7 +14,3 @@ devenv.local.nix
 
 # pre-commit
 .pre-commit-config.yaml
-
-# Ignore .mdformat.toml, part of the "markdown.nix" Biapy devenv recipe
-.mdformat.toml
-

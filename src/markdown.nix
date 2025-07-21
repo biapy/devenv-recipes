@@ -53,28 +53,35 @@ in
         '';
       };
 
-    "devenv-recipes:enterShell:ignore-mdformat-toml" = {
-      description = "Add .mdformat.toml to .gitignore";
+    "devenv-recipes:enterShell:create-mdformat-toml" = {
+      description = "Create default .mdformat.toml if missing";
       before = [ "devenv:enterShell" ];
       exec = ''
         set -o 'errexit' -o 'pipefail'
-        grep --quiet '^.mdformat.toml$' '${config.env.DEVENV_ROOT}/.gitignore' ||
-          tee --append '${config.env.DEVENV_ROOT}/.gitignore' <<EOF
+        [[ -e '${config.env.DEVENV_ROOT}/.mdformat.toml' ]] ||
+          tee '${config.env.DEVENV_ROOT}/.mdformat.toml' <<EOF
+        # .mdformat.toml
+        #
+        wrap = "keep"       # possible values: {"keep", "no", INTEGER}
+        number = true       # possible values: {false, true}
+        end_of_line = "lf"  # possible values: {"lf", "crlf", "keep"}
+        validate = true     # options: {false, true}
 
-        # Ignore .mdformat.toml, part of the "markdown.nix" Biapy devenv recipe
-        .mdformat.toml
+        # extensions = [      # options: a list of enabled extensions (default: all installed are enabled)
+        #     "gfm",
+        #     "toc",
+        # ]
 
+        # codeformatters = [  # options: a list of enabled code formatter languages (default: all installed are enabled)
+        #     "python",
+        #     "json",
+        # ]
+
+        exclude = []          # options: a list of file path pattern strings
         EOF
       '';
+
     };
   };
 
-  files = {
-    # https://mdformat.readthedocs.io/en/stable/users/configuration_file.html
-    ".mdformat.toml".toml = {
-      wrap = "keep"; # possible values: {"keep", "no", INTEGER}
-      number = true; # possible values: {false, true}
-      end_of_line = "lf"; # possible values: {"lf", "crlf", "keep"}
-    };
-  };
 }
