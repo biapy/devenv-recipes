@@ -33,6 +33,7 @@ Add the wished imports to `devenv.nix`, here for a Nix project:
 {
   imports = [
     "${inputs.devenv-recipes}/devenv-scripts.nix"
+    "${inputs.devenv-recipes}/git.nix"
     "${inputs.devenv-recipes}/devcontainer.nix"
     "${inputs.devenv-recipes}/markdown.nix"
     "${inputs.devenv-recipes}/nix.nix"
