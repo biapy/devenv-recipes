@@ -4,7 +4,10 @@ let
 in
 {
   # https://devenv.sh/packages/
-  packages = [ git ];
+  packages = [
+    git
+    pkgs.lazygit # Git terminal UI
+  ];
 
   # https://devenv.sh/integrations/difftastic/
   difftastic.enable = true;
