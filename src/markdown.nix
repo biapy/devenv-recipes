@@ -66,7 +66,7 @@ in
         '';
       };
 
-    "devenv-recipes:enterShell:create-mdformat-toml" = {
+    "devenv-recipes:enterShell:configure:mdformat" = {
       description = "Create default .mdformat.toml if missing";
       before = [ "devenv:enterShell" ];
       exec = ''
