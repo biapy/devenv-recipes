@@ -8,7 +8,7 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "devenv-recipes:enterShell:accept-citing-parallel" = {
+    "devenv-recipes:enterShell:configure:parallel" = {
       description = "Accept GNU parallel citation prompt";
       before = [ "devenv:enterShell" ];
       exec = ''
