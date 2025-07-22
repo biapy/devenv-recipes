@@ -46,6 +46,14 @@ in
                 "allow-plugins": {
                     "ergebnis/composer-normalize": true
                 }
+            },
+            "scripts": {
+                "install-link": [
+                    "::"
+                ]
+            },
+            "scripts-descriptions": {
+                "install-link": "Dummy script for consistency"
             }
         }
         EOF
