@@ -1,6 +1,4 @@
 _: {
-  imports = [
-    ./tasks.nix
-    ./composer-bin.nix
-  ];
+  tasks = import ./tasks.nix;
+  composer-bin = import ./composer-bin.nix;
 }
