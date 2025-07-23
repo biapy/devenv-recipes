@@ -4,7 +4,7 @@
   ...
 }:
 let
-  utils = import ../utils.nix;
+  utils = import ../utils;
   working-dir = "${config.env.DEVENV_ROOT}";
   composer-bin = "${config.languages.php.packages.composer}/bin/composer";
   composer-json = ''
