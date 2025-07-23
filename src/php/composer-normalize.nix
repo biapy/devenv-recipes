@@ -42,7 +42,7 @@ in
     "ci:format:composer-normalize".exec = ''
       set -o 'errexit' -o 'pipefail'
       cd '${working-dir}'
-      ${pkgs.fd}/bin/fd 'composer\.json$' '${working-dir}' --exec '${composer-bin}' --working-dir='${working-dir}' bin composer-normalize normalize {} \;
+      ${pkgs.fd}/bin/fd 'composer\.json$' '${working-dir}' --exec '${composer-bin}' bin composer-normalize normalize {} \;
     '';
   };
 
@@ -75,7 +75,8 @@ in
       ];
       exec = ''
         set -o 'errexit'
-        '${composer-bin}' --working-dir='${working-dir}' bin composer-normalize install
+        cd '${working-dir}'
+        '${composer-bin}' bin composer-normalize install
       '';
     };
   };
@@ -89,7 +90,7 @@ in
       package = config.languages.php.packages.composer;
       extraPackages = [ pkgs.parallel ];
       files = "composer.json";
-      entry = "'${parallel-bin}' '${composer-bin}' --working-dir='${working-dir}' bin composer-normalize normalize --dry-run '${working-dir}/'{} ::: ";
+      entry = "'${parallel-bin}' '${composer-bin}' bin composer-normalize normalize --dry-run '${working-dir}/'{} ::: ";
     };
   };
 

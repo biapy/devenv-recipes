@@ -84,7 +84,8 @@ in
       ];
       exec = ''
         set -o 'errexit'
-        '${composer-bin}' --working-dir='${working-dir}' bin phpstan install
+        cd '${working-dir}'
+        '${composer-bin}' bin phpstan install
       '';
     };
   };

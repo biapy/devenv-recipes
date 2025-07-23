@@ -57,7 +57,8 @@ in
       ];
       exec = ''
         set -o 'errexit'
-        '${composer-bin}' --working-dir='${working-dir}' bin rector install
+        cd '${working-dir}'
+        '${composer-bin}' bin rector install
       '';
     };
   };
