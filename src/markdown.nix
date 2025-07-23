@@ -99,7 +99,12 @@ in
         #     "python",
         # ]
 
-        exclude = []          # options: a list of file path pattern strings
+        # options: a list of file path pattern strings
+        exclude = [
+          "venv/**",
+          "**/vendor/**",
+          "**/node_modules/**",
+        ]
         EOF
       '';
 
