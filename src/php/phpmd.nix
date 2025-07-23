@@ -4,7 +4,7 @@
   ...
 }:
 let
-  utils = import ../utils;
+  utils = import ../utils { inherit config; };
   working-dir = "${config.env.DEVENV_ROOT}";
   composer-bin = "${config.languages.php.packages.composer}/bin/composer";
   composer-json = ''
@@ -98,21 +98,20 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "devenv-recipes:enterShell:initialize:phpmd:composer.json" = {
+    "devenv-recipes:enterShell:initialize:composer-bin:phpmd" = {
       description = "Initialize PHP Mess Detector composer.json";
       before = [ "devenv:enterShell" ];
-      exec = (utils.tasks.initializeFile "vendor-bin/phpmd/composer.json" composer-json);
+      exec = utils.tasks.initializeFile "vendor-bin/phpmd/composer.json" composer-json;
     };
 
     "devenv-recipes:enterShell:initialize:phpmd:configuration" = {
       description = "Initialize PHP Mess Detector configuration file";
       before = [ "devenv:enterShell" ];
-      exec = (utils.tasks.initializeFile "phpmd.xml.dist" config-file);
+      exec = utils.tasks.initializeFile "phpmd.xml.dist" config-file;
     };
 
-    "devenv-recipes:enterShell:install:phpmd" = (
-      utils.composer-bin.installTask "PHP Mess Detector" "phpmd"
-    );
+    "devenv-recipes:enterShell:install:phpmd" =
+      utils.composer-bin.installTask "PHP Mess Detector" "phpmd";
 
     "ci:lint:phpmd" = {
       description = "Lint 'src' and 'tests' with PHP Mess Detector";

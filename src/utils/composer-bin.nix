@@ -1,7 +1,7 @@
 { config, ... }:
 let
   working-dir = "${config.env.DEVENV_ROOT}";
-  composer-bin = "${config.languages.php.packages.composer}/bin/composer";
+  composer-binary = "${config.languages.php.packages.composer}/bin/composer";
 in
 {
   installTask = name: namespace: {
@@ -12,13 +12,13 @@ in
     ];
     after = [
       "devenv-recipes:enterShell:initialize:composer-bin"
-      "devenv-recipes:enterShell:initialize:${namespace}"
+      "devenv-recipes:enterShell:initialize:composer-bin:${namespace}"
       "devenv-recipes:enterShell:install:composer"
     ];
     exec = ''
       set -o 'errexit'
       cd '${working-dir}'
-      '${composer-bin}' 'bin' '${namespace}' 'install'
+      '${composer-binary}' 'bin' '${namespace}' 'install'
     '';
   };
 }
