@@ -101,17 +101,18 @@ in
     "devenv-recipes:enterShell:initialize:phpmd:composer.json" = {
       description = "Initialize PHP Mess Detector composer.json";
       before = [ "devenv:enterShell" ];
-      exec = utils.tasks.initializeFile "vendor-bin/phpmd/composer.json" composer-json;
+      exec = (utils.tasks.initializeFile "vendor-bin/phpmd/composer.json" composer-json);
     };
 
     "devenv-recipes:enterShell:initialize:phpmd:configuration" = {
       description = "Initialize PHP Mess Detector configuration file";
       before = [ "devenv:enterShell" ];
-      exec = utils.tasks.initializeFile "phpmd.xml.dist" config-file;
+      exec = (utils.tasks.initializeFile "phpmd.xml.dist" config-file);
     };
 
-    "devenv-recipes:enterShell:install:phpmd" =
-      utils.composer-bin.installTask "PHP Mess Detector" "phpmd";
+    "devenv-recipes:enterShell:install:phpmd" = (
+      utils.composer-bin.installTask "PHP Mess Detector" "phpmd"
+    );
 
     "ci:lint:phpmd" = {
       description = "Lint 'src' and 'tests' with PHP Mess Detector";
