@@ -7,6 +7,26 @@ let
   working-dir = "${config.env.DEVENV_ROOT}";
   composer-bin = "${config.languages.php.packages.composer}/bin/composer";
   parallel-bin = "${pkgs.parallel}/bin/parallel";
+  composer-json = ''
+    {
+        "require-dev": {
+            "ergebnis/composer-normalize": "^2.47"
+        },
+        "config": {
+            "allow-plugins": {
+                "ergebnis/composer-normalize": true
+            }
+        },
+        "scripts": {
+            "install-link": [
+                "::"
+            ]
+        },
+        "scripts-descriptions": {
+            "install-link": "Dummy script for consistency"
+        }
+    }
+  '';
 in
 {
   imports = [
@@ -29,7 +49,7 @@ in
   # https://devenv.sh/tasks/
   tasks = {
     "devenv-recipes:enterShell:initialize:composer-normalize" = {
-      description = "Install composer normalize";
+      description = "Initialize composer normalize composer.json";
       before = [ "devenv:enterShell" ];
       exec = ''
         set -o 'errexit'
@@ -38,24 +58,7 @@ in
 
         mkdir --parent '${working-dir}/vendor-bin/composer-normalize' &&
         tee '${working-dir}/vendor-bin/composer-normalize/composer.json' << EOF
-        {
-            "require-dev": {
-                "ergebnis/composer-normalize": "^2.47"
-            },
-            "config": {
-                "allow-plugins": {
-                    "ergebnis/composer-normalize": true
-                }
-            },
-            "scripts": {
-                "install-link": [
-                    "::"
-                ]
-            },
-            "scripts-descriptions": {
-                "install-link": "Dummy script for consistency"
-            }
-        }
+        ${composer-json}
         EOF
       '';
     };
