@@ -11,6 +11,7 @@ in
       name,
       namespace,
       composerJsonPath,
+      ...
     }:
     {
       "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer.json" = {
@@ -26,6 +27,7 @@ in
       namespace,
       configFile,
       configFilePath,
+      ...
     }:
     {
       "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:configuration" = {
@@ -36,7 +38,7 @@ in
     };
 
   installTask =
-    { name, namespace }:
+    { name, namespace, ... }:
     {
       "devenv-recipes:enterShell:install:composer-bin:${namespace}" = {
         description = "Install ${name}";
