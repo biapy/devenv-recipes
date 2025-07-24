@@ -1,0 +1,16 @@
+{
+  "require-dev": {
+    "phpmd/phpmd": "@stable"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@install-link"
+    ],
+    "install-link": [
+      "test -e '../../vendor/bin/phpmd' || ln --symbolic ../../vendor-bin/phpmd/vendor/bin/phpmd ../../vendor/bin/phpmd"
+    ]
+  },
+  "scripts-descriptions": {
+    "install-link": "Install composer bin link"
+  }
+}
