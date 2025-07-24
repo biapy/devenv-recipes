@@ -14,7 +14,7 @@ in
       ...
     }:
     {
-      "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer.json" = {
+      "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer-json" = {
         description = "Initialize ${name} composer.json";
         before = [ "devenv:enterShell" ];
         exec = tasks.initializeFile "vendor-bin/${namespace}/composer.json" composerJsonPath;
@@ -48,7 +48,7 @@ in
         ];
         after = [
           "devenv-recipes:enterShell:initialize:composer-bin"
-          "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer.json"
+          "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer-json"
           "devenv-recipes:enterShell:install:composer"
         ];
         exec = ''
