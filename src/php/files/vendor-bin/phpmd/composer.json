@@ -7,7 +7,7 @@
       "@install-link"
     ],
     "install-link": [
-      "test -e '../../vendor/bin/phpmd' || ln --symbolic ../../vendor-bin/phpmd/vendor/bin/phpmd ../../vendor/bin/phpmd"
+      "test -e '../../vendor/bin/phpmd' -a -d '../../vendor/bin' || ln --symbolic ../../vendor-bin/phpmd/vendor/bin/phpmd ../../vendor/bin/phpmd"
     ]
   },
   "scripts-descriptions": {

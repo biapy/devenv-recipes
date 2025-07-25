@@ -1,8 +1,8 @@
-{
-  pkgs,
-  config,
-  ...
-}:
+{ pkgs, config, ... }:
+let
+  composerCommand = "${config.languages.php.packages.composer}/bin/composer";
+  parallelCommand = "${pkgs.parallel}/bin/parallel";
+in
 {
   imports = [ ../gnu-parallel.nix ];
 
@@ -22,39 +22,36 @@
       before = [ "devenv:enterShell" ];
       exec = ''
         set -o 'errexit'
-        [[ -e '${config.env.DEVENV_ROOT}/composer.json' ]] &&
-          ${config.languages.php.packages.composer}/bin/composer 'install'
+        [[ -e "''${DEVENV_ROOT}/composer.json" ]] &&
+        ${composerCommand} 'install'
       '';
     };
   };
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
-    composer-validate = {
+    composer-validate = rec {
       enable = true;
       name = "composer validate";
       package = config.languages.php.packages.composer;
       extraPackages = [ pkgs.parallel ];
       files = "composer\.(json|lock)$";
-      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.packages.composer}/bin/composer validate --no-check-publish {} ::: ";
+      entry = ''"${parallelCommand}" "${package}/bin/composer" validate --no-check-publish {} ::: '';
       stages = [
         "pre-commit"
         "pre-push"
       ];
     };
 
-    composer-audit = {
+    composer-audit = rec {
       enable = true;
       name = "composer audit";
       after = [ "composer-validate" ];
       package = config.languages.php.packages.composer;
-      extraPackages = [
-        pkgs.parallel
-        pkgs.coreutils
-      ];
+      extraPackages = [ pkgs.parallel ];
       files = "composer\.(json|lock)$";
       verbose = true;
-      entry = "${pkgs.parallel}/bin/parallel ${config.languages.php.packages.composer}/bin/composer --working-dir=\"$(${pkgs.coreutils}/bin/dirname {})\" audit ::: ";
+      entry = ''"${parallelCommand}" "${package}/bin/composer" --working-dir="''${DEVENV_ROOT}" audit ::: '';
       stages = [
         "pre-commit"
         "pre-push"

@@ -1,0 +1,41 @@
+# phpstan.neon
+
+# includes are useless if phpstan-extension-installer is used.
+# includes:
+#     - vendor/phpstan/phpstan-doctrine/extension.neon
+#     - vendor/phpstan/phpstan-doctrine/rules.neon
+#     - vendor/phpstan/phpstan-symfony/extension.neon
+#     - vendor/phpstan/phpstan-symfony/rules.neon
+#     - vendor/phpstan/phpstan-phpunit/extension.neon
+#     - vendor/phpstan/phpstan-phpunit/rules.neon
+#     - vendor/phpstan/phpstan-strict-rules/rules.neon
+#     - vendor/phpstan/phpstan-deprecation-rules/rules.neon
+
+# Include bleeding edge PHP Stan tests (including unused classes and methods)
+# includes:
+# 	- vendor/phpstan/phpstan/conf/bleedingEdge.neon
+
+parameters:
+    level: 10
+    paths:
+        - bin/
+        - config/
+        - public/
+        - src/
+        - tests/
+    symfony:
+        containerXmlPath: "var/cache/dev/App_KernelDevDebugContainer.xml"
+        consoleApplicationLoader: "tests/PHPStan/PHPStanConsoleApplicationLoader.php"
+
+    doctrine:
+        objectManagerLoader: "tests/PHPStan/PHPStanObjectManagerLoader.php"
+
+    excludePaths:
+        # Exclude PHP CS Fixer configuration file from scans
+        - .php-cs-fixer.php
+
+    editorUrlTitle: '%%relFile%%:%%line%%'
+    editorUrl: "vscode://file/%%file%%:%%line%%"
+
+    # Don't trust PHPDoc type declarations
+    treatPhpDocTypesAsCertain: false

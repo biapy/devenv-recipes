@@ -1,0 +1,18 @@
+{
+  "require-dev": {
+    "ergebnis/composer-normalize": "^2.47"
+  },
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true
+    }
+  },
+  "scripts": {
+    "install-link": [
+      "::"
+    ]
+  },
+  "scripts-descriptions": {
+    "install-link": "Dummy script for consistency"
+  }
+}

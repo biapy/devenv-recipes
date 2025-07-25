@@ -1,94 +1,34 @@
-{
-  pkgs,
-  config,
-  ...
-}:
+{ pkgs, config, ... }:
 let
-  working-dir = "${config.env.DEVENV_ROOT}";
-  composer-bin = "${config.languages.php.packages.composer}/bin/composer";
-  composer-json = ''
-    {
-        "require-dev": {
-            "phpstan/extension-installer": "^1.4",
-            "phpstan/phpstan": "^2.1",
-            "phpstan/phpstan-deprecation-rules": "^2.0",
-            "phpstan/phpstan-doctrine": "^2.0",
-            "phpstan/phpstan-phpunit": "^2.0",
-            "phpstan/phpstan-strict-rules": "^2.0",
-            "phpstan/phpstan-symfony": "^2.0",
-            "rector/type-perfect": "^2.1",
-            "symplify/phpstan-rules": "^14.6"
-        },
-        "config": {
-            "allow-plugins": {
-                "phpstan/extension-installer": true
-            }
-        },
-        "scripts": {
-            "post-install-cmd": [
-                "@install-link"
-            ],
-            "install-link": [
-                "test -e '../../vendor/bin/phpstan' || ln --symbolic ../../vendor-bin/phpstan/vendor/bin/phpstan ../../vendor/bin/phpstan"
-            ]
-        },
-        "scripts-descriptions": {
-            "install-link": "Install composer bin link"
-        }
-    }
-  '';
+  utils = import ../utils { inherit config; };
+  composerBinTool = {
+    name = "PHPStan";
+    namespace = "phpstan";
+    composerJsonPath = ./files/vendor-bin/phpstan/composer.json;
+    configFiles = {
+      "phpstan.dist.neon" = ./files/phpstan.dist.neon;
+    };
+  };
 in
 {
-  imports = [
-    ./composer-bin.nix
-  ];
+  imports = [ ./composer-bin.nix ];
 
   # https://devenv.sh/packages/
   packages = with pkgs; [ fd ];
 
   # https://devenv.sh/tasks/
-  tasks = {
-    "ci:lint:phpstan".exec = ''
-      set -o 'errexit' -o 'pipefail'
-      cd '${working-dir}'
-      '${config.languages.php.package}/bin/php' 'vendor/bin/phpstan' 'analyse';
-    '';
-  };
+  tasks =
+    {
+      "ci:lint:php:phpstan".exec = ''
+        set -o 'errexit' -o 'pipefail'
 
-  # https://devenv.sh/tasks/
-  tasks = {
-    "devenv-recipes:enterShell:initialize:phpstan" = {
-      description = "Initialize PHPStan composer.json";
-      before = [ "devenv:enterShell" ];
-      exec = ''
-        set -o 'errexit'
-
-        [[ -e '${working-dir}/vendor-bin/phpstan/composer.json' ]] && exit 0
-
-        mkdir --parent '${working-dir}/vendor-bin/phpstan' &&
-        tee '${working-dir}/vendor-bin/phpstan/composer.json' << EOF
-        ${composer-json}
-        EOF
+        cd "''${DEVENV_ROOT}"
+        '${config.languages.php.package}/bin/php' 'vendor/bin/phpstan' 'analyse';
       '';
-    };
-    "devenv-recipes:enterShell:install:phpstan" = {
-      description = "Install PHPStan";
-      before = [
-        "devenv:enterShell"
-
-      ];
-      after = [
-        "devenv-recipes:enterShell:initialize:composer-bin"
-        "devenv-recipes:enterShell:initialize:phpstan"
-        "devenv-recipes:enterShell:install:composer"
-      ];
-      exec = ''
-        set -o 'errexit'
-        cd '${working-dir}'
-        '${composer-bin}' bin phpstan install
-      '';
-    };
-  };
+    }
+    // utils.composer-bin.initializeComposerJsonTask composerBinTool
+    // utils.composer-bin.initializeConfigFilesTask composerBinTool
+    // utils.composer-bin.installTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.phpstan = rec {
@@ -96,7 +36,7 @@ in
     name = "PHPStan";
     inherit (config.languages.php) package;
     pass_filenames = false;
-    entry = "'${package}/bin/php' '${working-dir}/vendor/bin/phpstan' 'analyse'";
+    entry = ''"${package}/bin/php" "''${DEVENV_ROOT}/vendor/bin/phpstan" "analyse"'';
     args = [ "--memory-limit=256m" ];
   };
 
