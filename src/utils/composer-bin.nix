@@ -1,8 +1,7 @@
 { config, ... }:
 let
   tasks = import ./tasks.nix { inherit config; };
-  working-dir = "${config.env.DEVENV_ROOT}";
-  composer-binary = "${config.languages.php.packages.composer}/bin/composer";
+  composerCommand = "${config.languages.php.packages.composer}/bin/composer";
 in
 {
 
@@ -21,19 +20,18 @@ in
       };
     };
 
-  initializeConfigFileTask =
+  initializeConfigFilesTask =
     {
       name,
       namespace,
-      configFile,
-      configFilePath,
+      configFiles,
       ...
     }:
     {
       "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:configuration" = {
-        description = ''Initialize ${name} "${configFile}" configuration file'';
+        description = ''Initialize ${name} configuration file(s)'';
         before = [ "devenv:enterShell" ];
-        exec = tasks.initializeFile configFile configFilePath;
+        exec = tasks.initializeFiles configFiles;
       };
     };
 
@@ -51,10 +49,12 @@ in
           "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer-json"
           "devenv-recipes:enterShell:install:composer"
         ];
+        # Use the composer command to install the too
+
         exec = ''
           set -o 'errexit'
-          cd '${working-dir}'
-          '${composer-binary}' 'bin' '${namespace}' 'install'
+          cd "''${DEVENV_ROOT}"
+          '${composerCommand}' 'bin' '${namespace}' 'install'
         '';
       };
     };
