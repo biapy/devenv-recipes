@@ -1,13 +1,13 @@
 { pkgs, config, ... }:
 let
   utils = import ../utils { inherit config; };
-  working-dir = "${config.env.DEVENV_ROOT}";
-  tool = {
+  composerBinTool = {
     name = "PHP Mess Detector";
     namespace = "phpmd";
     composerJsonPath = ./files/vendor-bin/phpmd/composer.json;
-    configFile = "phpmd.xml.dist";
-    configFilePath = ./files/phpmd.xml.dist;
+    configFiles = {
+      "phpmd.xml.dist" = ./files/phpmd.xml.dist;
+    };
   };
 in
 {
@@ -19,18 +19,18 @@ in
   # https://devenv.sh/tasks/
   tasks =
     {
-      "ci:lint:phpmd" = {
+      "ci:lint:php:phpmd" = {
         description = "Lint 'src' and 'tests' with PHP Mess Detector";
         exec = ''
           set -o 'errexit'
-          cd '${working-dir}'
-          '${config.languages.php.package}/bin/php' -d 'error_reporting=~E_DEPRECATED' '${working-dir}/vendor/bin/phpmd' '${working-dir}/'{src,tests} 'ansi' '${working-dir}/phpmd.xml.dist'
+          cd "''${DEVENV_ROOT}"'
+          '${config.languages.php.package}/bin/php' -d 'error_reporting=~E_DEPRECATED' 'vendor/bin/phpmd' {src,tests} 'ansi' 'phpmd.xml.dist'
         '';
       };
     }
-    // utils.composer-bin.initializeComposerJsonTask tool
-    // utils.composer-bin.initializeConfigFileTask tool
-    // utils.composer-bin.installTask tool;
+    // utils.composer-bin.initializeComposerJsonTask composerBinTool
+    // utils.composer-bin.initializeConfigFilesTask composerBinTool
+    // utils.composer-bin.installTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.phpmd = rec {
@@ -38,7 +38,7 @@ in
     name = "PHP Mess Detector";
     inherit (config.languages.php) package;
     extraPackages = [ pkgs.parallel ];
-    entry = "'${pkgs.parallel}/bin/parallel' '${package}/bin/php' -d 'error_reporting=~E_DEPRECATED' '${working-dir}/vendor/bin/phpmd' {} 'ansi' '${working-dir}/phpmd.xml.dist' ::: ";
+    entry = ''"${pkgs.parallel}/bin/parallel" '${package}/bin/php' -d 'error_reporting=~E_DEPRECATED' "''${DEVENV_ROOT}/vendor/bin/phpmd" {} 'ansi' "''${DEVENV_ROOT}/phpmd.xml.dist" ::: '';
   };
 
   # See full reference at https://devenv.sh/reference/options/
