@@ -42,7 +42,7 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "ci:lint:markdownlint" =
+    "ci:lint:md:markdownlint" =
       let
         inherit (config.git-hooks.hooks.markdownlint) package;
       in
@@ -54,7 +54,7 @@ in
         '';
       };
 
-    "ci:format:mdformat" =
+    "ci:format:md:mdformat" =
       let
         inherit (config.git-hooks.hooks.mdformat) package;
       in
@@ -66,7 +66,7 @@ in
         '';
       };
 
-    "devenv-recipes:enterShell:configure:mdformat" = {
+    "devenv-recipes:enterShell:initialize:mdformat" = {
       description = "Create default .mdformat.toml if missing";
       before = [ "devenv:enterShell" ];
       exec = ''
