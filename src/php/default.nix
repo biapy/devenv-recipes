@@ -6,6 +6,7 @@ _: {
     ./composer-normalize.nix
     ./phpstan.nix
     ./rector.nix
+    ./php-cs-fixer.nix
     ./phpmd.nix
   ];
 }
