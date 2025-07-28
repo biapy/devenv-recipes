@@ -49,9 +49,7 @@
     <rule ref="rulesets/cleancode.xml/StaticAccess">
         <properties>
             <property name="exceptions"
-                value="DateTime,DateTimeImmutable,DateInterval,IntlDateFormatter,Mockery,Symfony\Component\Uid\Uuid,Symfony\Component\Filesystem\Path,\Symfony\Component\Mime\Address,Symfony\Component\Form\ChoiceList\ChoiceList,\Behat\Transliterator\Transliterator,\Gedmo\Sluggable\Util\Urlizer,\Pagerfanta\Pagerfanta,\PhpOffice\PhpSpreadsheet\Shared\Date" />
-            <property name="ignorepattern"
-                value="/^(castFrom|PHPToExcel|fromLockableObjectAndUser|from|tryFrom|cases|forChoice|fromData)$/" />
+                value="DateTime,DateTimeImmutable,DateInterval,IntlDateFormatter,Mockery,Symfony\Component\Uid\Uuid,Symfony\Component\Filesystem\Path,\Symfony\Component\Mime\Address,Symfony\Component\Form\ChoiceList\ChoiceList,\Behat\Transliterator\Transliterator,\Gedmo\Sluggable\Util\Urlizer,\Pagerfanta\Pagerfanta" />
         </properties>
     </rule>
     <rule ref="rulesets/design.xml/CouplingBetweenObjects">
