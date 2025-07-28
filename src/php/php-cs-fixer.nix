@@ -24,10 +24,16 @@ in
   tasks =
     {
       "ci:lint:php:php-cs-fixer".exec = ''
-        set -o 'errexit' -o 'pipefail'
+        set -o 'errexit'
 
         cd "''${DEVENV_ROOT}"
-        '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'analyse';
+        '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --dry-run --diff --show-progress='bar';
+      '';
+      "ci:format:php:php-cs-fixer".exec = ''
+        set -o 'errexit'
+
+        cd "''${DEVENV_ROOT}"
+        '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --diff --show-progress='bar';
       '';
     }
     // utils.composer-bin.initializeComposerJsonTask composerBinTool
@@ -38,11 +44,13 @@ in
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.php-cs-fixer = rec {
     enable = true;
-    name = "PHPStan";
+    name = "PHP Coding Standards Fixer";
     inherit (config.languages.php) package;
-    pass_filenames = false;
-    entry = ''"${package}/bin/php" "''${DEVENV_ROOT}/vendor/bin/php-cs-fixer" "analyse"'';
-    args = [ "--memory-limit=256m" ];
+    files = ".*\.php$";
+    entry = "${package}/bin/php '${config.env.DEVENV_ROOT}/vendor/bin/php-cs-fixer' 'fix'";
+    args = [
+      "--dry-run"
+    ];
   };
 
   # See full reference at https://devenv.sh/reference/options/
