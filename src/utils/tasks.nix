@@ -181,7 +181,7 @@ _: {
 
             # Add the devenv-recipes section if it does not exist
             grep --quiet "^###> ''${section_name} ###" "''${gitignore}" ||
-            printf "###> %s ###\n###< %s ###" \
+            printf "\n###> %s ###\n###< %s ###" \
               "''${section_name}" "''${section_name}" \
               >> "''${gitignore}"
           }
@@ -195,8 +195,18 @@ _: {
             initializeGitIgnore "''${section_name}"
 
             # Replace contents between the section markers
-            sed --in-place --expression="/^###> ''${section_name} ###/,/^###< ''${section_name} ###/c\
-          ''${contents}" "''${gitignore}"
+            escaped_name="''${section_name//\//\\/}"
+            prepared_contents="$(echo "''${contents}" | sed --expression='s/$/\\/g')"
+
+            expression="$(cat <<EOF
+          /^###> ''${escaped_name} ###/,/^###< ''${escaped_name} ###/c\\
+          ###> ''${section_name} ###\\
+          ''${prepared_contents}
+          ###< ''${section_name} ###
+          EOF)"
+
+            # Use sed to replace the section contents
+            sed --in-place --expression="''${expression}" "''${gitignore}"
           }
 
           updateGitIgnoreSection "biapy/devenv-recipes:${namespace}" "${(builtins.concatStringsSep "\n" ignoredPaths)}"
