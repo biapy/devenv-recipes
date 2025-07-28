@@ -181,7 +181,9 @@ _: {
 
             # Add the devenv-recipes section if it does not exist
             grep --quiet "^###> ''${section_name} ###" ||
-            echo "###> ''${section_name} ###\n###< ''${section_name} ###" >> "''${gitignore}"
+            printf "###> %s ###\n###< %s ###" \\
+              "''${section_name}" "''${section_name}" \\
+              >> "''${gitignore}"
           }
 
           function updateGitIgnoreSection() {
@@ -193,7 +195,7 @@ _: {
             initializeGitIgnore "''${section_name}"
 
             # Replace contents between the section markers
-            sed -i "/^###> ''${section_name} ###/,/^###< ''${section_name} ###/c\\
+            sed --in-place --expression="/^###> ''${section_name} ###/,/^###< ''${section_name} ###/c\\
             ''${contents}" "''${gitignore}"
           }
 
