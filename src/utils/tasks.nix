@@ -156,4 +156,54 @@ _: {
     ${contents}
     EOF
   '';
+
+  gitIgnoreTask =
+    {
+      name,
+      namespace,
+      ignoredPaths,
+      ...
+    }:
+    {
+      "devenv-recipes:enterShell:initialize:git-ignore:${namespace}" = {
+        description = "Update .gitignore for ${name}";
+        before = [
+          "devenv:enterShell"
+
+        ];
+        exec = ''
+          set -o 'errexit'
+
+          function initializeGitIgnore() {
+            local section_name="''${1}"
+            local gitignore="''${DEVENV_ROOT}/.gitignore"
+
+            # Create the .gitignore file if it does not exist
+            [[ ! -e "''${gitignore}" ]] && touch "''${gitignore}"
+
+            # Add the devenv-recipes section if it does not exist
+            grep --quiet "^###> ''${section_name} ###" ||
+            cat >"''${gitignore}" << EOF
+            ###> ''${section_name} ###
+            ###< ''${section_name} ###
+            EOF
+          }
+
+          function updateGitIgnoreSection() {
+            local section_name="''${1}"
+            local contents="''${2}"
+            local gitignore="''${DEVENV_ROOT}/.gitignore"
+
+            # Create the section if it does not exist
+            initializeGitIgnore "''${section_name}"
+
+            # Replace contents between the section markers
+            sed -i "/^###> ''${section_name} ###/,/^###< ''${section_name} ###/c\\
+            ''${contents}" "''${gitignore}"
+          }
+
+          updateGitIgnoreSection "biapy/devenv-recipes:${namespace}" "${(builtins.concatStringsSep "\n" ignoredPaths)}"
+        '';
+      };
+    };
 }
