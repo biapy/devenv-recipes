@@ -180,7 +180,7 @@ _: {
             [[ ! -e "''${gitignore}" ]] && touch "''${gitignore}"
 
             # Add the devenv-recipes section if it does not exist
-            grep --quiet "^###> ''${section_name} ###" ||
+            grep --quiet "^###> ''${section_name} ###" "''${gitignore}" ||
             printf "###> %s ###\n###< %s ###" \
               "''${section_name}" "''${section_name}" \
               >> "''${gitignore}"
