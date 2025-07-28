@@ -152,9 +152,7 @@ _: {
     [[ -e "''${file}" ]] && exit 0
 
     mkdir --parent "''${filepath}" &&
-    tee "''${file}" << EOF
-    ${contents}
-    EOF
+    echo "${contents}" >>"''${file}"
   '';
 
   gitIgnoreTask =
@@ -183,10 +181,7 @@ _: {
 
             # Add the devenv-recipes section if it does not exist
             grep --quiet "^###> ''${section_name} ###" ||
-            cat >"''${gitignore}" << EOF
-            ###> ''${section_name} ###
-            ###< ''${section_name} ###
-            EOF
+            echo "###> ''${section_name} ###\n###< ''${section_name} ###" >> "''${gitignore}"
           }
 
           function updateGitIgnoreSection() {
