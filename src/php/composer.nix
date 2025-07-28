@@ -1,5 +1,6 @@
 { pkgs, config, ... }:
 let
+  utils = import ../utils { inherit config; };
   composerCommand = "${config.languages.php.packages.composer}/bin/composer";
   parallelCommand = "${pkgs.parallel}/bin/parallel";
 in
@@ -16,17 +17,23 @@ in
   '';
 
   # https://devenv.sh/tasks/
-  tasks = {
-    "devenv-recipes:enterShell:install:composer" = {
-      description = "Install composer packages";
-      before = [ "devenv:enterShell" ];
-      exec = ''
-        set -o 'errexit'
-        [[ -e "''${DEVENV_ROOT}/composer.json" ]] &&
-        ${composerCommand} 'install'
-      '';
+  tasks =
+    {
+      "devenv-recipes:enterShell:install:composer" = {
+        description = "Install composer packages";
+        before = [ "devenv:enterShell" ];
+        exec = ''
+          set -o 'errexit'
+          [[ -e "''${DEVENV_ROOT}/composer.json" ]] &&
+          ${composerCommand} 'install'
+        '';
+      };
+    }
+    // utils.tasks.gitIgnoreTask {
+      name = "Composer";
+      namespace = "composer";
+      ignoredPaths = [ "/vendor/" ];
     };
-  };
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
