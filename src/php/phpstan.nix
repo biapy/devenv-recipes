@@ -8,6 +8,9 @@ let
     configFiles = {
       "phpstan.dist.neon" = ./files/phpstan.dist.neon;
     };
+    ignoredPaths = [
+      "phpstan.neon"
+    ];
   };
 in
 {
@@ -28,7 +31,8 @@ in
     }
     // utils.composer-bin.initializeComposerJsonTask composerBinTool
     // utils.composer-bin.initializeConfigFilesTask composerBinTool
-    // utils.composer-bin.installTask composerBinTool;
+    // utils.composer-bin.installTask composerBinTool
+    // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.phpstan = rec {
