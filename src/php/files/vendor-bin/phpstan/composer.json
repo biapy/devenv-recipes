@@ -20,7 +20,7 @@
       "@install-link"
     ],
     "install-link": [
-      "test -e '../../vendor/bin/phpstan' || ln --symbolic ../../vendor-bin/phpstan/vendor/bin/phpstan ../../vendor/bin/phpstan"
+      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/phpstan' || ln --symbolic '../../vendor-bin/phpstan/vendor/bin/phpstan' '../../vendor/bin/phpstan'"
     ]
   },
   "scripts-descriptions": {
