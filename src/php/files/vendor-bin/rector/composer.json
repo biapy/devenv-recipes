@@ -1,0 +1,16 @@
+{
+  "require-dev": {
+    "rector/rector": "^2.1"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@install-link"
+    ],
+    "install-link": [
+      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/rector' || ln --symbolic '../../vendor-bin/rector/vendor/bin/rector' '../../vendor/bin/rector'"
+    ]
+  },
+  "scripts-descriptions": {
+    "install-link": "Install composer bin link"
+  }
+}
