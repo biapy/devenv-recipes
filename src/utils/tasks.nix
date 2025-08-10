@@ -47,7 +47,8 @@ _: {
       [[ -e "''${file}" ]] && return 0
 
       mkdir --parent "''${filepath}" &&
-      cp "''${sourcePath}" "''${file}"
+      cp "''${sourcePath}" "''${file}" &&
+      chmod u+w "''${file}"
     }
 
     ${
