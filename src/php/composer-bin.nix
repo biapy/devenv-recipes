@@ -1,9 +1,18 @@
-# Install bamarni/composer-bin-plugin
-# @see https://github.com/bamarni/composer-bin-plugin
-{ config, ... }:
+/**
+  # Install bamarni/composer-bin-plugin
+
+  ## 🛠️ Tech Stack
+
+  - [Composer bin plugin @ GitHub](https://github.com/bamarni/composer-bin-plugin).
+
+  ## 🙇 Acknowledgements
+
+  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+*/
+{ config, lib, ... }:
 let
   utils = import ../utils { inherit config; };
-  composerCommand = "${config.languages.php.packages.composer}/bin/composer";
+  composerCommand = lib.meta.getExe config.languages.php.packages.composer;
 in
 {
   imports = [ ./composer.nix ];
