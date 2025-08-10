@@ -19,6 +19,14 @@ in
   # https://devenv.sh/packages/
   packages = with pkgs; [ fd ];
 
+  languages.php = {
+    enable = true;
+    extensions = [
+      "ctype" # required by rector/type-perfect
+      "simplexml" # required by phpstan/phpstan-symfony
+    ];
+  };
+
   # https://devenv.sh/tasks/
   tasks =
     {
