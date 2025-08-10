@@ -32,7 +32,7 @@ parameters:
 
     excludePaths:
         # Exclude PHP CS Fixer configuration file from scans
-        - .php-cs-fixer.php
+        - .php-cs-fixer.php (?)
 
     editorUrlTitle: '%%relFile%%:%%line%%'
     editorUrl: "vscode://file/%%file%%:%%line%%"
