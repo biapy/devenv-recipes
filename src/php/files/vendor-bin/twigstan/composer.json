@@ -1,0 +1,16 @@
+{
+  "require-dev": {
+    "twigstan/twigstan": "^0.1"
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@install-link"
+    ],
+    "install-link": [
+      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/twigstan' || ln --symbolic '../../vendor-bin/twigstan/vendor/bin/twigstan' '../../vendor/bin/twigstan'"
+    ]
+  },
+  "scripts-descriptions": {
+    "install-link": "Install composer bin link"
+  }
+}
