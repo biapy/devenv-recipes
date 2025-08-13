@@ -10,9 +10,7 @@
 */
 
 _: {
-  imports = [
-    ./php.nix
-  ];
+  imports = [ ./php.nix ];
   # https://devenv.sh/languages/
   # https://devenv.sh/reference/options/#languagesphpenable
   languages.php.version = "8.4";

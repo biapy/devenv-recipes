@@ -21,25 +21,24 @@ in
   packages = with pkgs; [ fd ];
 
   # https://devenv.sh/tasks/
-  tasks =
-    {
-      "ci:lint:php:php-cs-fixer".exec = ''
-        set -o 'errexit'
+  tasks = {
+    "ci:lint:php:php-cs-fixer".exec = ''
+      set -o 'errexit'
 
-        cd "''${DEVENV_ROOT}"
-        '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --dry-run --diff --show-progress='bar';
-      '';
-      "ci:format:php:php-cs-fixer".exec = ''
-        set -o 'errexit'
+      cd "''${DEVENV_ROOT}"
+      '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --dry-run --diff --show-progress='bar';
+    '';
+    "ci:format:php:php-cs-fixer".exec = ''
+      set -o 'errexit'
 
-        cd "''${DEVENV_ROOT}"
-        '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --diff --show-progress='bar';
-      '';
-    }
-    // utils.composer-bin.initializeComposerJsonTask composerBinTool
-    // utils.composer-bin.initializeConfigFilesTask composerBinTool
-    // utils.composer-bin.installTask composerBinTool
-    // utils.tasks.gitIgnoreTask composerBinTool;
+      cd "''${DEVENV_ROOT}"
+      '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --diff --show-progress='bar';
+    '';
+  }
+  // utils.composer-bin.initializeComposerJsonTask composerBinTool
+  // utils.composer-bin.initializeConfigFilesTask composerBinTool
+  // utils.composer-bin.installTask composerBinTool
+  // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.php-cs-fixer = rec {
@@ -48,9 +47,7 @@ in
     inherit (config.languages.php) package;
     files = ".*\.php$";
     entry = "${package}/bin/php '${config.env.DEVENV_ROOT}/vendor/bin/php-cs-fixer' 'fix'";
-    args = [
-      "--dry-run"
-    ];
+    args = [ "--dry-run" ];
   };
 
   # See full reference at https://devenv.sh/reference/options/

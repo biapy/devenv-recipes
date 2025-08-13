@@ -8,9 +8,7 @@ let
     configFiles = {
       "phpstan.dist.neon" = ./files/phpstan.dist.neon;
     };
-    ignoredPaths = [
-      "phpstan.neon"
-    ];
+    ignoredPaths = [ "phpstan.neon" ];
   };
 in
 {
@@ -28,19 +26,18 @@ in
   };
 
   # https://devenv.sh/tasks/
-  tasks =
-    {
-      "ci:lint:php:phpstan".exec = ''
-        set -o 'errexit' -o 'pipefail'
+  tasks = {
+    "ci:lint:php:phpstan".exec = ''
+      set -o 'errexit' -o 'pipefail'
 
-        cd "''${DEVENV_ROOT}"
-        '${config.languages.php.package}/bin/php' 'vendor/bin/phpstan' 'analyse';
-      '';
-    }
-    // utils.composer-bin.initializeComposerJsonTask composerBinTool
-    // utils.composer-bin.initializeConfigFilesTask composerBinTool
-    // utils.composer-bin.installTask composerBinTool
-    // utils.tasks.gitIgnoreTask composerBinTool;
+      cd "''${DEVENV_ROOT}"
+      '${config.languages.php.package}/bin/php' 'vendor/bin/phpstan' 'analyse';
+    '';
+  }
+  // utils.composer-bin.initializeComposerJsonTask composerBinTool
+  // utils.composer-bin.initializeConfigFilesTask composerBinTool
+  // utils.composer-bin.installTask composerBinTool
+  // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.phpstan = rec {

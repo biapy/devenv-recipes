@@ -19,20 +19,19 @@ in
   packages = with pkgs; [ fd ];
 
   # https://devenv.sh/tasks/
-  tasks =
-    {
-      "ci:format:composer:composer-normalize" = {
-        description = "Reorganize composer.json files with composer normalize";
-        exec = ''
-          set -o 'errexit' -o 'pipefail'
+  tasks = {
+    "ci:format:composer:composer-normalize" = {
+      description = "Reorganize composer.json files with composer normalize";
+      exec = ''
+        set -o 'errexit' -o 'pipefail'
 
-          cd "''${DEVENV_ROOT}"
-          ${pkgs.fd}/bin/fd 'composer\.json$' "''${DEVENV_ROOT}" --exec '${composerCommand}' bin composer-normalize normalize {}
-        '';
-      };
-    }
-    // utils.composer-bin.initializeComposerJsonTask composerBinTool
-    // utils.composer-bin.installTask composerBinTool;
+        cd "''${DEVENV_ROOT}"
+        ${pkgs.fd}/bin/fd 'composer\.json$' "''${DEVENV_ROOT}" --exec '${composerCommand}' bin composer-normalize normalize {}
+      '';
+    };
+  }
+  // utils.composer-bin.initializeComposerJsonTask composerBinTool
+  // utils.composer-bin.installTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {

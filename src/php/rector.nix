@@ -17,21 +17,20 @@ in
   packages = with pkgs; [ fd ];
 
   # https://devenv.sh/tasks/
-  tasks =
-    {
-      "ci:format:php:rector" = {
-        description = "Apply Rector recommendations";
-        exec = ''
-          set -o 'errexit'
+  tasks = {
+    "ci:format:php:rector" = {
+      description = "Apply Rector recommendations";
+      exec = ''
+        set -o 'errexit'
 
-          cd "''${DEVENV_ROOT}"
-          '${config.languages.php.package}/bin/php' 'vendor/bin/rector' 'process';
-        '';
-      };
-    }
-    // utils.composer-bin.initializeComposerJsonTask composerBinTool
-    // utils.composer-bin.initializeConfigFilesTask composerBinTool
-    // utils.composer-bin.installTask composerBinTool;
+        cd "''${DEVENV_ROOT}"
+        '${config.languages.php.package}/bin/php' 'vendor/bin/rector' 'process';
+      '';
+    };
+  }
+  // utils.composer-bin.initializeComposerJsonTask composerBinTool
+  // utils.composer-bin.initializeConfigFilesTask composerBinTool
+  // utils.composer-bin.installTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.rector = rec {

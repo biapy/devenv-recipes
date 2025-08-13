@@ -17,20 +17,19 @@ in
   ];
 
   # https://devenv.sh/tasks/
-  tasks =
-    {
-      "ci:lint:php:phpmd" = {
-        description = "Lint 'src' and 'tests' with PHP Mess Detector";
-        exec = ''
-          set -o 'errexit'
-          cd "''${DEVENV_ROOT}"'
-          '${config.languages.php.package}/bin/php' -d 'error_reporting=~E_DEPRECATED' 'vendor/bin/phpmd' {src,tests} 'ansi' 'phpmd.xml.dist'
-        '';
-      };
-    }
-    // utils.composer-bin.initializeComposerJsonTask composerBinTool
-    // utils.composer-bin.initializeConfigFilesTask composerBinTool
-    // utils.composer-bin.installTask composerBinTool;
+  tasks = {
+    "ci:lint:php:phpmd" = {
+      description = "Lint 'src' and 'tests' with PHP Mess Detector";
+      exec = ''
+        set -o 'errexit'
+        cd "''${DEVENV_ROOT}"'
+        '${config.languages.php.package}/bin/php' -d 'error_reporting=~E_DEPRECATED' 'vendor/bin/phpmd' {src,tests} 'ansi' 'phpmd.xml.dist'
+      '';
+    };
+  }
+  // utils.composer-bin.initializeComposerJsonTask composerBinTool
+  // utils.composer-bin.initializeConfigFilesTask composerBinTool
+  // utils.composer-bin.installTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.phpmd = rec {
