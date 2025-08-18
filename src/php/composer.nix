@@ -58,6 +58,7 @@ in
         [[ -e "''${DEVENV_ROOT}/composer.json" ]] &&
         ${composerCommand} 'install'
       '';
+      status = ''test -e "''${DEVENV_ROOT}/vendor/autoload.php"'';
     };
   }
   // utils.tasks.gitIgnoreTask {
