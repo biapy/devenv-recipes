@@ -1,6 +1,14 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
-  utils = import ../utils { inherit config; };
+  utils = import ../utils {
+    inherit config;
+    inherit lib;
+  };
   composerCommand = "${config.languages.php.packages.composer}/bin/composer";
   parallelCommand = "${pkgs.parallel}/bin/parallel";
   composerBinTool = {

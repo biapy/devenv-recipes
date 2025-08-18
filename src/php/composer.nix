@@ -21,7 +21,10 @@
   ...
 }:
 let
-  utils = import ../utils { inherit config; };
+  utils = import ../utils {
+    inherit config;
+    inherit lib;
+  };
   inherit (config.languages.php.packages) composer;
   composerCommand = lib.meta.getExe composer;
   inherit (pkgs) parallel;

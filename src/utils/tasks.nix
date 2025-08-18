@@ -13,7 +13,7 @@ _: {
 
     ```nix
     _: let
-      utils = import ../utils { inherit config; };
+      utils = import ../utils { inherit config; inherit lib; };
     in {
       tasks.initializeConfiguration.exec =
         utils.tasks.initializeFile { "vendor-bin/phpmd/composer.json" = ./phpmd-composer.json; };
@@ -72,7 +72,7 @@ _: {
 
     ```nix
     _: let
-      utils = import ../utils { inherit config; };
+      utils = import ../utils { inherit config; inherit lib; };
     in {
       tasks.initializeConfiguration.exec =
         utils.tasks.initializeFile "vendor-bin/phpmd/composer.json" ./phpmd-composer.json;
@@ -117,7 +117,7 @@ _: {
 
     ```nix
     _: let
-      utils = import ../utils { inherit config; };
+      utils = import ../utils { inherit config; inherit lib; };
     in {
       tasks.initializeConfiguration.exec =
         utils.tasks.initializeFileContents "vendor-bin/phpmd/composer.json" ''
@@ -166,7 +166,7 @@ _: {
 
     ```nix
     _: let
-      utils = import ../utils { inherit config; };
+      utils = import ../utils { inherit config; inherit lib; };
     in {
       tasks = {
         ...

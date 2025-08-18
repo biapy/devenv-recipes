@@ -11,7 +11,10 @@
 */
 { config, lib, ... }:
 let
-  utils = import ../utils { inherit config; };
+  utils = import ../utils {
+    inherit config;
+    inherit lib;
+  };
   composerCommand = lib.meta.getExe config.languages.php.packages.composer;
 in
 {

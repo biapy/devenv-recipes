@@ -8,7 +8,6 @@
 
   - [PHP homepage](https://www.php.net/).
 */
-
 _: {
   imports = [ ./php.nix ];
   # https://devenv.sh/languages/

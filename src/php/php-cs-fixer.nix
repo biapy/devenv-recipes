@@ -1,6 +1,14 @@
-{ pkgs, config, ... }:
+{
+  pkgs,
+  config,
+  lib,
+  ...
+}:
 let
-  utils = import ../utils { inherit config; };
+  utils = import ../utils {
+    inherit config;
+    inherit lib;
+  };
   composerBinTool = {
     name = "PHP Coding Standards Fixer";
     namespace = "php-cs-fixer";
