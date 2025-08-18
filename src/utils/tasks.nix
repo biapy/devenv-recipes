@@ -156,6 +156,45 @@ _: {
     echo "${contents}" >>"''${file}"
   '';
 
+  /**
+    Create a task that update the contents of `.gitignore`. It:
+
+    1. Creates `${DEVENV_ROOT}/.gitignore` if it does not exist,
+    2. adds `${ignoredPaths}` to `${DEVENV_ROOT}/.gitignore` if it not already added.
+
+    # Example
+
+    ```nix
+    _: let
+      utils = import ../utils { inherit config; };
+    in {
+      tasks = {
+        ...
+        } // utils.tasks.gitIgnoreTask {
+          name = "Composer";
+          namespace = "composer";
+          ignoredPaths = [ "/vendor/" ];
+        };
+    }
+    ```
+
+    # Type
+
+    ```
+    gitIgnoreTask :: { name: String, namespace: String, ignoredPaths: List String } -> Attrset
+    ```
+
+    # Arguments
+
+    name
+    : the name of the software for which the .gitignore file is being updated.
+
+    namespace
+    : the namespace of the software for which the .gitignore file is being updated.
+
+    ignoredPaths
+    : the paths to add to the .gitignore file.
+  */
   gitIgnoreTask =
     {
       name,
@@ -168,8 +207,13 @@ _: {
         description = "Update .gitignore for ${name}";
         before = [
           "devenv:enterShell"
-
         ];
+        status = ''
+          [[ -e "''${DEVENV_ROOT}/.gitignore" ]] &&
+          command grep --quiet --fixed-string --line-regexp \
+          ${builtins.concatStringsSep " " (builtins.map (path: ''--regexp "${path}"'') ignoredPaths)} \
+          "''${DEVENV_ROOT}/.gitignore"
+        '';
         exec = ''
           set -o 'errexit'
 
