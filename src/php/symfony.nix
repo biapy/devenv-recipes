@@ -44,7 +44,7 @@ in
       description = "Lint services containerwith Symfony console";
       exec = ''
         set -o 'errexit'
-        cd "''${DEVENV_ROOT}"'
+        cd "''${DEVENV_ROOT}"
         '${symfonyCommand}' console lint:container'
       '';
     };
@@ -53,7 +53,7 @@ in
       description = "Lint 'twig' files with Symfony console";
       exec = ''
         set -o 'errexit'
-        cd "''${DEVENV_ROOT}"'
+        cd "''${DEVENV_ROOT}"
         '${symfonyCommand}' console lint:twig --show-deprecations'
       '';
     };
@@ -61,7 +61,7 @@ in
       description = "Lint 'xlf' files with Symfony console";
       exec = ''
         set -o 'errexit'
-        cd "''${DEVENV_ROOT}"'
+        cd "''${DEVENV_ROOT}"
         '${symfonyCommand}' console lint:xliff'
       '';
     };
@@ -69,7 +69,7 @@ in
       description = "Lint 'yml' files with Symfony console";
       exec = ''
         set -o 'errexit'
-        cd "''${DEVENV_ROOT}"'
+        cd "''${DEVENV_ROOT}"
         '${symfonyCommand}' console lint:yaml'
       '';
     };

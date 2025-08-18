@@ -22,7 +22,7 @@ in
       description = "Lint 'src' and 'tests' with PHP Mess Detector";
       exec = ''
         set -o 'errexit'
-        cd "''${DEVENV_ROOT}"'
+        cd "''${DEVENV_ROOT}"
         '${config.languages.php.package}/bin/php' -d 'error_reporting=~E_DEPRECATED' 'vendor/bin/phpmd' {src,tests} 'ansi' 'phpmd.xml.dist'
       '';
     };
