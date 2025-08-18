@@ -205,9 +205,7 @@ _: {
     {
       "devenv-recipes:enterShell:initialize:git-ignore:${namespace}" = {
         description = "Update .gitignore for ${name}";
-        before = [
-          "devenv:enterShell"
-        ];
+        before = [ "devenv:enterShell" ];
         status = ''
           [[ -e "''${DEVENV_ROOT}/.gitignore" ]] &&
           command grep --quiet --fixed-string --line-regexp \

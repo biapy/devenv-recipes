@@ -51,9 +51,7 @@ in
   };
 
   # Load symfony.dev environment
-  dotenv.filename = dotenvFilenames ++ [
-    ".env.dev"
-  ];
+  dotenv.filename = dotenvFilenames ++ [ ".env.dev" ];
 
   enterShell = ''
     export PATH="${config.env.DEVENV_ROOT}/vendor/bin:${config.env.DEVENV_ROOT}/bin:$PATH"
