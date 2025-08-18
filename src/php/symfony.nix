@@ -27,11 +27,6 @@ let
   symfonyCommand = lib.meta.getExe symfony-cli;
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
-  dotenvFilenames =
-    let
-      inherit (config.dotenv) filename;
-    in
-    if (lib.strings.isString filename) then [ filename ] else filename;
 in
 {
   imports = [
@@ -50,8 +45,8 @@ in
     ];
   };
 
-  # Load symfony.dev environment
-  dotenv.filename = dotenvFilenames ++ [ ".env.dev" ];
+  # Load symfony .env.dev environment
+  dotenv.filename = [ ".env.dev" ];
 
   enterShell = ''
     export PATH="${config.env.DEVENV_ROOT}/vendor/bin:${config.env.DEVENV_ROOT}/bin:$PATH"
