@@ -45,7 +45,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console lint:container'
+        '${symfonyCommand}' console 'lint:container'
       '';
     };
 
@@ -54,7 +54,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console lint:twig --show-deprecations'
+        '${symfonyCommand}' console 'lint:twig' '--show-deprecations'
       '';
     };
     "ci:lint:xliff:symfony" = {
@@ -62,7 +62,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console lint:xliff'
+        '${symfonyCommand}' console 'lint:xliff'
       '';
     };
     "ci:lint:yaml:symfony" = {
@@ -70,7 +70,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console lint:yaml'
+        '${symfonyCommand}' console 'lint:yaml'
       '';
     };
   };
