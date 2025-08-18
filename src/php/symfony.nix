@@ -8,10 +8,13 @@
   ## 🛠️ Tech Stack
 
   - [Symfony homepage](https://symfony.com/).
+  - [fd @ GitHub](https://github.com/sharkdp/fd).
 
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+  - [lib.strings.isString @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.strings.isString).
+  - [Operators @ Nix 2.28.5 Reference Manual](https://nix.dev/manual/nix/2.28/language/operators.html).
 */
 {
   pkgs,
@@ -22,9 +25,22 @@
 let
   inherit (pkgs) symfony-cli;
   symfonyCommand = lib.meta.getExe symfony-cli;
+  inherit (pkgs) fd;
+  fdCommand = lib.meta.getExe fd;
+  dotenvFilenames =
+    let
+      inherit (config.dotenv) filename;
+    in
+    if (lib.strings.isString filename) then [ filename ] else filename;
 in
 {
-  imports = [ ./composer.nix ];
+  imports = [
+    ../dotenv.nix
+    ./composer.nix
+    ./phpstan.nix
+  ];
+
+  packages = [ fd ];
 
   languages.php = {
     enable = true;
@@ -34,6 +50,11 @@ in
     ];
   };
 
+  # Load symfony.dev environment
+  dotenv.filename = dotenvFilenames ++ [
+    ".env.dev"
+  ];
+
   enterShell = ''
     export PATH="${config.env.DEVENV_ROOT}/vendor/bin:${config.env.DEVENV_ROOT}/bin:$PATH"
   '';
@@ -41,7 +62,7 @@ in
   # https://devenv.sh/tasks/
   tasks = {
     "ci:lint:symfony:container" = {
-      description = "Lint services containerwith Symfony console";
+      description = "Lint services container with Symfony console";
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
@@ -54,23 +75,28 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console 'lint:twig' '--show-deprecations'
+        '${fdCommand} --extension='twig' --type='file' --exec-batch -- \
+            '${symfonyCommand}' console 'lint:twig' '--show-deprecations'
       '';
     };
+
     "ci:lint:xliff:symfony" = {
       description = "Lint 'xlf' files with Symfony console";
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console 'lint:xliff'
+        '${fdCommand} --extension='xlf' --type='file' --exec-batch -- \
+          '${symfonyCommand}' console 'lint:xliff'
       '';
     };
+
     "ci:lint:yaml:symfony" = {
       description = "Lint 'yml' files with Symfony console";
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console 'lint:yaml'
+        '${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch -- \
+            '${symfonyCommand}' console 'lint:yaml'
       '';
     };
   };
@@ -81,7 +107,7 @@ in
       enable = true;
       name = "symfony lint container";
       package = symfony-cli;
-      files = "\.(php|yml|yaml)$";
+      files = "\.(php|yml|yaml|xml|json|lock)$";
       pass_filenames = false;
       entry = ''"${lib.meta.getExe package}" console lint:container'';
       stages = [
@@ -97,6 +123,19 @@ in
       files = "\.twig$";
       entry = ''"${lib.meta.getExe package}" console lint:twig'';
       args = [ "--show-deprecations" ];
+      stages = [
+        "pre-commit"
+        "pre-push"
+      ];
+    };
+
+    symfony-lint-translations = rec {
+      enable = true;
+      name = "symfony lint:translations";
+      package = symfony-cli;
+      files = "/translations/.*\.(php|xlf|yml|yaml|po|pot|csv|json|ini|dat|res|mo|qt)$";
+      pass_filenames = false;
+      entry = ''"${lib.meta.getExe package}" console lint:translations'';
       stages = [
         "pre-commit"
         "pre-push"
