@@ -1,4 +1,189 @@
-_: {
+/**
+  # devenv tasks utilities
+
+  This module provides utilities for creating and managing tasks in the
+  devenv environment:
+
+  - `gitIgnoreTask`: Create a task that updates the contents of `.gitignore`.
+  - `initializeFilesTask`: Create a task that copy files from the
+    devenv recipes to the project if they don't exist.
+  - `initializeFiles`: Create a shell script that copy files from the
+    devenv recipes to the project if they don't exist.
+  - `initializeFile`: Create a shell script that copy one file from the
+    devenv recipes to the project if it doesn't exist.
+  - `initializeFileContents`: Create a shell script that write the given string
+    to the target file in the project if it doesn't exist.
+*/
+_: rec {
+  /**
+    Create a task that update the contents of `.gitignore`. It:
+
+    1. Creates `${DEVENV_ROOT}/.gitignore` if it does not exist,
+    2. adds `${ignoredPaths}` to `${DEVENV_ROOT}/.gitignore` if it not already added.
+
+    # Example
+
+    ```nix
+    _: let
+      utils = import ../utils { inherit config; inherit lib; };
+    in {
+      tasks = {
+        ...
+        } // utils.tasks.gitIgnoreTask {
+          name = "Composer";
+          namespace = "composer";
+          ignoredPaths = [ "/vendor/" ];
+        };
+    }
+    ```
+
+    # Type
+
+    ```
+    gitIgnoreTask :: { name: String, namespace: String, ignoredPaths: List String } -> Attrset
+    ```
+
+    # Arguments
+
+    name
+    : the name of the software for which the .gitignore file is being updated.
+
+    namespace
+    : the namespace of the software for which the .gitignore file is being updated.
+
+    ignoredPaths
+    : the paths to add to the .gitignore file.
+  */
+  gitIgnoreTask =
+    {
+      name,
+      namespace,
+      ignoredPaths,
+      ...
+    }:
+    {
+      "devenv-recipes:enterShell:initialize:git-ignore:${namespace}" = {
+        description = "Update .gitignore for ${name}";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          test -e "''${DEVENV_ROOT}/.gitignore" &&
+          ${builtins.concatStringsSep " &&\n" (
+            builtins.map (
+              path:
+              ''command grep --quiet --fixed-string --line-regexp --regexp "${path}" "''${DEVENV_ROOT}/.gitignore"''
+            ) ignoredPaths
+          )}
+        '';
+        exec = ''
+          set -o 'errexit'
+
+          function initializeGitIgnore() {
+            local section_name="''${1}"
+            local gitignore="''${DEVENV_ROOT}/.gitignore"
+
+            # Create the .gitignore file if it does not exist
+            [[ ! -e "''${gitignore}" ]] && touch "''${gitignore}"
+
+            # Add the devenv-recipes section if it does not exist
+            grep --quiet "^###> ''${section_name} ###" "''${gitignore}" ||
+            printf "\n###> %s ###\n###< %s ###" \
+              "''${section_name}" "''${section_name}" \
+              >> "''${gitignore}"
+          }
+
+          function updateGitIgnoreSection() {
+            local section_name="''${1}"
+            local contents="''${2}"
+            local gitignore="''${DEVENV_ROOT}/.gitignore"
+
+            # Create the section if it does not exist
+            initializeGitIgnore "''${section_name}"
+
+            # Replace contents between the section markers
+            escaped_name="''${section_name//\//\\/}"
+            prepared_contents="$(echo "''${contents}" | sed --expression='s/$/\\/g')"
+
+            expression="$(cat <<EOF
+          /^###> ''${escaped_name} ###/,/^###< ''${escaped_name} ###/c\\
+          ###> ''${section_name} ###\\
+          ''${prepared_contents}
+          ###< ''${section_name} ###
+          EOF)"
+
+            # Use sed to replace the section contents
+            sed --in-place --expression="''${expression}" "''${gitignore}"
+          }
+
+          updateGitIgnoreSection "biapy/devenv-recipes:${namespace}" "${(builtins.concatStringsSep "\n" ignoredPaths)}"
+        '';
+      };
+    };
+
+  /**
+    Create a task that copies sample files from the devenv recipes to the
+    project if they don't exist.
+
+    # Example
+
+    ```nix
+    _: let
+      utils = import ../utils { inherit config; inherit lib; };
+    in {
+      tasks = {
+        ...
+        } // utils.tasks.initializeFilesTask {
+          name = "PHPStan";
+          namespace = "phpstan";
+          configFiles = {
+            "phpstan.dist.neon" = ../files/php/phpstan.dist.neon;
+            "vendor-bin/phpstan/composer.json" = ../files/php/vendor-bin/phpstan/composer.json;
+          };
+        };
+    }
+    ```
+
+    # Type
+
+    ```
+    initializeFilesTask :: { name: String, namespace: String, configFiles: Attrset {String = Path;} } -> Attrset
+    ```
+
+    # Arguments
+
+    name
+    : the name of the software for which the .gitignore file is being updated.
+
+    namespace
+    : the namespace of the software for which the .gitignore file is being updated.
+
+    configFiles
+    : a set of file paths and their source paths `{String = Path;}`, where:
+
+      - the key is the initialized file path in the devenv.
+      - the value is the source path in the local nix package.
+  */
+  initializeFilesTask =
+    {
+      name,
+      namespace,
+      configFiles,
+      ...
+    }:
+    {
+      "devenv-recipes:enterShell:initialize:files:${namespace}" = {
+        description = "Initialize ${name}'s configuration files presets";
+        before = [ "devenv:enterShell" ];
+        status = ''
+          test ${
+            builtins.concatStringsSep "\\\n-a" (
+              builtins.map (file: ''-e "${file}"'') (builtins.attrNames configFiles)
+            )
+          }
+        '';
+        exec = initializeFiles configFiles;
+      };
+    };
+
   /**
     Create the contents of a bash script that:
 
@@ -156,107 +341,4 @@ _: {
     echo "${contents}" >>"''${file}"
   '';
 
-  /**
-    Create a task that update the contents of `.gitignore`. It:
-
-    1. Creates `${DEVENV_ROOT}/.gitignore` if it does not exist,
-    2. adds `${ignoredPaths}` to `${DEVENV_ROOT}/.gitignore` if it not already added.
-
-    # Example
-
-    ```nix
-    _: let
-      utils = import ../utils { inherit config; inherit lib; };
-    in {
-      tasks = {
-        ...
-        } // utils.tasks.gitIgnoreTask {
-          name = "Composer";
-          namespace = "composer";
-          ignoredPaths = [ "/vendor/" ];
-        };
-    }
-    ```
-
-    # Type
-
-    ```
-    gitIgnoreTask :: { name: String, namespace: String, ignoredPaths: List String } -> Attrset
-    ```
-
-    # Arguments
-
-    name
-    : the name of the software for which the .gitignore file is being updated.
-
-    namespace
-    : the namespace of the software for which the .gitignore file is being updated.
-
-    ignoredPaths
-    : the paths to add to the .gitignore file.
-  */
-  gitIgnoreTask =
-    {
-      name,
-      namespace,
-      ignoredPaths,
-      ...
-    }:
-    {
-      "devenv-recipes:enterShell:initialize:git-ignore:${namespace}" = {
-        description = "Update .gitignore for ${name}";
-        before = [ "devenv:enterShell" ];
-        status = ''
-          [[ -e "''${DEVENV_ROOT}/.gitignore" ]] &&
-          ${builtins.concatStringsSep " &&\n" (
-            builtins.map (
-              path:
-              ''command grep --quiet --fixed-string --line-regexp --regexp "${path}" "''${DEVENV_ROOT}/.gitignore"''
-            ) ignoredPaths
-          )}
-        '';
-        exec = ''
-          set -o 'errexit'
-
-          function initializeGitIgnore() {
-            local section_name="''${1}"
-            local gitignore="''${DEVENV_ROOT}/.gitignore"
-
-            # Create the .gitignore file if it does not exist
-            [[ ! -e "''${gitignore}" ]] && touch "''${gitignore}"
-
-            # Add the devenv-recipes section if it does not exist
-            grep --quiet "^###> ''${section_name} ###" "''${gitignore}" ||
-            printf "\n###> %s ###\n###< %s ###" \
-              "''${section_name}" "''${section_name}" \
-              >> "''${gitignore}"
-          }
-
-          function updateGitIgnoreSection() {
-            local section_name="''${1}"
-            local contents="''${2}"
-            local gitignore="''${DEVENV_ROOT}/.gitignore"
-
-            # Create the section if it does not exist
-            initializeGitIgnore "''${section_name}"
-
-            # Replace contents between the section markers
-            escaped_name="''${section_name//\//\\/}"
-            prepared_contents="$(echo "''${contents}" | sed --expression='s/$/\\/g')"
-
-            expression="$(cat <<EOF
-          /^###> ''${escaped_name} ###/,/^###< ''${escaped_name} ###/c\\
-          ###> ''${section_name} ###\\
-          ''${prepared_contents}
-          ###< ''${section_name} ###
-          EOF)"
-
-            # Use sed to replace the section contents
-            sed --in-place --expression="''${expression}" "''${gitignore}"
-          }
-
-          updateGitIgnoreSection "biapy/devenv-recipes:${namespace}" "${(builtins.concatStringsSep "\n" ignoredPaths)}"
-        '';
-      };
-    };
 }
