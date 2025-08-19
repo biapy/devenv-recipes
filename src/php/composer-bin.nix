@@ -28,6 +28,7 @@ in
         "devenv:enterShell"
         "devenv-recipes:enterShell:install:composer"
       ];
+      status = ''grep --quiet 'bamarni/composer-bin-plugin' "''${DEVENV_ROOT}/composer.json"'';
       exec = ''
         set -o 'errexit' -o 'pipefail'
 
