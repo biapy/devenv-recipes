@@ -208,9 +208,12 @@ _: {
         before = [ "devenv:enterShell" ];
         status = ''
           [[ -e "''${DEVENV_ROOT}/.gitignore" ]] &&
-          command grep --quiet --fixed-string --line-regexp \
-          ${builtins.concatStringsSep " " (builtins.map (path: ''--regexp "${path}"'') ignoredPaths)} \
-          "''${DEVENV_ROOT}/.gitignore"
+          ${builtins.concatStringsSep " &&\n" (
+            builtins.map (
+              path:
+              ''command grep --quiet --fixed-string --line-regexp --regexp "${path}" "''${DEVENV_ROOT}/.gitignore"''
+            ) ignoredPaths
+          )}
         '';
         exec = ''
           set -o 'errexit'
