@@ -1,3 +1,13 @@
+/**
+  # PHP Coding Standard Fixer
+
+  `php-cs-fixer` is a tool to automatically fix PHP Coding Standards issues
+
+  ## 🛠️ Tech Stack
+
+  - [PHP Coding Standard Fixer homepage](https://cs.symfony.com/).
+  - [PHP Coding Standard Fixer @ GitHub](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer).
+*/
 {
   pkgs,
   config,
@@ -12,9 +22,9 @@ let
   composerBinTool = {
     name = "PHP Coding Standards Fixer";
     namespace = "php-cs-fixer";
-    composerJsonPath = ./files/vendor-bin/php-cs-fixer/composer.json;
+    composerJsonPath = ../files/php/vendor-bin/php-cs-fixer/composer.json;
     configFiles = {
-      ".php-cs-fixer.dist.php" = ./files/.php-cs-fixer.dist.php;
+      ".php-cs-fixer.dist.php" = ../files/php/.php-cs-fixer.dist.php;
     };
     ignoredPaths = [
       ".php-cs-fixer.cache"

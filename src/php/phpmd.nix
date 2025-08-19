@@ -1,3 +1,18 @@
+/**
+  # PHP Mess Detector
+
+  `phpmd` takes a given PHP source code base and look for several potential
+  problems within that source.
+
+  ## 🛠️ Tech Stack
+
+  - [PHP Mess Detector homepage](https://phpmd.org/).
+  - [PHP Mess Detector @ GitHub](https://github.com/phpmd/phpmd).
+
+  ## 🙇 Acknowledgements
+
+  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+*/
 {
   pkgs,
   config,
@@ -9,12 +24,15 @@ let
     inherit config;
     inherit lib;
   };
+  phpCommand = lib.meta.getExe config.languages.php.package;
+  inherit (pkgs) parallel;
+  parallelCommand = lib.meta.getExe parallel;
   composerBinTool = {
     name = "PHP Mess Detector";
     namespace = "phpmd";
-    composerJsonPath = ./files/vendor-bin/phpmd/composer.json;
+    composerJsonPath = ../files/php/vendor-bin/phpmd/composer.json;
     configFiles = {
-      "phpmd.xml.dist" = ./files/phpmd.xml.dist;
+      "phpmd.xml.dist" = ../files/php/phpmd.xml.dist;
     };
   };
 in
@@ -31,7 +49,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${config.languages.php.package}/bin/php' -d 'error_reporting=~E_DEPRECATED' 'vendor/bin/phpmd' {src,tests} 'ansi' 'phpmd.xml.dist'
+        ${phpCommand} -d 'error_reporting=~E_DEPRECATED' 'vendor/bin/phpmd' {src,tests} 'ansi' 'phpmd.xml.dist'
       '';
     };
   }
@@ -44,8 +62,8 @@ in
     enable = true;
     name = "PHP Mess Detector";
     inherit (config.languages.php) package;
-    extraPackages = [ pkgs.parallel ];
-    entry = ''"${pkgs.parallel}/bin/parallel" '${package}/bin/php' -d 'error_reporting=~E_DEPRECATED' "''${DEVENV_ROOT}/vendor/bin/phpmd" {} 'ansi' "''${DEVENV_ROOT}/phpmd.xml.dist" ::: '';
+    extraPackages = [ parallel ];
+    entry = ''${parallelCommand} ${phpCommand} -d 'error_reporting=~E_DEPRECATED' "''${DEVENV_ROOT}/vendor/bin/phpmd" {} 'ansi' "''${DEVENV_ROOT}/phpmd.xml.dist" ::: '';
   };
 
   # See full reference at https://devenv.sh/reference/options/

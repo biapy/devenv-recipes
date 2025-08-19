@@ -12,9 +12,9 @@ let
   composerBinTool = {
     name = "Rector";
     namespace = "rector";
-    composerJsonPath = ./files/vendor-bin/rector/composer.json;
+    composerJsonPath = ../files/php/vendor-bin/rector/composer.json;
     configFiles = {
-      "rector.php" = ./files/rector.php;
+      "rector.php" = ../files/php/rector.php;
     };
   };
 in

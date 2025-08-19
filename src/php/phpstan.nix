@@ -1,20 +1,37 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}:
+/**
+  # PHPStan
+
+  `phpstan` on finding errors in your code without actually running it.
+
+  ## 🛠️ Tech Stack
+
+  - [PHPStan homepage](https://phpstan.org/).
+  - [PHPStan @ GitHub](https://github.com/phpstan/phpstan).
+  - [phpstan/phpstan-deprecation-rules @ GitHub](https://github.com/phpstan/phpstan-deprecation-rules).
+  - [Doctrine extensions for PHPStan @ GitHub](https://github.com/phpstan/phpstan-doctrine).
+  - [PHPStan PHPUnit extensions and rules @ GitHub](https://github.com/phpstan/phpstan-phpunit).
+  - [Extra strict and opinionated rules for PHPStan @ GitHub](https://github.com/phpstan/phpstan-strict-rules).
+  - [PHPStan Symfony Framework extensions and rules @ GitHub](https://github.com/phpstan/phpstan-symfony).
+  - [Rector Type Perfect @ GitHub](https://github.com/rectorphp/type-perfect).
+  - [Symplify's PHPStan Rules](https://github.com/symplify/phpstan-rules).
+
+  ## 🙇 Acknowledgements
+
+  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+*/
+{ config, lib, ... }:
 let
   utils = import ../utils {
     inherit config;
     inherit lib;
   };
+  phpCommand = lib.meta.getExe config.languages.php.package;
   composerBinTool = {
     name = "PHPStan";
     namespace = "phpstan";
-    composerJsonPath = ./files/vendor-bin/phpstan/composer.json;
+    composerJsonPath = ../files/php/vendor-bin/phpstan/composer.json;
     configFiles = {
-      "phpstan.dist.neon" = ./files/phpstan.dist.neon;
+      "phpstan.dist.neon" = ../files/php/phpstan.dist.neon;
     };
     ignoredPaths = [ "phpstan.neon" ];
   };
@@ -22,11 +39,7 @@ in
 {
   imports = [ ./composer-bin.nix ];
 
-  # https://devenv.sh/packages/
-  packages = with pkgs; [ fd ];
-
   languages.php = {
-    enable = true;
     extensions = [
       "ctype" # required by rector/type-perfect
       "simplexml" # required by phpstan/phpstan-symfony
@@ -39,7 +52,7 @@ in
       set -o 'errexit' -o 'pipefail'
 
       cd "''${DEVENV_ROOT}"
-      '${config.languages.php.package}/bin/php' 'vendor/bin/phpstan' 'analyse';
+      ${phpCommand} 'vendor/bin/phpstan' 'analyse';
     '';
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
@@ -53,7 +66,7 @@ in
     name = "PHPStan";
     inherit (config.languages.php) package;
     pass_filenames = false;
-    entry = ''"${package}/bin/php" "''${DEVENV_ROOT}/vendor/bin/phpstan" "analyse"'';
+    entry = ''${phpCommand} "''${DEVENV_ROOT}/vendor/bin/phpstan" "analyse"'';
     args = [ "--memory-limit=256m" ];
   };
 

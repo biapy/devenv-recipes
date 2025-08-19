@@ -1,3 +1,17 @@
+/**
+  # ergebnis/composer-normalize
+
+  `ergebnis/composer-normalize` provides a `composer` plugin for normalizing
+  `composer.json`.
+
+  ## 🛠️ Tech Stack
+
+  - [ergebnis/composer-normalize @ GitHub](https://github.com/ergebnis/composer-normalize)
+
+  ## 🙇 Acknowledgements
+
+  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+*/
 {
   pkgs,
   config,
@@ -9,12 +23,15 @@ let
     inherit config;
     inherit lib;
   };
-  composerCommand = "${config.languages.php.packages.composer}/bin/composer";
-  parallelCommand = "${pkgs.parallel}/bin/parallel";
+  inherit (config.languages.php.packages) composer;
+  composerCommand = lib.meta.getExe composer;
+  inherit (pkgs) parallel fd;
+  parallelCommand = lib.meta.getExe parallel;
+  fdCommand = lib.meta.getExe fd;
   composerBinTool = {
     name = "composer normalize";
     namespace = "composer-normalize";
-    composerJsonPath = ./files/vendor-bin/composer-normalize/composer.json;
+    composerJsonPath = ../files/php/vendor-bin/composer-normalize/composer.json;
   };
 in
 {
@@ -24,7 +41,7 @@ in
   ];
 
   # https://devenv.sh/packages/
-  packages = with pkgs; [ fd ];
+  packages = [ fd ];
 
   # https://devenv.sh/tasks/
   tasks = {
@@ -34,7 +51,7 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${pkgs.fd}/bin/fd 'composer\.json$' "''${DEVENV_ROOT}" --exec '${composerCommand}' bin composer-normalize normalize {}
+        ${fdCommand} 'composer\.json$' "''${DEVENV_ROOT}" --exec '${composerCommand}' bin composer-normalize normalize {}
       '';
     };
   }
@@ -47,8 +64,8 @@ in
       enable = true;
       name = "composer normalize";
       before = [ "composer-validate" ];
-      package = config.languages.php.packages.composer;
-      extraPackages = [ pkgs.parallel ];
+      package = composer;
+      extraPackages = [ parallel ];
       files = "composer.json";
       entry = ''"${parallelCommand}" '${package}/bin/composer' bin composer-normalize normalize --dry-run "''${DEVENV_ROOT}/"{} ::: '';
     };
