@@ -8,13 +8,13 @@
 declare(strict_types=1);
 
 use App\Kernel;
-use App\Tests\PhpStanObjectManager;
+use App\Tests\PHPStan\PhpStanObjectManager;
 use Doctrine\Persistence\ManagerRegistry;
 use Symfony\Component\Dotenv\Dotenv;
 
-require __DIR__.'/../vendor/autoload.php';
+require __DIR__.'/../../vendor/autoload.php';
 
-(new Dotenv())->bootEnv(__DIR__.'/../.env');
+(new Dotenv())->bootEnv(__DIR__.'/../../.env');
 
 $env = $_SERVER['APP_ENV'] ?? 'dev';
 $debug = (bool) ($_SERVER['APP_DEBUG'] ?? false);

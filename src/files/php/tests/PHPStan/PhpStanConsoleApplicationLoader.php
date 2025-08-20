@@ -10,7 +10,7 @@ declare(strict_types=1);
 use App\Kernel;
 use Symfony\Bundle\FrameworkBundle\Console\Application;
 
-require dirname(__DIR__).'/tests/bootstrap.php';
+require __DIR__.'/../bootstrap.php';
 
 $env = $_SERVER['APP_ENV'] ?? 'dev';
 $debug = (bool) ($_SERVER['APP_DEBUG'] ?? false);
