@@ -59,7 +59,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${symfonyCommand}' console 'lint:container'
+        ${symfonyCommand} console 'lint:container'
       '';
     };
 
@@ -68,8 +68,8 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${fdCommand} --extension='twig' --type='file' --exec-batch -- \
-            '${symfonyCommand}' console 'lint:twig' '--show-deprecations'
+        ${fdCommand} --extension='twig' --type='file' --exec-batch -- \
+            ${symfonyCommand} console 'lint:twig' '--show-deprecations'
       '';
     };
 
@@ -78,8 +78,8 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${fdCommand} --extension='xlf' --type='file' --exec-batch -- \
-          '${symfonyCommand}' console 'lint:xliff'
+        ${fdCommand} --extension='xlf' --type='file' --exec-batch -- \
+          ${symfonyCommand} console 'lint:xliff'
       '';
     };
 
@@ -88,33 +88,33 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        '${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch -- \
-            '${symfonyCommand}' console 'lint:yaml'
+        ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch -- \
+            ${symfonyCommand} console 'lint:yaml'
       '';
     };
   };
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
-    symfony-lint-container = rec {
+    symfony-lint-container = {
       enable = true;
       name = "symfony lint container";
       package = symfony-cli;
       files = "\.(php|yml|yaml|xml|json|lock)$";
       pass_filenames = false;
-      entry = ''"${lib.meta.getExe package}" console lint:container'';
+      entry = ''"${symfonyCommand}" console lint:container'';
       stages = [
         "pre-commit"
         "pre-push"
       ];
     };
 
-    symfony-lint-twig = rec {
+    symfony-lint-twig = {
       enable = true;
       name = "symfony lint:twig";
       package = symfony-cli;
       files = "\.twig$";
-      entry = ''"${lib.meta.getExe package}" console lint:twig'';
+      entry = ''${symfonyCommand} console lint:twig'';
       args = [ "--show-deprecations" ];
       stages = [
         "pre-commit"
@@ -122,25 +122,25 @@ in
       ];
     };
 
-    symfony-lint-translations = rec {
+    symfony-lint-translations = {
       enable = true;
       name = "symfony lint:translations";
       package = symfony-cli;
       files = "/translations/.*\.(php|xlf|yml|yaml|po|pot|csv|json|ini|dat|res|mo|qt)$";
       pass_filenames = false;
-      entry = ''"${lib.meta.getExe package}" console lint:translations'';
+      entry = ''${symfonyCommand} console lint:translations'';
       stages = [
         "pre-commit"
         "pre-push"
       ];
     };
 
-    symfony-lint-xliff = rec {
+    symfony-lint-xliff = {
       enable = true;
       name = "symfony lint:xliff";
       package = symfony-cli;
       files = "\.xlf$";
-      entry = ''"${lib.meta.getExe package}" console lint:xliff'';
+      entry = ''${symfonyCommand} console lint:xliff'';
       stages = [
         "pre-commit"
         "pre-push"
@@ -152,7 +152,7 @@ in
       name = "symfony lint:yaml";
       package = symfony-cli;
       files = "\.(yml|yaml)$";
-      entry = ''"${lib.meta.getExe package}" console lint:yaml'';
+      entry = ''${symfonyCommand} console lint:yaml'';
       stages = [
         "pre-commit"
         "pre-push"
