@@ -14,7 +14,5 @@ let
 in
 {
   # https://devenv.sh/packages/
-  packages = [
-    glow
-  ];
+  packages = [ glow ];
 }
