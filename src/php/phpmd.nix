@@ -39,6 +39,7 @@ let
     configFiles = {
       "phpmd.xml.dist" = ../files/php/phpmd.xml.dist;
     };
+    ignoredPaths = [ "/.phpmd.result-cache.php" ];
   };
 in
 {
