@@ -52,7 +52,7 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${phpCommand} 'vendor/bin/psalm' --show-info --show-snippet --report="''${DEVENV_TASK_OUTPUT_FILE}"
+        ${phpCommand} 'vendor/bin/psalm' --show-info --show-snippet
       '';
     };
   }
