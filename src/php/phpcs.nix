@@ -66,7 +66,7 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${phpCommand} 'vendor/bin/phpcs' --colors --report='json' --report-file="''${DEVENV_TASK_OUTPUT_FILE}";
+        ${phpCommand} 'vendor/bin/phpcs' --colors";
       '';
     };
   }
