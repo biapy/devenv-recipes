@@ -20,7 +20,7 @@ in
   imports = [ ./nix.nix ];
 
   # https://devenv.sh/git-hooks/
-  git-hooks.deadnix.enable = true;
+  git-hooks.hooks.deadnix.enable = true;
 
   # https://devenv.sh/tasks/
   tasks."ci:lint:nix:deadnix" = {
