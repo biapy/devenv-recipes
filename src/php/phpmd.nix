@@ -58,7 +58,7 @@ in
   // utils.composer-bin.installTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
-  git-hooks.hooks.phpmd = rec {
+  git-hooks.hooks.phpmd = {
     enable = true;
     name = "PHP Mess Detector";
     inherit (config.languages.php) package;
