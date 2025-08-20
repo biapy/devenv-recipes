@@ -38,13 +38,6 @@ final class PhpStanObjectManager implements ObjectManager
         $this->metadataFactory = new PhpStanMetadataFactory($doctrineRegistries);
     }
 
-    /**
-     * @param class-string<T> $className
-     *
-     * @return ObjectRepository<T>
-     *
-     * @template T of object
-     */
     #[\Override]
     public function getRepository(string $className): ObjectRepository
     {
@@ -52,39 +45,27 @@ final class PhpStanObjectManager implements ObjectManager
     }
 
     /**
-     * @param class-string $className
-     * @psalm-param class-string<T> $className
+     * @param class-string<T> $className
      *
-     * @return ClassMetadata<object>
-     * @psalm-return ClassMetadata<T>
+     * @return ClassMetadata<T>
      *
      * @template T of object
      */
     #[\Override]
     public function getClassMetadata(string $className): ClassMetadata
     {
-        /** @psalm-var ClassMetadata<T> $result */
+        /** @var ClassMetadata<T> $result */
         $result = $this->metadataFactory->getMetadataFor($className);
 
         return $result;
     }
 
-    /**
-     * @return ClassMetadataFactory<ClassMetadata<object>> $metadataFactory
-     */
     #[\Override]
     public function getMetadataFactory(): ClassMetadataFactory
     {
         return $this->metadataFactory;
     }
 
-    /**
-     * @param class-string<O> $className
-     *
-     * @return O|null
-     *
-     * @template O of object
-     */
     #[\Override]
     public function find(string $className, mixed $id): ?object
     {
@@ -149,6 +130,7 @@ final class PhpStanObjectManager implements ObjectManager
         $this->getManagerForClass($obj::class)->initializeObject($obj);
     }
 
+    #[\Override]
     public function isUninitializedObject(mixed $value): bool
     {
         if (!is_object($value)) {
@@ -169,9 +151,7 @@ final class PhpStanObjectManager implements ObjectManager
     }
 
     /**
-     * Get the object manager for the given class.
-     *
-     * @param class-string $className Class name which manager is needed
+     * @param class-string $className
      */
     private function getManagerForClass(string $className): ObjectManager
     {
@@ -190,8 +170,6 @@ final class PhpStanObjectManager implements ObjectManager
     }
 
     /**
-     * Get the default object manager, or the manager for the given name.
-     *
      * @throws \InvalidArgumentException If no manager is found for given name
      */
     private function getManager(?string $name = null): ObjectManager

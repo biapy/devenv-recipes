@@ -34,10 +34,6 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
     ) {
     }
 
-    /**
-     * @return ClassMetadata<object>[]
-     * @psalm-return list<T>
-     */
     #[\Override]
     public function getAllMetadata(): array
     {
@@ -74,9 +70,6 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
         return $metadata;
     }
 
-    /**
-     * @param class-string $className
-     */
     #[\Override]
     public function isTransient(string $className): bool
     {
@@ -89,9 +82,6 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
         return true;
     }
 
-    /**
-     * @param class-string $className
-     */
     #[\Override]
     public function hasMetadataFor(string $className): bool
     {
@@ -104,11 +94,6 @@ final class PhpStanMetadataFactory implements ClassMetadataFactory
         return false;
     }
 
-    /**
-     * @param class-string          $className
-     * @param ClassMetadata<object> $class
-     * @psalm-param T $class
-     */
     #[\Override]
     public function setMetadataFor(string $className, ClassMetadata $class): void
     {
