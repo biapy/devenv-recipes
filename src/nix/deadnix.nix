@@ -29,7 +29,7 @@ in
       set -o 'errexit' -o 'pipefail'
 
       cd "''${DEVENV_ROOT}"
-      ${deadnixCommand} --output-format 'json' > "''${DEVENV_TASK_OUTPUT_FILE}"
+      ${deadnixCommand} --fail"
     '';
   };
 }
