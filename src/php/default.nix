@@ -1,12 +1,14 @@
 _: {
   imports = [
     ./php84.nix
-    ./composer.nix
     ./composer-bin.nix
     ./composer-normalize.nix
-    ./phpstan.nix
-    ./rector.nix
+    ./composer.nix
     ./php-cs-fixer.nix
+    ./phpcs.nix
     ./phpmd.nix
+    ./phpstan.nix
+    ./psalm.nix
+    ./rector.nix
   ];
 }
