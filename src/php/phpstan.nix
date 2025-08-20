@@ -41,12 +41,7 @@ let
     composerJsonPath = ../files/php/vendor-bin/phpstan/composer.json;
     configFiles = {
       "phpstan.dist.neon" = ../files/php/phpstan.dist.neon;
-      "tests/PHPStan/PhpStanConsoleApplicationLoader.php" =
-        ../files/php/tests/PHPStan/PhpStanConsoleApplicationLoader.php;
-      "tests/PHPStan/PhpStanMetadataFactory.php" = ../files/php/tests/PHPStan/PhpStanMetadataFactory.php;
-      "tests/PHPStan/PhpStanObjectManager.php" = ../files/php/tests/PHPStan/PhpStanObjectManager.php;
-      "tests/PHPStan/PhpStanObjectManagerLoader.php" =
-        ../files/php/tests/PHPStan/PhpStanObjectManagerLoader.php;
+      "tests/PHPStan" = ../files/php/tests/PHPStan;
     };
     ignoredPaths = [ "phpstan.neon" ];
   };

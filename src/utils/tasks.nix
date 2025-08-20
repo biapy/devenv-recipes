@@ -86,7 +86,7 @@ _: rec {
 
             # Add the devenv-recipes section if it does not exist
             grep --quiet "^###> ''${section_name} ###" "''${gitignore}" ||
-            printf "\n###> %s ###\n###< %s ###" \
+            printf "\n###> %s ###\n###< %s ###\n" \
               "''${section_name}" "''${section_name}" \
               >> "''${gitignore}"
           }
@@ -224,7 +224,7 @@ _: rec {
 
     function initializeFile() {
       local file="''${1}"
-      local sourcePath="''${2}"
+      local source="''${2}"
 
       file="''${DEVENV_ROOT}/''${file}"
       filepath="$(dirname "''${file}")"
@@ -232,8 +232,8 @@ _: rec {
       [[ -e "''${file}" ]] && return 0
 
       mkdir --parent "''${filepath}" &&
-      cp "''${sourcePath}" "''${file}" &&
-      chmod u+w "''${file}"
+        cp --recursive "''${source}" "''${file}" &&
+        chmod --recursive 'u+w' "''${file}"
     }
 
     ${
@@ -281,13 +281,15 @@ _: rec {
   initializeFile = file: sourcePath: ''
     set -o 'errexit'
 
+    source="${sourcePath}"
     file="''${DEVENV_ROOT}/${file}"
     filepath="$(dirname "''${file}")"
 
     [[ -e "''${file}" ]] && exit 0
 
     mkdir --parent "''${filepath}" &&
-      cp "${sourcePath}" "''${file}"
+      cp --recursive "''${source}" "''${file}" &&
+      chmod --recursive 'u+w' "''${file}"
   '';
 
   /**
