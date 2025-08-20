@@ -66,7 +66,7 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${phpCommand} 'vendor/bin/phpcs' --colors";
+        ${phpCommand} 'vendor/bin/phpcs' --colors
       '';
     };
   }
