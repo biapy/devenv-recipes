@@ -3,9 +3,6 @@
   # https://devenv.sh/packages/
   packages = with pkgs; [
     alejandra
-    nixos-anywhere
-    nixos-rebuild
-    nixos-rebuild-ng
     nixdoc
   ];
 
