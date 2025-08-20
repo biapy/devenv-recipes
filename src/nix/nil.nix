@@ -7,11 +7,14 @@
   ## 🛠️ Tech Stack
 
   - [nil @ GitHub](https://github.com/oxalica/nil).
+  - [fd @ GitHub](https://github.com/sharkdp/fd).
+  - [Nix IDE @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=jnoortheen.nix-ide).
 
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
   - [git-hooks.hooks.nil @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksnil).
+  - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
 {
   pkgs,
