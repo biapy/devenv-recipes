@@ -32,7 +32,12 @@ parameters:
 
     excludePaths:
         # Exclude PHP CS Fixer configuration file from scans
+        - .php-cs-fixer.dist.php (?)
         - .php-cs-fixer.php (?)
+
+    # Do not report partial contravariance in method signatures.
+    # Allow for `array{username: string|null}` to match `array{string: mixed}`
+    # reportMaybesInMethodSignatures: false
 
     editorUrlTitle: '%%relFile%%:%%line%%'
     editorUrl: "vscode://file/%%file%%:%%line%%"
