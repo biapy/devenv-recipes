@@ -7,8 +7,14 @@
   ## 🛠️ Tech Stack
 
   - [nil @ GitHub](https://github.com/oxalica/nil).
-  - [fd @ GitHub](https://github.com/sharkdp/fd).
+
+  ### Visual Studio Code
+
   - [Nix IDE @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=jnoortheen.nix-ide).
+
+  ### Third party tools
+
+  - [fd @ GitHub](https://github.com/sharkdp/fd).
 
   ## 🙇 Acknowledgements
 
@@ -30,6 +36,7 @@ in
 {
   imports = [ ./nix.nix ];
 
+  # https://devenv.sh/integrations/codespaces-devcontainer/
   devcontainer.settings.customizations.vscode.extensions = [ "jnoortheen.nix-ide" ];
 
   packages = [ fd ];
