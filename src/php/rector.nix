@@ -1,14 +1,12 @@
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
   utils = import ../utils {
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
+  phpCommand = lib.meta.getExe config.languages.php.package;
+  rectorCommand = "${root}/vendor-bin/rector/vendor/bin/rector";
   composerBinTool = {
     name = "Rector";
     namespace = "rector";
@@ -21,9 +19,6 @@ in
 {
   imports = [ ./composer-bin.nix ];
 
-  # https://devenv.sh/packages/
-  packages = with pkgs; [ fd ];
-
   # https://devenv.sh/tasks/
   tasks = {
     "ci:format:php:rector" = {
@@ -32,7 +27,16 @@ in
         set -o 'errexit'
 
         cd "''${DEVENV_ROOT}"
-        '${config.languages.php.package}/bin/php' 'vendor/bin/rector' 'process';
+        ${phpCommand} '${rectorCommand}' 'process' '--no-progress-bar';
+      '';
+    };
+    "ci:lint:php:rector" = {
+      description = "Lint '.php' files with Rector";
+      exec = ''
+        set -o 'errexit'
+
+        cd "''${DEVENV_ROOT}"
+        ${phpCommand} '${rectorCommand}' 'process' '--no-progress-bar' '--dry-run';
       '';
     };
   }
@@ -41,13 +45,16 @@ in
   // utils.composer-bin.installTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
-  git-hooks.hooks.rector = rec {
+  git-hooks.hooks.rector = {
     enable = true;
     name = "Rector";
     inherit (config.languages.php) package;
     pass_filenames = false;
-    entry = ''"${package}/bin/php" "''${DEVENV_ROOT}/vendor/bin/rector" "process"'';
-    args = [ "--dry-run" ];
+    entry = ''${phpCommand} '${rectorCommand}' "process"'';
+    args = [
+      "--no-progress-bar"
+      "--dry-run"
+    ];
   };
 
   # See full reference at https://devenv.sh/reference/options/

@@ -33,6 +33,7 @@ let
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
   inherit (config.languages.php.packages) composer;
   composerCommand = lib.meta.getExe composer;
   inherit (pkgs) parallel;
@@ -59,7 +60,7 @@ in
   };
 
   enterShell = ''
-    export PATH="${config.env.DEVENV_ROOT}/vendor/bin:${config.env.DEVENV_ROOT}/bin:$PATH"
+    export PATH="${root}/vendor/bin:$PATH"
   '';
 
   # https://devenv.sh/tasks/
@@ -84,27 +85,27 @@ in
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
-    composer-validate = rec {
+    composer-validate = {
       enable = true;
       name = "composer validate";
       package = composer;
       extraPackages = [ parallel ];
       files = "composer\.(json|lock)$";
-      entry = ''"${parallelCommand}" "${composerCommand}" validate --no-check-publish {} ::: '';
+      entry = "'${parallelCommand}' '${composerCommand}' 'validate' --no-check-publish {} ::: ";
       stages = [
         "pre-commit"
         "pre-push"
       ];
     };
 
-    composer-audit = rec {
+    composer-audit = {
       enable = true;
       name = "composer audit";
       after = [ "composer-validate" ];
       package = composer;
       files = "composer\.(json|lock)$";
       pass_filenames = false;
-      entry = ''"${composerCommand}" --working-dir="''${DEVENV_ROOT}" audit'';
+      entry = "'${composerCommand}' 'audit'";
       stages = [
         "pre-commit"
         "pre-push"

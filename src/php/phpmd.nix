@@ -29,7 +29,9 @@ let
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
+  phpmdCommand = "${root}/vendor-bin/phpmd/vendor/bin/phpmd";
   inherit (pkgs) parallel;
   parallelCommand = lib.meta.getExe parallel;
   composerBinTool = {
@@ -37,7 +39,7 @@ let
     namespace = "phpmd";
     composerJsonPath = ../files/php/vendor-bin/phpmd/composer.json;
     configFiles = {
-      "phpmd.xml.dist" = ../files/php/phpmd.xml.dist;
+      "phpmd.xml" = ../files/php/phpmd.xml;
     };
     ignoredPaths = [ "/.phpmd.result-cache.php" ];
   };
@@ -58,13 +60,14 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        ${phpCommand} -d 'error_reporting=~E_DEPRECATED' 'vendor/bin/phpmd' {src,tests} 'ansi' 'phpmd.xml.dist'
+        ${phpCommand} -d 'error_reporting=~E_DEPRECATED' '${phpmdCommand}' {src,tests} 'ansi' 'phpmd.xml'
       '';
     };
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
   // utils.composer-bin.initializeConfigFilesTask composerBinTool
-  // utils.composer-bin.installTask composerBinTool;
+  // utils.composer-bin.installTask composerBinTool
+  // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.phpmd = {
@@ -72,7 +75,8 @@ in
     name = "PHP Mess Detector";
     inherit (config.languages.php) package;
     extraPackages = [ parallel ];
-    entry = ''${parallelCommand} ${phpCommand} -d 'error_reporting=~E_DEPRECATED' "''${DEVENV_ROOT}/vendor/bin/phpmd" {} 'ansi' "''${DEVENV_ROOT}/phpmd.xml.dist" ::: '';
+    # Using parallel allows to run phpmd on staged files only
+    entry = ''${parallelCommand} ${phpCommand} -d 'error_reporting=~E_DEPRECATED' "${phpmdCommand}" {} 'ansi' "''${DEVENV_ROOT}/phpmd.xml.dist" ::: '';
   };
 
   # See full reference at https://devenv.sh/reference/options/

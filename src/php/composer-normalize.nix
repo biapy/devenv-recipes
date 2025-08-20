@@ -23,6 +23,7 @@ let
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
   inherit (config.languages.php.packages) composer;
   composerCommand = lib.meta.getExe composer;
   inherit (pkgs) parallel fd;
@@ -51,7 +52,8 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${fdCommand} 'composer\.json$' "''${DEVENV_ROOT}" --exec '${composerCommand}' bin composer-normalize normalize {}
+        ${fdCommand} '^composer\.json$' "''${DEVENV_ROOT}" --exec \
+          '${composerCommand}' bin composer-normalize normalize {}
       '';
     };
   }
@@ -60,14 +62,14 @@ in
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
-    composer-normalize = rec {
+    composer-normalize = {
       enable = true;
       name = "composer normalize";
       before = [ "composer-validate" ];
       package = composer;
       extraPackages = [ parallel ];
       files = "composer.json";
-      entry = ''"${parallelCommand}" '${package}/bin/composer' bin composer-normalize normalize --dry-run "''${DEVENV_ROOT}/"{} ::: '';
+      entry = ''"${parallelCommand}" '${composerCommand}' bin composer-normalize normalize --dry-run "${root}/"{} ::: '';
     };
   };
 

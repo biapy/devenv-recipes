@@ -23,6 +23,7 @@
   ...
 }:
 let
+  inherit (config.devenv) root;
   inherit (pkgs) symfony-cli;
   symfonyCommand = lib.meta.getExe symfony-cli;
   inherit (pkgs) fd;
@@ -49,7 +50,7 @@ in
   dotenv.filename = [ ".env.dev" ];
 
   enterShell = ''
-    export PATH="${config.env.DEVENV_ROOT}/vendor/bin:${config.env.DEVENV_ROOT}/bin:$PATH"
+    export PATH="${root}/bin:$PATH"
   '';
 
   # https://devenv.sh/tasks/
@@ -116,10 +117,6 @@ in
       files = "\.twig$";
       entry = ''${symfonyCommand} console lint:twig'';
       args = [ "--show-deprecations" ];
-      stages = [
-        "pre-commit"
-        "pre-push"
-      ];
     };
 
     symfony-lint-translations = {
@@ -129,10 +126,6 @@ in
       files = "/translations/.*\.(php|xlf|yml|yaml|po|pot|csv|json|ini|dat|res|mo|qt)$";
       pass_filenames = false;
       entry = ''${symfonyCommand} console lint:translations'';
-      stages = [
-        "pre-commit"
-        "pre-push"
-      ];
     };
 
     symfony-lint-xliff = {
@@ -141,22 +134,14 @@ in
       package = symfony-cli;
       files = "\.xlf$";
       entry = ''${symfonyCommand} console lint:xliff'';
-      stages = [
-        "pre-commit"
-        "pre-push"
-      ];
     };
 
-    symfony-lint-yaml = rec {
+    symfony-lint-yaml = {
       enable = true;
       name = "symfony lint:yaml";
       package = symfony-cli;
       files = "\.(yml|yaml)$";
       entry = ''${symfonyCommand} console lint:yaml'';
-      stages = [
-        "pre-commit"
-        "pre-push"
-      ];
     };
   };
 

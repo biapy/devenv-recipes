@@ -27,7 +27,9 @@ let
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
+  psalmCommand = "${root}/vendor-bin/psalm/vendor/bin/psalm";
   composerBinTool = {
     name = "Psalm";
     namespace = "psalm";
@@ -52,7 +54,7 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${phpCommand} 'vendor/bin/psalm' --show-info --show-snippet
+        ${phpCommand} '${psalmCommand}' --no-progress --show-info --show-snippet
       '';
     };
   }
@@ -66,7 +68,8 @@ in
     enable = true;
     name = "Psalm";
     inherit (config.languages.php) package;
-    entry = ''${phpCommand} "''${DEVENV_ROOT}/vendor/bin/psalm"'';
+    entry = "${phpCommand} '${psalmCommand}'";
+    args = [ "--no-progress" ];
   };
 
   # See full reference at https://devenv.sh/reference/options/

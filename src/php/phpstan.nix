@@ -34,7 +34,9 @@ let
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
+  phpstanCommand = "${root}/vendor-bin/phpstan/vendor/bin/phpstan";
   composerBinTool = {
     name = "PHPStan";
     namespace = "phpstan";
@@ -65,7 +67,7 @@ in
       set -o 'errexit' -o 'pipefail'
 
       cd "''${DEVENV_ROOT}"
-      ${phpCommand} 'vendor/bin/phpstan' 'analyse';
+      ${phpCommand} '${phpstanCommand}' 'analyse' --no-progress;
     '';
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
@@ -79,8 +81,8 @@ in
     name = "PHPStan";
     inherit (config.languages.php) package;
     pass_filenames = false;
-    entry = ''${phpCommand} "''${DEVENV_ROOT}/vendor/bin/phpstan" "analyse"'';
-    args = [ "--memory-limit=256m" ];
+    entry = ''${phpCommand} '${phpstanCommand}' "analyse"'';
+    args = [ "--no-progress" ];
   };
 
   # See full reference at https://devenv.sh/reference/options/

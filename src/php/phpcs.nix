@@ -37,7 +37,9 @@ let
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
+  phpcsCommand = "${root}/vendor-bin/phpcs/vendor/bin/phpcs";
   composerBinTool = {
     name = "PHP CodeSniffer";
     namespace = "phpcs";
@@ -66,7 +68,7 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${phpCommand} 'vendor/bin/phpcs' --colors
+        ${phpCommand} '${phpcsCommand}' --colors
       '';
     };
   }
@@ -80,7 +82,7 @@ in
     enable = true;
     name = "PHP CodeSniffer";
     inherit (config.languages.php) package;
-    entry = ''${phpCommand} "''${DEVENV_ROOT}/vendor/bin/phpcs"'';
+    entry = "${phpCommand} '${phpcsCommand}'";
     args = [ "-q" ];
   };
 
