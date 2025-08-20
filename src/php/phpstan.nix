@@ -61,7 +61,7 @@ in
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
-  git-hooks.hooks.phpstan = rec {
+  git-hooks.hooks.phpstan = {
     enable = true;
     name = "PHPStan";
     inherit (config.languages.php) package;
