@@ -8,7 +8,7 @@ _:
     src/devenv-scripts.nix
     src/markdown
     src/gitleaks.nix
-    src/nix.nix
+    src/nix
   ];
 
   # https://devenv.sh/basics/
