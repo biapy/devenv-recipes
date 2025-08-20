@@ -7,12 +7,20 @@
   ## 🛠️ Tech Stack
 
   - [Composer homepage](https://getcomposer.org/).
+
+  ### Visual Studio Code
+
+  - [Composer @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=DEVSENSE.composer-php-vscode).
+
+  ### Third party tools
+
   - [GNU Parallel homepage](https://www.gnu.org/software/parallel/).
 
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
   - [Setting priorities @ NixOS Manual](https://nixos.org/manual/nixos/stable/#sec-option-definitions-setting-priorities).
+  - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
 {
   pkgs,
@@ -36,6 +44,9 @@ in
     ./php.nix
   ];
 
+  # https://devenv.sh/integrations/codespaces-devcontainer/
+  devcontainer.settings.customizations.vscode.extensions = [ "DEVSENSE.composer-php-vscode" ];
+
   languages.php = {
     enable = true;
     extensions = [
@@ -56,12 +67,13 @@ in
     "devenv-recipes:enterShell:install:composer" = {
       description = "Install composer packages";
       before = [ "devenv:enterShell" ];
+      status = ''test -e "''${DEVENV_ROOT}/vendor/autoload.php"'';
       exec = ''
         set -o 'errexit'
+        cd "''${DEVENV_ROOT}"
         [[ -e "''${DEVENV_ROOT}/composer.json" ]] &&
         ${composerCommand} 'install'
       '';
-      status = ''test -e "''${DEVENV_ROOT}/vendor/autoload.php"'';
     };
   }
   // utils.tasks.gitIgnoreTask {
@@ -78,7 +90,7 @@ in
       package = composer;
       extraPackages = [ parallel ];
       files = "composer\.(json|lock)$";
-      entry = ''"${parallelCommand}" "${lib.meta.getExe package}" validate --no-check-publish {} ::: '';
+      entry = ''"${parallelCommand}" "${composerCommand}" validate --no-check-publish {} ::: '';
       stages = [
         "pre-commit"
         "pre-push"
@@ -93,7 +105,7 @@ in
       extraPackages = [ parallel ];
       files = "composer\.(json|lock)$";
       verbose = true;
-      entry = ''"${parallelCommand}" "${lib.meta.getExe package}" --working-dir="''${DEVENV_ROOT}" audit ::: '';
+      entry = ''"${parallelCommand}" "${composerCommand}" --working-dir="''${DEVENV_ROOT}" audit ::: '';
       stages = [
         "pre-commit"
         "pre-push"

@@ -9,9 +9,14 @@
   - [PHP Mess Detector homepage](https://phpmd.org/).
   - [PHP Mess Detector @ GitHub](https://github.com/phpmd/phpmd).
 
+  ### Visual Studio Code
+
+  - [PHP Mess Detector @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ecodes.vscode-phpmd).
+
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+  - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
 {
   pkgs,
@@ -41,6 +46,9 @@ in
     ../gnu-parallel.nix
     ./composer-bin.nix
   ];
+
+  # https://devenv.sh/integrations/codespaces-devcontainer/
+  devcontainer.settings.customizations.vscode.extensions = [ "ecodes.vscode-phpmd" ];
 
   # https://devenv.sh/tasks/
   tasks = {

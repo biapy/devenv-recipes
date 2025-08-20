@@ -7,18 +7,24 @@
 
   - [PHP Coding Standard Fixer homepage](https://cs.symfony.com/).
   - [PHP Coding Standard Fixer @ GitHub](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer).
+
+  ### Visual Studio Code
+
+  - [php cs fixer @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=junstyle.php-cs-fixer).
+
+  ## 🙇 Acknowledgements
+
+  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+  - [git-hooks.hooks.php-cs-fixer @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksphp-cs-fixer).
+  - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
-{
-  pkgs,
-  config,
-  lib,
-  ...
-}:
+{ config, lib, ... }:
 let
   utils = import ../utils {
     inherit config;
     inherit lib;
   };
+  phpCommand = lib.meta.getExe config.languages.php.package;
   composerBinTool = {
     name = "PHP Coding Standards Fixer";
     namespace = "php-cs-fixer";
@@ -35,8 +41,8 @@ in
 {
   imports = [ ./composer-bin.nix ];
 
-  # https://devenv.sh/packages/
-  packages = with pkgs; [ fd ];
+  # https://devenv.sh/integrations/codespaces-devcontainer/
+  devcontainer.settings.customizations.vscode.extensions = [ "junstyle.php-cs-fixer" ];
 
   # https://devenv.sh/tasks/
   tasks = {
@@ -44,13 +50,13 @@ in
       set -o 'errexit'
 
       cd "''${DEVENV_ROOT}"
-      '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --dry-run --diff --show-progress='bar';
+      ${phpCommand} 'vendor/bin/php-cs-fixer' 'fix' --dry-run --diff --show-progress='bar';
     '';
     "ci:format:php:php-cs-fixer".exec = ''
       set -o 'errexit'
 
       cd "''${DEVENV_ROOT}"
-      '${config.languages.php.package}/bin/php' 'vendor/bin/php-cs-fixer' 'fix' --diff --show-progress='bar';
+      ${phpCommand} 'vendor/bin/php-cs-fixer' 'fix' --diff --show-progress='bar';
     '';
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
@@ -59,12 +65,12 @@ in
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
-  git-hooks.hooks.php-cs-fixer = rec {
+  git-hooks.hooks.php-cs-fixer = {
     enable = true;
     name = "PHP Coding Standards Fixer";
     inherit (config.languages.php) package;
     files = ".*\.php$";
-    entry = "${package}/bin/php '${config.env.DEVENV_ROOT}/vendor/bin/php-cs-fixer' 'fix'";
+    entry = ''${phpCommand} "''${DEVENV_ROOT}/vendor/bin/php-cs-fixer" fix'';
     args = [ "--dry-run" ];
   };
 

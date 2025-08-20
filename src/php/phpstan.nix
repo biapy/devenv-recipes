@@ -7,6 +7,9 @@
 
   - [PHPStan homepage](https://phpstan.org/).
   - [PHPStan @ GitHub](https://github.com/phpstan/phpstan).
+
+  ### PHPStan rules
+
   - [phpstan/phpstan-deprecation-rules @ GitHub](https://github.com/phpstan/phpstan-deprecation-rules).
   - [Doctrine extensions for PHPStan @ GitHub](https://github.com/phpstan/phpstan-doctrine).
   - [PHPStan PHPUnit extensions and rules @ GitHub](https://github.com/phpstan/phpstan-phpunit).
@@ -15,9 +18,15 @@
   - [Rector Type Perfect @ GitHub](https://github.com/rectorphp/type-perfect).
   - [Symplify's PHPStan Rules](https://github.com/symplify/phpstan-rules).
 
+  ### Visual Studio Code
+
+  - [phpstan @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=SanderRonde.phpstan-vscode).
+
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+  - [git-hooks.hooks.phpstan @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksphpstan).
+  - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
 { config, lib, ... }:
 let
@@ -45,6 +54,9 @@ in
       "simplexml" # required by phpstan/phpstan-symfony
     ];
   };
+
+  # https://devenv.sh/integrations/codespaces-devcontainer/
+  devcontainer.settings.customizations.vscode.extensions = [ "SanderRonde.phpstan-vscode" ];
 
   # https://devenv.sh/tasks/
   tasks = {
