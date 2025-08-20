@@ -41,7 +41,7 @@ in
         set -o 'errexit' -o 'pipefail'
 
         cd "''${DEVENV_ROOT}"
-        ${statixCommand} fix --format 'json' > "''${DEVENV_TASK_OUTPUT_FILE}"
+        ${statixCommand} fix
       '';
     };
   };
