@@ -68,7 +68,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        ${fdCommand} --extension='twig' --type='file' --exec-batch -- \
+        ${fdCommand} --extension='twig' --type='file' --exec-batch \
             ${symfonyCommand} console 'lint:twig' '--show-deprecations'
       '';
     };
@@ -78,7 +78,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        ${fdCommand} --extension='xlf' --type='file' --exec-batch -- \
+        ${fdCommand} --extension='xlf' --type='file' --exec-batch \
           ${symfonyCommand} console 'lint:xliff'
       '';
     };
@@ -88,7 +88,7 @@ in
       exec = ''
         set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch -- \
+        ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch \
             ${symfonyCommand} console 'lint:yaml'
       '';
     };
