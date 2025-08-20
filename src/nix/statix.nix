@@ -29,16 +29,16 @@ in
     "ci:lint:nix:statix" = {
       description = "Lint *.nix files with statix";
       exec = ''
-        set -o 'errexit' -o 'pipefail'
+        set -o 'errexit'
 
         cd "''${DEVENV_ROOT}"
-        ${statixCommand} check --format 'json' > "''${DEVENV_TASK_OUTPUT_FILE}"
+        ${statixCommand} check
       '';
     };
     "ci:format:nix:statix" = {
       description = "Fix *.nix files with statix";
       exec = ''
-        set -o 'errexit' -o 'pipefail'
+        set -o 'errexit'
 
         cd "''${DEVENV_ROOT}"
         ${statixCommand} fix
