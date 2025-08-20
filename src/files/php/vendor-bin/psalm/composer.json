@@ -10,7 +10,7 @@
       "@install-link"
     ],
     "install-link": [
-      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/rector' || ln --symbolic '../../vendor-bin/psalm/vendor/bin/psalm' '../../vendor/bin/psalm'"
+      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/psalm' || ln --symbolic '../../vendor-bin/psalm/vendor/bin/psalm' '../../vendor/bin/psalm'"
     ]
   },
   "scripts-descriptions": {
