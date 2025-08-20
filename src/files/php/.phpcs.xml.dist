@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="vendor-bin/phpcs/vendor/squizlabs/php_codesniffer/phpcs.xsd">
+
+    <arg name="basepath" value="." />
+    <arg name="cache" value=".phpcs.cache" />
+    <arg name="colors" />
+    <arg name="extensions" value="php" />
+
+    <!---config
+    name="installed_paths"
+    value="../../escapestudios/symfony2-coding-standard,../../phpcompatibility/php-compatibility,../../slevomat/coding-standard,../../suin/phpcs-psr4-sniff/src"
+    /-->
+
+    <!-- Run against the PHPCompatibility ruleset -->
+    <config name="testVersion" value="8.2-" />
+    <rule ref="PHPCompatibility" />
+
+
+    <rule ref="PSR1">
+        <exclude name="Generic.Files.LineLength.TooLong" />
+    </rule>
+
+    <!-- PSR2 is deprecated since 2019-08-10, use PSR12 instead.
+        For information, PSR2.ControlStructures.ControlStructureSpacing.SpacingAfterOpenBrace
+        conflicts with PSR12.ControlStructures.ControlStructureSpacing.FirstExpressionLine
+    -->
+    <rule ref="PSR2">
+        <exclude name="PSR2" />
+    </rule>
+
+    <rule ref="PSR12">
+        <!--
+            Disable OperatorSpacing rule for Symfony compatibility
+            Symfony does not allows spaces around '.' (dot) operator.
+            This is enforced by php-cs-fixer.
+        -->
+        <exclude name="PSR12.Operators.OperatorSpacing" />
+        <!--
+            Disable AnonClassDeclaration.SpaceAfterKeyword check.
+            Invalid rule for php-cs-fixer compatibility
+        -->
+        <exclude name="PSR12.Classes.AnonClassDeclaration.SpaceAfterKeyword" />
+    </rule>
+    <rule ref="Symfony">
+        <!-- Allow for multi-line function and method's declarations -->
+        <exclude name="Symfony.Functions.Arguments" />
+        <!--
+            Disable Commenting.Annotations.Invalid rule for php-cs-fixer compatibility
+            See https://github.com/djoos/Symfony-coding-standard/issues/196
+        -->
+        <exclude name="Symfony.Commenting.Annotations.Invalid" />
+
+        <!-- Disable MissingReturn check since Return is not mandatory for void returns -->
+        <exclude name="Symfony.Commenting.FunctionComment.MissingReturn" />
+
+        <!-- Disable MissingParamTag check since it's not mandatory with PHP 8 typing -->
+        <exclude name="Symfony.Commenting.FunctionComment.MissingParamTag" />
+
+        <!-- Disable ParamNameNoMatch check since it's dependant on MissingParamTag check -->
+        <exclude name="Symfony.Commenting.FunctionComment.ParamNameNoMatch" />
+
+        <!-- Disable ObjectInstantiation check, since it has a false positive for anonymous classes -->
+        <exclude name="Symfony.Objects.ObjectInstantiation.Invalid" />
+
+        <!-- Disable mandatory docblock rules, to apply Uncle Bob Clean Code recommendations,
+        and Pragmatic Programmer DRY principle -->
+        <exclude name="Symfony.Commenting.FunctionComment.Missing" />
+        <exclude name="Symfony.Commenting.ClassComment.Missing" />
+    </rule>
+
+    <file>bin/</file>
+    <file>config/</file>
+    <file>public/</file>
+    <file>src/</file>
+    <file>tests/</file>
+
+    <!-- Exclude vendor directory -->
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+</ruleset>

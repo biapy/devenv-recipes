@@ -1,0 +1,25 @@
+{
+  "require-dev": {
+    "squizlabs/php_codesniffer": "*",
+    "spryker/code-sniffer": "^0.17.28",
+    "slevomat/coding-standard": "^8.15",
+    "phpcompatibility/php-compatibility": "^9.3",
+    "escapestudios/symfony2-coding-standard": "3.x-dev"
+  },
+  "config": {
+    "allow-plugins": {
+      "dealerdirect/phpcodesniffer-composer-installer": true
+    }
+  },
+  "scripts": {
+    "post-install-cmd": [
+      "@install-link"
+    ],
+    "install-link": [
+      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/rector' || ln --symbolic '../../vendor-bin/phpcs/vendor/bin/phpcs' '../../vendor/bin/phpcs'"
+    ]
+  },
+  "scripts-descriptions": {
+    "install-link": "Install composer bin link"
+  }
+}
