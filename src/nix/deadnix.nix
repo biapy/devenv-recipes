@@ -29,7 +29,7 @@ in
       set -o 'errexit' -o 'pipefail'
 
       cd "''${DEVENV_ROOT}"
-      ${deadnixCommand} --fail"
+      '${deadnixCommand}' --fail
     '';
   };
 }
