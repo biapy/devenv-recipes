@@ -25,10 +25,10 @@ parameters:
         - tests/
     symfony:
         containerXmlPath: "var/cache/dev/App_KernelDevDebugContainer.xml"
-        consoleApplicationLoader: "tests/PHPStan/PHPStanConsoleApplicationLoader.php"
+        consoleApplicationLoader: "tests/PHPStan/PhpStanConsoleApplicationLoader.php"
 
     doctrine:
-        objectManagerLoader: "tests/PHPStan/PHPStanObjectManagerLoader.php"
+        objectManagerLoader: "tests/PHPStan/PhpStanObjectManagerLoader.php"
 
     excludePaths:
         # Exclude PHP CS Fixer configuration file from scans
