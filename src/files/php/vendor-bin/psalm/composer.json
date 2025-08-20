@@ -1,9 +1,9 @@
 {
   "require-dev": {
-    "vimeo/psalm": "^6.10",
+    "psalm/plugin-phpunit": "^0.19.5",
     "psalm/plugin-symfony": "^5.2",
-    "weirdan/doctrine-psalm-plugin": "^2.10",
-    "psalm/plugin-phpunit": "^0.19.5"
+    "vimeo/psalm": "^6.10",
+    "weirdan/doctrine-psalm-plugin": "^2.10"
   },
   "scripts": {
     "post-install-cmd": [

@@ -1,10 +1,10 @@
 {
   "require-dev": {
-    "squizlabs/php_codesniffer": "*",
-    "spryker/code-sniffer": "^0.17.28",
-    "slevomat/coding-standard": "^8.15",
+    "escapestudios/symfony2-coding-standard": "3.x-dev",
     "phpcompatibility/php-compatibility": "^9.3",
-    "escapestudios/symfony2-coding-standard": "3.x-dev"
+    "slevomat/coding-standard": "^8.15",
+    "spryker/code-sniffer": "^0.17.28",
+    "squizlabs/php_codesniffer": "*"
   },
   "config": {
     "allow-plugins": {
