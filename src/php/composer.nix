@@ -102,10 +102,9 @@ in
       name = "composer audit";
       after = [ "composer-validate" ];
       package = composer;
-      extraPackages = [ parallel ];
       files = "composer\.(json|lock)$";
-      verbose = true;
-      entry = ''"${parallelCommand}" "${composerCommand}" --working-dir="''${DEVENV_ROOT}" audit ::: '';
+      pass_filenames = false;
+      entry = ''"${composerCommand}" --working-dir="''${DEVENV_ROOT}" audit'';
       stages = [
         "pre-commit"
         "pre-push"
