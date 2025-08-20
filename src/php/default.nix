@@ -8,7 +8,6 @@ _: {
     ./phpcs.nix
     ./phpmd.nix
     ./phpstan.nix
-    ./psalm.nix
     ./rector.nix
   ];
 }
