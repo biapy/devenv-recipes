@@ -3,6 +3,6 @@ _: {
     ./deadnix.nix
     ./nil.nix
     ./nixfmt.nix
-    ./default.nix
+    ./statix.nix
   ];
 }
