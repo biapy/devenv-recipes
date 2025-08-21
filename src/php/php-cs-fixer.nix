@@ -52,13 +52,15 @@ in
       set -o 'errexit'
 
       cd "''${DEVENV_ROOT}"
-      ${phpCommand} '${phpCsFixerCommand}' 'fix' --dry-run --diff --show-progress='bar';
+      ${phpCommand} '${phpCsFixerCommand}' 'fix' --allow-unsupported-php-version=yes \
+        --no-interaction --diff --show-progress='none' --dry-run;
     '';
     "ci:format:php:php-cs-fixer".exec = ''
       set -o 'errexit'
 
       cd "''${DEVENV_ROOT}"
-      ${phpCommand} '${phpCsFixerCommand}' 'fix' --diff --show-progress='bar';
+      ${phpCommand} '${phpCsFixerCommand}' 'fix' --allow-unsupported-php-version=yes \
+        --no-interaction --diff --show-progress='none';
     '';
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
@@ -73,7 +75,12 @@ in
     inherit (config.languages.php) package;
     files = ".*\.php$";
     entry = ''${phpCommand} '${phpCsFixerCommand}' fix'';
-    args = [ "--dry-run" ];
+    args = [
+      "--no-interaction"
+      "--diff"
+      "--show-progress='none'"
+      "--dry-run"
+    ];
   };
 
   # See full reference at https://devenv.sh/reference/options/
