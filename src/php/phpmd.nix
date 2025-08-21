@@ -58,9 +58,9 @@ in
     "ci:lint:php:phpmd" = {
       description = "Lint 'src' and 'tests' with PHP Mess Detector";
       exec = ''
-        set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        ${phpCommand} -d 'error_reporting=~E_DEPRECATED' '${phpmdCommand}' {src,tests} 'ansi' 'phpmd.xml'
+        ${phpCommand} -d 'error_reporting=~E_DEPRECATED' \
+          '${phpmdCommand}' {src,tests} 'ansi' 'phpmd.xml'
       '';
     };
   }
@@ -76,7 +76,7 @@ in
     inherit (config.languages.php) package;
     extraPackages = [ parallel ];
     # Using parallel allows to run phpmd on staged files only
-    entry = ''${parallelCommand} ${phpCommand} -d 'error_reporting=~E_DEPRECATED' "${phpmdCommand}" {} 'ansi' "''${DEVENV_ROOT}/phpmd.xml.dist" ::: '';
+    entry = ''${parallelCommand} ${phpCommand} -d 'error_reporting=~E_DEPRECATED' '${phpmdCommand}' {} 'ansi' '${root}/phpmd.xml' ::: '';
   };
 
   # See full reference at https://devenv.sh/reference/options/
