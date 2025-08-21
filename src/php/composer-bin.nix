@@ -22,7 +22,7 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "devenv-recipes:enterShell:initialize:composer-bin" = {
+    "devenv-recipes:enterShell:initialize:php:composer-bin" = {
       description = "Require 'bamarni/composer-bin-plugin' if missing";
       before = [
         "devenv:enterShell"

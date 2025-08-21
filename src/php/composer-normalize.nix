@@ -8,7 +8,7 @@
 
   ### 🔨 Tasks
 
-  - `ci:format:php:composer-normalize`: Reorganize `composer.json` files
+  - `ci:format:php:composer:normalize`: Reorganize `composer.json` files
     with `composer normalize`.
   - `devenv-recipes:reset:php:composer-bin:composer-normalize`: Delete 'vendor-bin/composer-normalize/vendor' folder.
 
@@ -59,7 +59,7 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "ci:format:composer:composer-normalize" = {
+    "ci:format:php:composer:normalize" = {
       description = "Reorganize composer.json files with composer normalize";
       exec = ''
         cd "''${DEVENV_ROOT}"
