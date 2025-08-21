@@ -23,6 +23,7 @@ in
   tasks = {
     "ci:format:php:rector" = {
       description = "Apply Rector recommendations";
+      before = [ "ci:format:php:php-cs-fixer" ];
       exec = ''
         set -o 'errexit'
 
