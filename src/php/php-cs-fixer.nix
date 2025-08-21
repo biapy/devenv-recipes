@@ -78,17 +78,23 @@ in
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
+  # https://cs.symfony.com/doc/usage.html#using-php-cs-fixer-on-ci
   git-hooks.hooks.php-cs-fixer = {
     enable = true;
     name = "PHP Coding Standards Fixer";
     inherit (config.languages.php) package;
-    files = ".*\.php$";
+    files = "^(\.php-cs-fixer(\.dist)?\.php|composer\.lock)$";
     entry = ''${phpCommand} '${phpCsFixerCommand}' fix'';
     args = [
       "--no-interaction"
       "--diff"
-      "--show-progress='none'"
+      "--show-progress=none"
+      "--path-mode=intersection"
+      "--verbose"
+      "--stop-on-violation"
+      "--using-cache=no"
       "--dry-run"
+      "--"
     ];
   };
 
