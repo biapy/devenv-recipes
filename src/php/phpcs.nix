@@ -39,7 +39,7 @@ let
   };
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
-  phpcsCommand = "${root}/vendor-bin/phpcs/vendor/bin/phpcs";
+  phpcsCommand = "${root}/vendor-bin/phpcs/vendor/squizlabs/php_codesniffer/bin/phpcs";
   composerBinTool = {
     name = "PHP CodeSniffer";
     namespace = "phpcs";

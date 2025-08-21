@@ -24,7 +24,9 @@ let
     inherit config;
     inherit lib;
   };
+  inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
+  phpCsFixerCommand = "${root}/vendor-bin/php-cs-fixer/vendor/friendsofphp/php-cs-fixer/php-cs-fixer";
   composerBinTool = {
     name = "PHP Coding Standards Fixer";
     namespace = "php-cs-fixer";
@@ -50,13 +52,13 @@ in
       set -o 'errexit'
 
       cd "''${DEVENV_ROOT}"
-      ${phpCommand} 'vendor/bin/php-cs-fixer' 'fix' --dry-run --diff --show-progress='bar';
+      ${phpCommand} '${phpCsFixerCommand}' 'fix' --dry-run --diff --show-progress='bar';
     '';
     "ci:format:php:php-cs-fixer".exec = ''
       set -o 'errexit'
 
       cd "''${DEVENV_ROOT}"
-      ${phpCommand} 'vendor/bin/php-cs-fixer' 'fix' --diff --show-progress='bar';
+      ${phpCommand} '${phpCsFixerCommand}' 'fix' --diff --show-progress='bar';
     '';
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
@@ -70,7 +72,7 @@ in
     name = "PHP Coding Standards Fixer";
     inherit (config.languages.php) package;
     files = ".*\.php$";
-    entry = ''${phpCommand} "''${DEVENV_ROOT}/vendor/bin/php-cs-fixer" fix'';
+    entry = ''${phpCommand} '${phpCsFixerCommand}' fix'';
     args = [ "--dry-run" ];
   };
 

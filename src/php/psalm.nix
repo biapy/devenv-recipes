@@ -29,7 +29,7 @@ let
   };
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
-  psalmCommand = "${root}/vendor-bin/psalm/vendor/bin/psalm";
+  psalmCommand = "${root}/vendor-bin/psalm/vendor/vimeo/psalm/psalm";
   composerBinTool = {
     name = "Psalm";
     namespace = "psalm";

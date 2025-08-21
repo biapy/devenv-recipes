@@ -31,7 +31,7 @@ let
   };
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
-  phpmdCommand = "${root}/vendor-bin/phpmd/vendor/bin/phpmd";
+  phpmdCommand = "${root}/vendor-bin/phpmd/vendor/phpmd/phpmd/src/bin/phpmd";
   inherit (pkgs) parallel;
   parallelCommand = lib.meta.getExe parallel;
   composerBinTool = {

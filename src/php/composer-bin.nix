@@ -40,6 +40,7 @@ in
         cd "''${DEVENV_ROOT}"
         ${composerCommand} config --json 'allow-plugins.bamarni/composer-bin-plugin' 'true'
         ${composerCommand} config --json 'extra.bamarni-bin.bin-links' 'false'
+        ${composerCommand} config --json 'extra.bamarni-bin.forward-command' 'true'
         ${composerCommand} require --dev 'bamarni/composer-bin-plugin'
       '';
     };

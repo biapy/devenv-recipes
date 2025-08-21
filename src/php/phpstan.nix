@@ -36,7 +36,7 @@ let
   };
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
-  phpstanCommand = "${root}/vendor-bin/phpstan/vendor/bin/phpstan";
+  phpstanCommand = "${root}/vendor-bin/phpstan/vendor/phpstan/phpstan/phpstan";
   composerBinTool = {
     name = "PHPStan";
     namespace = "phpstan";

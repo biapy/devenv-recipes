@@ -6,7 +6,7 @@ let
   };
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
-  rectorCommand = "${root}/vendor-bin/rector/vendor/bin/rector";
+  rectorCommand = "${root}/vendor-bin/rector/vendor/rector/rector/bin/rector";
   composerBinTool = {
     name = "Rector";
     namespace = "rector";
