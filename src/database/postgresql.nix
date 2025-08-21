@@ -1,24 +1,34 @@
 /**
-  # PostgreSQL
+    # PostgreSQL
 
-  PostgreSQL is a powerful, open source object-relational database system.
+    PostgreSQL is a powerful, open source object-relational database system.
 
-  ## 🛠️ Tech Stack
+    ## 🧐 Features
 
-  - [PostgreSQL homepage](https://www.postgresql.org/).
+    ### 🔨 Tasks
 
-  ### Terminal User Interface tools
+    - `devenv-recipes:reset:services:postgresql`: Delete PostgreSQL data.
 
-  - [dblab @ GitHub](https://github.com/danvergara/dblab).
-  - [Harlequin homepage](https://harlequin.sh/)
-    ([Harlequin @ GitHub](https://github.com/tconbeer/harlequin)).
-  - [Lazysql @ GitHub](https://github.com/jorgerojas26/lazysql).
-  - [pgtui @ Codeberg](https://codeberg.org/ihabunek/pgtui).
-  - [Rainfrog @ GitHub](https://github.com/achristmascarl/rainfrog).
+    ### 🧙 Services
 
-  ## 🙇 Acknowledgements
+    - `postgres`: PostgreSQL service, on port 5432.
 
-  - [Setting priorities @ NixOS Manual](https://nixos.org/manual/nixos/stable/#sec-option-definitions-setting-priorities).
+    ### 🐚 Terminal User Interface tools
+
+    - [dblab @ GitHub](https://github.com/danvergara/dblab).
+    - [Harlequin homepage](https://harlequin.sh/)
+      ([Harlequin @ GitHub](https://github.com/tconbeer/harlequin)).
+    - [Lazysql @ GitHub](https://github.com/jorgerojas26/lazysql).
+    - [pgtui @ Codeberg](https://codeberg.org/ihabunek/pgtui).
+    - [Rainfrog @ GitHub](https://github.com/achristmascarl/rainfrog).
+
+    ## 🛠️ Tech Stack
+
+    - [PostgreSQL homepage](https://www.postgresql.org/).
+
+    ## 🙇 Acknowledgements
+
+    - [Setting priorities @ NixOS Manual](https://nixos.org/manual/nixos/stable/#sec-option-definitions-setting-priorities).
 */
 {
   pkgs,
@@ -62,13 +72,12 @@
 
   # https://devenv.sh/tasks/
   tasks = {
-    "devenv-recipes:services:reset:postgresql" = {
-      description = "Reset PostgreSQL data";
+    "devenv-recipes:reset:services:postgresql" = {
+      description = "Delete PostgreSQL data";
       exec = ''
-        set -o 'errexit'
         echo "Deleting PostgreSQL data in ''${PGDATA}"
         [[ -e "''${PGDATA}" ]] &&
-        rm -r "''${PGDATA}"
+          rm -r "''${PGDATA}"
       '';
     };
   };
