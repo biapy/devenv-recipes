@@ -4,6 +4,19 @@
   `ergebnis/composer-normalize` provides a `composer` plugin for normalizing
   `composer.json`.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:format:php:composer-normalize`: Reorganize `composer.json` files
+    with `composer normalize`.
+  - `devenv-recipes:reset:php:composer-bin:composer-normalize`: Delete 'vendor-bin/composer-normalize/vendor' folder.
+
+  ### 👷 Commit hooks
+
+  - `composer-normalize`: Reorganize `composer.json` files with
+    `composer normalize`.
+
   ## 🛠️ Tech Stack
 
   - [ergebnis/composer-normalize @ GitHub](https://github.com/ergebnis/composer-normalize)
@@ -49,8 +62,6 @@ in
     "ci:format:composer:composer-normalize" = {
       description = "Reorganize composer.json files with composer normalize";
       exec = ''
-        set -o 'errexit' -o 'pipefail'
-
         cd "''${DEVENV_ROOT}"
         ${fdCommand} '^composer\.json$' "''${DEVENV_ROOT}" --exec \
           '${composerCommand}' bin composer-normalize normalize {}
@@ -58,7 +69,8 @@ in
     };
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
-  // utils.composer-bin.installTask composerBinTool;
+  // utils.composer-bin.installTask composerBinTool
+  // utils.composer-bin.resetTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {

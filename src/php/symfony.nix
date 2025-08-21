@@ -5,6 +5,24 @@
   scalable, high-performance web applications with reusable components,
   comprehensive documentation, and a strong community.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:symfony:container`: Lint services container with Symfony console.
+  - `ci:lint:symfony:translations`: Lint translations with Symfony console.
+  - `ci:lint:symfony:twig`: Lint 'twig' files with Symfony console.
+  - `ci:lint:symfony:xliff`: Lint 'xlf' files with Symfony console.
+  - `ci:lint:symfony:yaml`: Lint 'yml' files with Symfony console.
+
+  ### 👷 Commit hooks
+
+  - `symfony-lint-container`: Lint services container with Symfony console.
+  - `symfony-lint-twig`: Lint 'twig' files with Symfony console.
+  - `symfony-lint-translations`: Lint translations with Symfony console.
+  - `symfony-lint-xliff`: Lint 'xlf' files with Symfony console.
+  - `symfony-lint-yaml`: Lint 'yml' files with Symfony console.
+
   ## 🛠️ Tech Stack
 
   - [Symfony homepage](https://symfony.com/).
@@ -58,36 +76,40 @@ in
     "ci:lint:symfony:container" = {
       description = "Lint services container with Symfony console";
       exec = ''
-        set -o 'errexit'
         cd "''${DEVENV_ROOT}"
         ${symfonyCommand} console 'lint:container'
       '';
     };
 
-    "ci:lint:twig:symfony" = {
+    "ci:lint:symfony:translations" = {
+      description = "Lint translations with Symfony console";
+      exec = ''
+        cd "''${DEVENV_ROOT}"
+        ${symfonyCommand} console 'lint:translations'
+      '';
+    };
+
+    "ci:lint:symfony:twig" = {
       description = "Lint 'twig' files with Symfony console";
       exec = ''
-        set -o 'errexit'
         cd "''${DEVENV_ROOT}"
         ${fdCommand} --extension='twig' --type='file' --exec-batch \
             ${symfonyCommand} console 'lint:twig' '--show-deprecations'
       '';
     };
 
-    "ci:lint:xliff:symfony" = {
+    "ci:lint:symfony:xliff" = {
       description = "Lint 'xlf' files with Symfony console";
       exec = ''
-        set -o 'errexit'
         cd "''${DEVENV_ROOT}"
         ${fdCommand} --extension='xlf' --type='file' --exec-batch \
           ${symfonyCommand} console 'lint:xliff'
       '';
     };
 
-    "ci:lint:yaml:symfony" = {
+    "ci:lint:symfony:yaml" = {
       description = "Lint 'yml' files with Symfony console";
       exec = ''
-        set -o 'errexit'
         cd "''${DEVENV_ROOT}"
         ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch \
             ${symfonyCommand} console 'lint:yaml'

@@ -1,3 +1,28 @@
+/**
+  # Rector
+
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:php:rector`: Lint '.php' files with Rector.
+  - `ci:format:php:rector`: Apply Rector recommendations.
+  - `devenv-recipes:reset:php:composer-bin:rector`: Delete 'vendor-bin/rector/vendor' folder.
+
+  ### 👷 Commit hooks
+
+  - `rector`: Lint '.php' files with Rector.
+
+  ## 🛠️ Tech Stack
+
+  - [Rector homepage](https://getrector.com/)
+    ([Rector @ GitHub](https://github.com/rectorphp/rector)).
+
+  ## 🙇 Acknowledgements
+
+  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+*/
+
 { config, lib, ... }:
 let
   utils = import ../utils {
@@ -25,8 +50,6 @@ in
       description = "Apply Rector recommendations";
       before = [ "ci:format:php:php-cs-fixer" ];
       exec = ''
-        set -o 'errexit'
-
         cd "''${DEVENV_ROOT}"
         ${phpCommand} '${rectorCommand}' 'process' '--no-progress-bar';
       '';
@@ -34,8 +57,6 @@ in
     "ci:lint:php:rector" = {
       description = "Lint '.php' files with Rector";
       exec = ''
-        set -o 'errexit'
-
         cd "''${DEVENV_ROOT}"
         ${phpCommand} '${rectorCommand}' 'process' '--no-progress-bar' '--dry-run';
       '';
@@ -43,7 +64,8 @@ in
   }
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
   // utils.composer-bin.initializeConfigFilesTask composerBinTool
-  // utils.composer-bin.installTask composerBinTool;
+  // utils.composer-bin.installTask composerBinTool
+  // utils.composer-bin.resetTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.rector = {

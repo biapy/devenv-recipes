@@ -4,11 +4,22 @@
   Composer is a dependency manager for PHP,
   allowing to manage libraries and packages in PHP projects.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `devenv-recipes:reset:php:composer`: Delete Composer `vendor` folder.
+
+  ### 👷 Commit hooks
+
+  - `composer-validate`: Validate `composer.json` files with `composer validate`.
+  - `composer-audit`: Audit `composer.json` files with `composer audit`.
+
   ## 🛠️ Tech Stack
 
   - [Composer homepage](https://getcomposer.org/).
 
-  ### Visual Studio Code
+  ### 🧑‍💻 Visual Studio Code
 
   - [Composer @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=DEVSENSE.composer-php-vscode).
 
@@ -65,15 +76,23 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "devenv-recipes:enterShell:install:composer" = {
+    "devenv-recipes:enterShell:install:php:composer" = {
       description = "Install composer packages";
       before = [ "devenv:enterShell" ];
       status = ''test -e "''${DEVENV_ROOT}/vendor/autoload.php"'';
       exec = ''
-        set -o 'errexit'
         cd "''${DEVENV_ROOT}"
         [[ -e "''${DEVENV_ROOT}/composer.json" ]] &&
         ${composerCommand} 'install'
+      '';
+    };
+
+    "devenv-recipes:reset:php:composer" = {
+      description = "Delete Composer 'vendor' folder";
+      exec = ''
+        echo "Deleting Composer 'vendor' folder"
+        [[ -e "''${DEVENV_ROOT}/vendor/" ]] &&
+          rm -r "''${DEVENV_ROOT}/vendor/"
       '';
     };
   }

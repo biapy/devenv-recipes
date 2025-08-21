@@ -3,12 +3,24 @@
 
   `php-cs-fixer` is a tool to automatically fix PHP Coding Standards issues
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:php:php-cs-fixer`: Lint PHP files with `php-cs-fixer`.
+  - `ci:format:php:php-cs-fixer`: Format PHP files with `php-cs-fixer`.
+
+  ### 👷 Commit hooks
+
+  - `php-cs-fixer`: Lint PHP files with `php-cs-fixer`.
+  - `devenv-recipes:reset:php:composer-bin:php-cs-fixer`: Delete 'vendor-bin/php-cs-fixer/vendor' folder.
+
   ## 🛠️ Tech Stack
 
   - [PHP Coding Standard Fixer homepage](https://cs.symfony.com/).
   - [PHP Coding Standard Fixer @ GitHub](https://github.com/PHP-CS-Fixer/PHP-CS-Fixer).
 
-  ### Visual Studio Code
+  ### 🧑‍💻 Visual Studio Code
 
   - [php cs fixer @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=junstyle.php-cs-fixer).
 
@@ -49,15 +61,11 @@ in
   # https://devenv.sh/tasks/
   tasks = {
     "ci:lint:php:php-cs-fixer".exec = ''
-      set -o 'errexit'
-
       cd "''${DEVENV_ROOT}"
       ${phpCommand} '${phpCsFixerCommand}' 'fix' --allow-unsupported-php-version=yes \
         --no-interaction --diff --show-progress='none' --dry-run;
     '';
     "ci:format:php:php-cs-fixer".exec = ''
-      set -o 'errexit'
-
       cd "''${DEVENV_ROOT}"
       ${phpCommand} '${phpCsFixerCommand}' 'fix' --allow-unsupported-php-version=yes \
         --no-interaction --diff --show-progress='none';
@@ -66,6 +74,7 @@ in
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
   // utils.composer-bin.initializeConfigFilesTask composerBinTool
   // utils.composer-bin.installTask composerBinTool
+  // utils.composer-bin.resetTask composerBinTool
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/

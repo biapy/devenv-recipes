@@ -8,11 +8,22 @@
   PHP CodeSniffer is an essential development tool that ensures your code
   remains clean and consistent.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:php:phpcs`: Lint PHP files with `phpcs`.
+  - `devenv-recipes:reset:php:composer-bin:phpcs`: Delete 'vendor-bin/phpcs/vendor' folder.
+
+  ### 👷 Commit hooks
+
+  - `phpcs`: Lint PHP files with `phpcs`.
+
   ## 🛠️ Tech Stack
 
   - [PHP_CodeSniffer @ GitHub](https://github.com/PHPCSStandards/PHP_CodeSniffer).
 
-  ### PHP CodeSniffer plugins
+  ### 🧩 PHP CodeSniffer plugins
 
   - [Slevomat Coding Standard @ GitHub](https://github.com/slevomat/coding-standard).
   - [PHPCompatibility @ GitHub](https://github.com/PHPCompatibility/PHPCompatibility).
@@ -65,8 +76,6 @@ in
     "ci:lint:php:phpcs" = {
       description = "Lint '.php' files with PHP CodeSniffer";
       exec = ''
-        set -o 'errexit' -o 'pipefail'
-
         cd "''${DEVENV_ROOT}"
         ${phpCommand} '${phpcsCommand}' --colors
       '';
@@ -75,6 +84,7 @@ in
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
   // utils.composer-bin.initializeConfigFilesTask composerBinTool
   // utils.composer-bin.installTask composerBinTool
+  // utils.composer-bin.resetTask composerBinTool
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/

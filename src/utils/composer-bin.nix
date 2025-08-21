@@ -24,7 +24,7 @@ in
       ...
     }:
     {
-      "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer-json" = {
+      "devenv-recipes:enterShell:initialize:php:composer-bin:${namespace}:composer-json" = {
         description = "Initialize ${name} composer.json";
         before = [ "devenv:enterShell" ];
         status = ''test -e "''${DEVENV_ROOT}/vendor-bin/${namespace}/composer.json"'';
@@ -40,7 +40,7 @@ in
       ...
     }:
     {
-      "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:configuration" = {
+      "devenv-recipes:enterShell:initialize:php:composer-bin:${namespace}:configuration" = {
         description = ''Initialize ${name} configuration file(s)'';
         before = [ "devenv:enterShell" ];
         status = ''test ${
@@ -55,15 +55,15 @@ in
   installTask =
     { name, namespace, ... }:
     {
-      "devenv-recipes:enterShell:install:composer-bin:${namespace}" = {
+      "devenv-recipes:enterShell:install:php:composer-bin:${namespace}" = {
         description = "Install ${name}";
         before = [
           "devenv:enterShell"
 
         ];
         after = [
-          "devenv-recipes:enterShell:initialize:composer-bin"
-          "devenv-recipes:enterShell:initialize:composer-bin:${namespace}:composer-json"
+          "devenv-recipes:enterShell:initialize:php:composer-bin"
+          "devenv-recipes:enterShell:initialize:php:composer-bin:${namespace}:composer-json"
           "devenv-recipes:enterShell:install:composer"
         ];
         status = ''test -e "''${DEVENV_ROOT}/vendor-bin/${namespace}/vendor/autoload.php"'';
@@ -75,4 +75,18 @@ in
         '';
       };
     };
+
+  resetTask =
+    { name, namespace, ... }:
+    {
+      "devenv-recipes:reset:php:composer-bin:${namespace}" = {
+        description = "Delete ${name} 'vendor-bin/${namespace}/vendor' folder";
+        exec = ''
+          echo "Deleting '''''${DEVENV_ROOT}/vendor-bin/${namespace}/vendor/' folder"
+          [[ -e "''${DEVENV_ROOT}/vendor-bin/${namespace}/vendor/" ]] &&
+            rm -r "''${DEVENV_ROOT}/vendor-bin/${namespace}/vendor/"
+        '';
+      };
+    };
+
 }

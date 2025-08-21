@@ -4,6 +4,17 @@
   `phpmd` takes a given PHP source code base and look for several potential
   problems within that source.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:php:phpmd`: Lint 'src' and 'tests' with PHP Mess Detector.
+  - `devenv-recipes:reset:php:composer-bin:phpmd`: Delete 'vendor-bin/phpmd/vendor' folder.
+
+  ### 👷 Commit hooks
+
+  - `phpmd`: Lint 'src' and 'tests' with PHP Mess Detector.
+
   ## 🛠️ Tech Stack
 
   - [PHP Mess Detector homepage](https://phpmd.org/).
@@ -67,6 +78,7 @@ in
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
   // utils.composer-bin.initializeConfigFilesTask composerBinTool
   // utils.composer-bin.installTask composerBinTool
+  // utils.composer-bin.resetTask composerBinTool
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/

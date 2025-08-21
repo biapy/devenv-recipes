@@ -4,6 +4,12 @@
   PHP is a popular general-purpose scripting language that is especially
   suited to web development.
 
+  ## 🧐 Features
+
+  ### 🐚 Commands
+
+  - `php-modules`: List installed PHP modules.
+
   ## 🛠️ Tech Stack
 
   - [PHP homepage](https://www.php.net/).

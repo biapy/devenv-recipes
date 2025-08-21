@@ -3,12 +3,23 @@
 
   `phpstan` on finding errors in your code without actually running it.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:php:phpstan`: Lint PHP files with PHPStan.
+  - `devenv-recipes:reset:php:composer-bin:phpstan`: Delete 'vendor-bin/rector/phpstan' folder.
+
+  ### 👷 Commit hooks
+
+  - `phpstan`: Lint PHP files with PHPStan.
+
   ## 🛠️ Tech Stack
 
   - [PHPStan homepage](https://phpstan.org/).
   - [PHPStan @ GitHub](https://github.com/phpstan/phpstan).
 
-  ### PHPStan rules
+  ### 🧩 PHPStan rules
 
   - [phpstan/phpstan-deprecation-rules @ GitHub](https://github.com/phpstan/phpstan-deprecation-rules).
   - [Doctrine extensions for PHPStan @ GitHub](https://github.com/phpstan/phpstan-doctrine).
@@ -64,8 +75,6 @@ in
   # https://devenv.sh/tasks/
   tasks = {
     "ci:lint:php:phpstan".exec = ''
-      set -o 'errexit' -o 'pipefail'
-
       cd "''${DEVENV_ROOT}"
       ${phpCommand} '${phpstanCommand}' 'analyse' --no-progress;
     '';
@@ -73,6 +82,7 @@ in
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
   // utils.composer-bin.initializeConfigFilesTask composerBinTool
   // utils.composer-bin.installTask composerBinTool
+  // utils.composer-bin.resetTask composerBinTool
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/

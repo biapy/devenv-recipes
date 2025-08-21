@@ -3,15 +3,29 @@
 
   Psalm is a free & open-source static analysis tool that helps you identify
   problems in your code, so you can sleep a little better.
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:php:psalm`: Lint PHP files with Psalm.
+  - `devenv-recipes:reset:php:composer-bin:psalm`: Delete 'vendor-bin/psalm/vendor' folder.
+
+  ### 👷 Commit hooks
+
+  - `psalm`: Lint PHP files with Psalm.
 
   ## 🛠️ Tech Stack
 
   - [Psalm homepage](https://psalm.dev/).
   - [Psalm @ GitHub](https://github.com/vimeo/psalm).
 
-  ### PHPStan rules
+  ### 🧩 Psalm plugins
 
-  ### Visual Studio Code
+  - [phpunit-psalm-plugin @ GitHub](https://github.com/psalm/psalm-plugin-phpunit).
+  - [Symfony Psalm Plugin @ GitHub](https://github.com/psalm/psalm-plugin-symfony).
+  - [Doctrine Psalm Plugin @ GitHub](https://github.com/psalm/psalm-plugin-doctrine).
+
+  ### 🧑‍💻 Visual Studio Code
 
   - [Psalm (PHP Static Analysis Linting Machine) @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=getpsalm.psalm-vscode-plugin).
 
@@ -51,8 +65,6 @@ in
     "ci:lint:php:psalm" = {
       description = "Lint '*.php' files with Psalm";
       exec = ''
-        set -o 'errexit' -o 'pipefail'
-
         cd "''${DEVENV_ROOT}"
         ${phpCommand} '${psalmCommand}' --no-progress --show-info --show-snippet
       '';
@@ -61,6 +73,7 @@ in
   // utils.composer-bin.initializeComposerJsonTask composerBinTool
   // utils.composer-bin.initializeConfigFilesTask composerBinTool
   // utils.composer-bin.installTask composerBinTool
+  // utils.composer-bin.resetTask composerBinTool
   // utils.tasks.gitIgnoreTask composerBinTool;
 
   # https://devenv.sh/git-hooks/
