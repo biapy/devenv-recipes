@@ -64,7 +64,7 @@ in
         after = [
           "devenv-recipes:enterShell:initialize:php:composer-bin"
           "devenv-recipes:enterShell:initialize:php:composer-bin:${namespace}:composer-json"
-          "devenv-recipes:enterShell:install:composer"
+          "devenv-recipes:enterShell:install:php:composer"
         ];
         status = ''test -e "''${DEVENV_ROOT}/vendor-bin/${namespace}/vendor/autoload.php"'';
         # Use the composer command to install the tool

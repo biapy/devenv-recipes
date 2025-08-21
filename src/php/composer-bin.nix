@@ -26,7 +26,7 @@ in
       description = "Require 'bamarni/composer-bin-plugin' if missing";
       before = [
         "devenv:enterShell"
-        "devenv-recipes:enterShell:install:composer"
+        "devenv-recipes:enterShell:install:php:composer"
       ];
       status = ''grep --quiet 'bamarni/composer-bin-plugin' "''${DEVENV_ROOT}/composer.json"'';
       exec = ''
