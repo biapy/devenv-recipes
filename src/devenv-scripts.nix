@@ -3,18 +3,20 @@
 
   Scripts to ease devenv use.
 
+  ## 🧐 Features
+
+  ### 🐚 Commands
+
+  - `detr`: Alias to `devenv tasks run`.
+
   ## 🛠️ Tech Stack
 
   - [devenv homepage](https://devenv.sh/).
   - [direnv homepage](https://direnv.net/).
 
-  ### Visual Studio Code
+  ### 🧑‍💻 Visual Studio Code
 
   - [direnv @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=mkhl.direnv).
-
-  ### Third party tools
-
-  - [fd @ GitHub](https://github.com/sharkdp/fd).
 
   ## 🙇 Acknowledgements
 
@@ -27,7 +29,6 @@ _: {
     detr = {
       description = "Alias of devenv tasks run";
       exec = ''
-        set -o 'errexit' -o 'nounset' -o 'pipefail'
         cd "''${DEVENV_ROOT}"
         devenv tasks run "''${@}"
       '';
