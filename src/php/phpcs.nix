@@ -31,7 +31,7 @@
   - [Symfony PHP CodeSniffer Coding Standard @ GitHub](https://github.com/djoos/Symfony-coding-standard).
   - [GitLab Report for PHP_CodeSniffer @ GitHub](https://github.com/micheh/phpcs-gitlab).
 
-  ### Visual Studio Code
+  ### 🧑‍💻 Visual Studio Code
 
   - [PHP Sniffer & Beautifier @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ValeryanM.vscode-phpsab).
 

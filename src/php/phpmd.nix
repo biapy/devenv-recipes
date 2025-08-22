@@ -20,9 +20,13 @@
   - [PHP Mess Detector homepage](https://phpmd.org/).
   - [PHP Mess Detector @ GitHub](https://github.com/phpmd/phpmd).
 
-  ### Visual Studio Code
+  ### 🧑‍💻 Visual Studio Code
 
   - [PHP Mess Detector @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ecodes.vscode-phpmd).
+
+  ### 📦 Third party tools
+
+  - [GNU Parallel homepage](https://www.gnu.org/software/parallel/).
 
   ## 🙇 Acknowledgements
 

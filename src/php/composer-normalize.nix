@@ -21,6 +21,10 @@
 
   - [ergebnis/composer-normalize @ GitHub](https://github.com/ergebnis/composer-normalize)
 
+  ### 📦 Third party tools
+
+  - [GNU Parallel homepage](https://www.gnu.org/software/parallel/).
+
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).

@@ -23,7 +23,7 @@
 
   - [Composer @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=DEVSENSE.composer-php-vscode).
 
-  ### Third party tools
+  ### 📦 Third party tools
 
   - [GNU Parallel homepage](https://www.gnu.org/software/parallel/).
 

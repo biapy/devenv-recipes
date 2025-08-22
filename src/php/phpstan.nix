@@ -29,7 +29,7 @@
   - [Rector Type Perfect @ GitHub](https://github.com/rectorphp/type-perfect).
   - [Symplify's PHPStan Rules](https://github.com/symplify/phpstan-rules).
 
-  ### Visual Studio Code
+  ### 🧑‍💻 Visual Studio Code
 
   - [phpstan @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=SanderRonde.phpstan-vscode).
 
