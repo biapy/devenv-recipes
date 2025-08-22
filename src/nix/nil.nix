@@ -4,15 +4,25 @@
   Nil is a Nix Language server,
   an incremental analysis assistant for writing in Nix.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:nix:nil`: Lint `.nix` files with `nil`.
+
+  ### 👷 Commit hooks
+
+  - `nil`: Lint `.nix` files `nil`.
+
   ## 🛠️ Tech Stack
 
   - [nil @ GitHub](https://github.com/oxalica/nil).
 
-  ### Visual Studio Code
+  ### 🧑‍💻 Visual Studio Code
 
   - [Nix IDE @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=jnoortheen.nix-ide).
 
-  ### Third party tools
+  ### 📦 Third party tools
 
   - [fd @ GitHub](https://github.com/sharkdp/fd).
 
@@ -48,8 +58,6 @@ in
   tasks."ci:lint:nix:nil" = {
     description = "Lint *.nix files with nil";
     exec = ''
-      set -o 'errexit' -o 'pipefail'
-
       cd "''${DEVENV_ROOT}"
       ${fdCommand} '\.nix$' "''${DEVENV_ROOT}" --exec-batch ${nilCommand} 'diagnostics'
     '';
