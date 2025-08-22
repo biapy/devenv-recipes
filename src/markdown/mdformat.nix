@@ -5,6 +5,17 @@
   a consistent style in Markdown files.
   Mdformat is a UNIX-style command-line tool as well as a Python library.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:md:mdformat`: Lint `.md` files with `mdformat`.
+  - `ci:format:md:mdformat`: Format `.md` files with `mdformat`.
+
+  ### 👷 Commit hooks
+
+  - `mdformat`: Lint `.md` files with `mdformat`.
+
   ## 🛠️ Tech Stack
 
   - [Mdformat homepage](https://mdformat.readthedocs.io/en/stable/)
@@ -26,7 +37,7 @@
   - [mdformat-toc @ GitHub](https://github.com/hukkin/mdformat-toc).
   - [mdformat-wikilink @ GitHub](https://github.com/tmr232/mdformat-wikilink).
 
-  ### Third party tools
+  ### 📦 Third party tools
 
   - [Beautysh @ GitHub](https://github.com/lovesegfault/beautysh).
   - [Alejandra 💅 homepage](https://kamadorueda.com/alejandra/)
@@ -34,6 +45,7 @@
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+  - [git-hooks.hooks.mdformat @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksmdformat).
 */
 {
   pkgs,
@@ -61,6 +73,7 @@ in
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.mdformat = {
     enable = true;
+    args = [ "--check" ];
     package = pythonPackages.mdformat;
     extraPackages = with pythonPackages; [
       mdformat-admon
@@ -81,12 +94,18 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
+    "ci:lint:md:mdformat" = {
+      description = "Lint *.md files with Mdformat";
+      exec = ''
+        cd "''${DEVENV_ROOT}"
+        ${mdformatCommand} --check "''${DEVENV_ROOT}"
+      '';
+    };
     "ci:format:md:mdformat" = {
       description = "Format *.md files with Mdformat";
       exec = ''
-        set -o 'errexit'
         cd "''${DEVENV_ROOT}"
-        ${mdformatCommand} ./
+        ${mdformatCommand} "''${DEVENV_ROOT}"
       '';
     };
   }
