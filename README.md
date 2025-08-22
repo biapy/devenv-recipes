@@ -29,8 +29,7 @@ Add the wished imports to `devenv.nix`, here for a Nix project:
 
 ```nix
 # devenv.nix
-{ inputs, ... }:
-{
+{inputs, ...}: {
   imports = [
     "${inputs.devenv-recipes}/devenv-scripts.nix"
     "${inputs.devenv-recipes}/git.nix"
@@ -39,7 +38,7 @@ Add the wished imports to `devenv.nix`, here for a Nix project:
     "${inputs.devenv-recipes}/nix"
     "${inputs.devenv-recipes}/gitleaks.nix"
   ];
-  …
+  # …
 }
 ```
 
