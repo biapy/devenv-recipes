@@ -23,6 +23,10 @@
   - `symfony-lint-xliff`: Lint 'xlf' files with Symfony console.
   - `symfony-lint-yaml`: Lint 'yml' files with Symfony console.
 
+  ### 🐚 Commands
+
+  - `composer-recipes-install-all`: Install or reinstall all Composer recipes.
+
   ## 🛠️ Tech Stack
 
   - [Symfony homepage](https://symfony.com/).
@@ -42,6 +46,10 @@
   ...
 }:
 let
+  utils = import ../utils {
+    inherit config;
+    inherit lib;
+  };
   inherit (config.devenv) root;
   inherit (pkgs) symfony-cli;
   symfonyCommand = lib.meta.getExe symfony-cli;
@@ -56,11 +64,6 @@ in
   ];
 
   packages = [ fd ];
-
-  files."bin/composer-recipes-install-all" = {
-    executable = true;
-    text = builtins.readFile ../files/php/bin/composer-recipes-install-all.bash;
-  };
 
   languages.php = {
     enable = true;
@@ -121,6 +124,16 @@ in
             ${symfonyCommand} console 'lint:yaml'
       '';
     };
+  }
+  // utils.tasks.gitIgnoreTask {
+    name = "Symfony";
+    namespace = "symfony";
+    ignoredPaths = [ "composer-recipes-install-all" ];
+  };
+
+  files."bin/composer-recipes-install-all" = {
+    executable = true;
+    text = builtins.readFile ../files/php/bin/composer-recipes-install-all.bash;
   };
 
   # https://devenv.sh/git-hooks/
