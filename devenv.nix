@@ -6,6 +6,7 @@ _:
   imports = [
     src/git.nix
     src/devenv-scripts.nix
+    src/shell
     src/markdown
     src/gitleaks.nix
     src/nix
