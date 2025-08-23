@@ -6,18 +6,20 @@ Recipes for [Cachix devenv](https://devenv.sh/).
 
 ## 🧑🏻‍💻 Usage
 
-Add `devenv-recipes` input to `devenv.yaml`:
+Add `nixpkgs-unstable` and `devenv-recipes` inputs to `devenv.yaml`:
 
 ```yaml
 # devenv.yaml
 inputs:
   …
+  nixpkgs-unstable:
+    url: github:nixos/nixpkgs/nixpkgs-unstable
   devenv-recipes:
     url: github:biapy/devenv-recipes?dir=src
     flake: false
 ```
 
-<!-- CSpell:ignore biapy -->
+<!-- CSpell:ignore biapy nixpkgs nixos -->
 
 Update `devenv.lock`:
 
