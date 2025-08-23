@@ -13,6 +13,7 @@
 
   ## 🙇 Acknowledgements
 
+  - [Setting priorities @ NixOS Manual](https://nixos.org/manual/nixos/stable/#sec-option-definitions-setting-priorities).
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
 */
 {
@@ -35,7 +36,7 @@ in
   };
 
   # https://devenv.sh/git-hooks/
-  git-hooks.hooks.beautysh.enable = true;
+  git-hooks.hooks.beautysh.enable = lib.mkDefault false;
 
   # https://devenv.sh/tasks/
   tasks = {
