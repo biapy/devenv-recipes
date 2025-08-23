@@ -19,7 +19,6 @@
     - [Harlequin homepage](https://harlequin.sh/)
       ([Harlequin @ GitHub](https://github.com/tconbeer/harlequin)).
     - [Lazysql @ GitHub](https://github.com/jorgerojas26/lazysql).
-    - [pgtui @ Codeberg](https://codeberg.org/ihabunek/pgtui).
     - [Rainfrog @ GitHub](https://github.com/achristmascarl/rainfrog).
 
     ## 🛠️ Tech Stack
@@ -29,6 +28,7 @@
     ## 🙇 Acknowledgements
 
     - [Setting priorities @ NixOS Manual](https://nixos.org/manual/nixos/stable/#sec-option-definitions-setting-priorities).
+    - [pgtui @ Codeberg](https://codeberg.org/ihabunek/pgtui).
 */
 {
   pkgs,
@@ -43,7 +43,7 @@
     POSTGRES_USER = lib.mkDefault "postgres";
     POSTGRES_PASSWORD = lib.mkDefault "postgres";
     POSTGRES_DB = lib.mkDefault "postgres_doctrine_test";
-    POSTGRES_PORT = lib.mkDefault 5432;
+    POSTGRES_PORT = lib.mkDefault "5432";
   };
 
   # https://devenv.sh/packages/
@@ -51,7 +51,6 @@
     dblab
     harlequin
     lazysql
-    pgtui
     rainfrog
   ];
 
