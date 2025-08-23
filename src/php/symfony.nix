@@ -32,6 +32,7 @@
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
   - [lib.strings.isString @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.strings.isString).
+  - [builtins.readFile @ Nix 2.28.5 Reference Manual](https://nix.dev/manual/nix/2.28/language/builtins.html#builtins-readFile).
   - [Operators @ Nix 2.28.5 Reference Manual](https://nix.dev/manual/nix/2.28/language/operators.html).
 */
 {
@@ -55,6 +56,11 @@ in
   ];
 
   packages = [ fd ];
+
+  files."bin/composer-recipes-install-all" = {
+    executable = true;
+    text = builtins.readFile ../files/php/bin/composer-recipes-install-all.bash;
+  };
 
   languages.php = {
     enable = true;
