@@ -32,7 +32,7 @@ in
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.shfmt = {
     enable = true;
-    simplify = true;
+    settings.simplify = true;
   };
 
   # https://devenv.sh/tasks/
@@ -48,7 +48,7 @@ in
       description = "Format shell files with shfmt";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${shfmtCommand} --simplify --diff --write "''${DEVENV_ROOT}"
+        ${shfmtCommand} --simplify --diff --write "''${DEVENV_ROOT}" || true
       '';
     };
   };
