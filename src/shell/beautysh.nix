@@ -44,7 +44,7 @@ in
       exec = ''
         cd "''${DEVENV_ROOT}"
         ${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" \
-          --exec ${beautyshCommand} --tab --check "''${DEVENV_ROOT}"
+          --exec ${beautyshCommand} --tab --check
       '';
     };
     "ci:format:sh:beautysh" = {
@@ -52,7 +52,7 @@ in
       exec = ''
         cd "''${DEVENV_ROOT}"
         ${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" \
-          --exec ${beautyshCommand} --tab "''${DEVENV_ROOT}"
+          --exec ${beautyshCommand} --tab
       '';
     };
   };
