@@ -59,7 +59,7 @@
     enable = true;
 
     listen_addresses = "127.0.0.1";
-    port = config.env.POSTGRES_PORT;
+    port = lib.strings.toInt config.env.POSTGRES_PORT;
 
     initialDatabases = [ { name = config.env.POSTGRES_DB; } ];
 
