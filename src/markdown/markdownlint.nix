@@ -7,6 +7,9 @@
   ## 🛠️ Tech Stack
 
   - [markdownlint @ GitHub](https://github.com/DavidAnson/markdownlint).
+
+  ### 🧑‍💻 Visual Studio Code
+
   - [markdownlint @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint).
 
   ## 🙇 Acknowledgements
