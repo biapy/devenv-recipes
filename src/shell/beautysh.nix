@@ -3,6 +3,10 @@
 
   `beautysh` is a Bash beautifier for the masses.
 
+  ⚠️ `beautysh` and `shfmt` don't produce the same output,
+  notably with indentation of multi-line pipes.
+  Use one or the other to prevent their git hooks from conflicting.
+
   ## 🛠️ Tech Stack
 
   - [Beautysh @ GitHub](https://github.com/lovesegfault/beautysh).
@@ -36,7 +40,7 @@ in
   };
 
   # https://devenv.sh/git-hooks/
-  git-hooks.hooks.beautysh.enable = lib.mkDefault false;
+  git-hooks.hooks.beautysh.enable = lib.mkDefault true;
 
   # https://devenv.sh/tasks/
   tasks = {
