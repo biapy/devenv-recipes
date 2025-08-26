@@ -6,10 +6,10 @@ _:
   imports = [
     src/git.nix
     src/devenv-scripts.nix
-    src/shell
     src/markdown
-    src/gitleaks.nix
     src/nix
+    src/secrets/gitleaks.nix
+    src/shell
   ];
 
   # https://devenv.sh/basics/

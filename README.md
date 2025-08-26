@@ -38,7 +38,7 @@ Add the wished imports to `devenv.nix`, here for a Nix project:
     "${inputs.devenv-recipes}/devcontainer.nix"
     "${inputs.devenv-recipes}/markdown"
     "${inputs.devenv-recipes}/nix"
-    "${inputs.devenv-recipes}/gitleaks.nix"
+    "${inputs.devenv-recipes}/secrets"
   ];
   # …
 }
