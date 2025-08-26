@@ -13,14 +13,12 @@
 
   - [SOPS homepage](https://getsops.io/)
     ([SOPS: Secrets OPerationS @ GitHub](https://github.com/getsops/sops)).
-  - [age @ GitHub](https://github.com/FiloSottile/age).
   - [pre-commit-hook-ensure-sops @ GitHub](https://github.com/yuvipanda/pre-commit-hook-ensure-sops).
 
   ### 🦀 Rust alternatives
 
   - [ROPS homepage](https://gibbz00.github.io/rops/)
     ([ROPS @ GitHub](https://github.com/gibbz00/rops)).
-  - [rage @ GitHub](https://github.com/str4d/rage).
 
   ### 🧑‍💻 Visual Studio Code
 
@@ -32,12 +30,12 @@
 */
 { pkgs, ... }:
 let
-  inherit (pkgs) age sops;
+  inherit (pkgs) sops;
 in
 {
+  imports = [ ./age.nix ];
 
   packages = [
-    age
     sops
   ];
 
