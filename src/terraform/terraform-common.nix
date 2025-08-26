@@ -1,4 +1,4 @@
-{ pkgs, config, ... }:
+{ pkgs, ... }:
 
 {
 
@@ -17,7 +17,6 @@
     checkov # Static code analysis tool for infrastructure-as-code
     open-policy-agent # General-purpose policy engine
     terrascan # Detect compliance and security violations across Infrastructure
-    trivy # Simple and comprehensive vulnerability scanner for containers, suitable for CI
 
     # Testing & Verification
     terragrunt # Thin wrapper for Terraform that supports locking for Terraform state and enforces best practices
@@ -42,35 +41,6 @@
     # tgswitch # Command line tool to switch between different versions of terragrunt
   ];
 
-  devcontainer = {
-    settings.customizations.vscode.extensions = [
-      "DerekCAshmore.terraform-docs"
-      "ms-azuretools.vscode-azureterraform"
-      "AquaSecurityOfficial.trivy-vulnerability-scanner"
-    ];
-  };
-
-  # https://devenv.sh/git-hooks/
-  git-hooks.hooks = {
-    terraform-format.enable = true;
-    terraform-validate.enable = true;
-    tflint.enable = true;
-
-  };
-
-  # https://devenv.sh/tasks/
-  tasks = {
-    "ci:lint:tflint" =
-      let
-        inherit (config.git-hooks.hooks.tflint) package;
-      in
-      {
-        description = "Lint *.tf files with tflint";
-        exec = ''
-          set -o 'errexit'
-          ${package}/bin/tflint '${config.env.DEVENV_ROOT}'
-        '';
-      };
-  };
+  devcontainer.settings.customizations.vscode.extensions = [ "ms-azuretools.vscode-azureterraform" ];
 
 }
