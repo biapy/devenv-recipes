@@ -1,20 +1,31 @@
 /**
-  # markdownlint
+    # markdownlint
 
-  `markdownlint` is a Node.js style checker and lint tool for
-  Markdown/CommonMark files.
+    `markdownlint` is a Node.js style checker and lint tool for
+    Markdown/CommonMark files.
+  \
+    ## 🧐 Features
 
-  ## 🛠️ Tech Stack
+    ### 🔨 Tasks
 
-  - [markdownlint @ GitHub](https://github.com/DavidAnson/markdownlint).
+    - `ci:lint:md:markdownlint`: Lint `.md` files with `markdownlint`.
 
-  ### 🧑‍💻 Visual Studio Code
+    ### 👷 Commit hooks
 
-  - [markdownlint @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint).
+    - `markdownlint`: Lint `.md` files with `markdownlint`.
 
-  ## 🙇 Acknowledgements
+    ## 🛠️ Tech Stack
 
-  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+    - [markdownlint @ GitHub](https://github.com/DavidAnson/markdownlint).
+
+    ### 🧑‍💻 Visual Studio Code
+
+    - [markdownlint @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint).
+
+    ## 🙇 Acknowledgements
+
+    - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+    - [git-hooks.hooks.markdownlint @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksmarkdownlint).
 */
 { config, lib, ... }:
 let
@@ -22,9 +33,7 @@ let
   markdownlintCommand = lib.meta.getExe markdownlint;
 in
 {
-  devcontainer.settings.customizations.vscode = {
-    extensions = [ "DavidAnson.vscode-markdownlint" ];
-  };
+  devcontainer.settings.customizations.vscode.extensions = [ "DavidAnson.vscode-markdownlint" ];
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.markdownlint.enable = true;
@@ -34,9 +43,8 @@ in
     "ci:lint:md:markdownlint" = {
       description = "Lint *.md files with markdownlint";
       exec = ''
-        set -o 'errexit' -o 'pipefail'
         cd "''${DEVENV_ROOT}"
-        ${markdownlintCommand} --json --output "''${DEVENV_TASK_OUTPUT_FILE}"
+        ${markdownlintCommand} "./**/*.md"
       '';
     };
   };
