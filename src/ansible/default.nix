@@ -12,5 +12,6 @@ _: {
   imports = [
     ./ansible.nix
     ./ansible-lint.nix
+    ./ansible-tools.nix
   ];
 }
