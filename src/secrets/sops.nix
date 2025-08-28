@@ -35,9 +35,7 @@ in
 {
   imports = [ ./age.nix ];
 
-  packages = [
-    sops
-  ];
+  packages = [ sops ];
 
   # https://devenv.sh/integrations/codespaces-devcontainer/
   devcontainer.settings.customizations.vscode.extensions = [ "signageos.signageos-vscode-sops" ];

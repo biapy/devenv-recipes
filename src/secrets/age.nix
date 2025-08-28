@@ -17,7 +17,5 @@ let
   inherit (pkgs) age;
 in
 {
-  packages = [
-    age
-  ];
+  packages = [ age ];
 }
