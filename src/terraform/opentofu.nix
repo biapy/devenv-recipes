@@ -10,8 +10,8 @@
 
   ### 🔨 Tasks
 
-  - `ci:format:tf:tf-fmt`: Format OpenTofu files `tofu fmt`.
-  - `ci:lint:tf:tf-validate`: Lint OpenTofu files with `tofu validate`.
+  - `ci:format:tf:tofu-fmt`: Format OpenTofu files `tofu fmt`.
+  - `ci:lint:tf:tofu-validate`: Lint OpenTofu files with `tofu validate`.
 
   ### 👷 Commit hooks
 
@@ -44,18 +44,18 @@ in
 
   # https://devenv.sh/tasks/
   tasks = {
-    "ci:format:tf-fmt" = {
+    "ci:format:tf:tofu-fmt" = {
       description = "Format OpenTofu files";
       exec = ''
-        set -o 'errexit'
+        cd "''${DEVENV_ROOT}"
         ${tofuCommand} fmt --recursive
       '';
     };
-    "ci:lint:tf-validate" = {
+    "ci:lint:tf:tofu-validate" = {
       description = "Lint OpenTofu files with tofu validate";
       exec = ''
-        set -o 'errexit' -o 'pipefail'
-        ${tofuCommand} validate --json > "$DEVENV_TASK_OUTPUT_FILE"
+        cd "''${DEVENV_ROOT}"
+        ${tofuCommand} validate
       '';
     };
   };
