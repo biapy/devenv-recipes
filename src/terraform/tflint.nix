@@ -18,12 +18,18 @@
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
 */
-{ config, lib, ... }:
+{
+  lib,
+  pkgs,
+  ...
+}:
 let
-  tflint = config.git-hooks.hooks.tflint.package;
+  inherit (pkgs) tflint;
   tflintCommand = lib.meta.getExe tflint;
 in
 {
+  packages = [ tflint ];
+
   # https://devenv.sh/git-hooks/
   git-hooks.hooks.tflint.enable = true;
 
