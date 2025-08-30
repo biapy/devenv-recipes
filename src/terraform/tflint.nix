@@ -39,7 +39,7 @@ in
       description = "Lint *.tf files with tflint";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${tflintCommand} "''${DEVENV_ROOT}"
+        ${tflintCommand} --chdir="''${DEVENV_ROOT}"
       '';
     };
   };
