@@ -1,7 +1,11 @@
 /**
-  # terraform-docs
+  # TFLint
 
-  terraform-docs generates Terraform modules documentation in various formats.
+  TFLint is a framework and each feature is provided by plugins, the key features are as follows:
+
+  - Find possible errors (like invalid instance types) for Major Cloud providers (AWS/Azure/GCP).
+  - Warn about deprecated syntax, unused declarations.
+  - Enforce best practices, naming conventions.
 
   ## 🧐 Features
 
@@ -11,8 +15,11 @@
 
   ## 🛠️ Tech Stack
 
-  - [terraform-docs homepage](https://terraform-docs.io/).
-  - [terraform-docs @ GitHub](https://github.com/terraform-docs/terraform-docs).
+  - [terraform-docs @ GitHub](https://github.com/terraform-linters/tflint).
+
+  ### 👷 Commit hooks
+
+  - 'tflint`: Lint `.tf` files with `tflint`.
 
   ## 🙇 Acknowledgements
 
