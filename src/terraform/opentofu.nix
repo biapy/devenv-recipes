@@ -30,6 +30,7 @@
 
   - [languages.opentofu @ devenv](https://devenv.sh/reference/options/#languagesopentofuenable).
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
+  - [Cloud Development Kit for Terraform](https://developer.hashicorp.com/terraform/cdktf).
 */
 { config, lib, ... }:
 let
@@ -39,6 +40,8 @@ in
 {
   # https://devenv.sh/languages/
   languages.opentofu.enable = true;
+
+  env.TERRAFORM_BINARY_NAME = tofuCommand;
 
   devcontainer.settings.customizations.vscode.extensions = [ "OpenTofu.vscode-opentofu" ];
 
