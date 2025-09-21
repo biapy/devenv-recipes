@@ -15,7 +15,7 @@
 
   ### 👷 Commit hooks
 
-  - `ansible`: Lint Ansible files with `ansible-lint`.
+  - `ansible-lint`: Lint Ansible files with `ansible-lint`.
 
   ## 🛠️ Tech Stack
 
