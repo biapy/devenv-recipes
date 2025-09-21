@@ -56,7 +56,7 @@ in
       name = "Trivy local filesystem audit";
       package = trivy;
       pass_filenames = false;
-      entry = ''${trivyCommand} 'fs' "''${DEVENV_ROOT}"'';
+      entry = ''${trivyCommand} 'fs' "${root}"'';
     };
 
     trivy-config = {
@@ -64,7 +64,7 @@ in
       name = "Trivy configuration audit";
       package = trivy;
       pass_filenames = false;
-      entry = ''${trivyCommand} 'config' "''${DEVENV_ROOT}"'';
+      entry = ''${trivyCommand} 'config' "${root}"'';
     };
   };
 
@@ -74,14 +74,14 @@ in
       description = "Lint local filesystem with trivy";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${trivyCommand} 'fs' "${root}"
+        ${trivyCommand} 'fs' "''${DEVENV_ROOT}"
       '';
     };
     "ci:secops:trivy:config" = {
       description = "Lint local configuration files with trivy";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${trivyCommand} 'config' "${root}"
+        ${trivyCommand} 'config' "''${DEVENV_ROOT}"
       '';
     };
   };
