@@ -30,8 +30,14 @@
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
 */
-{ lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (config.devenv) root;
   inherit (pkgs) trivy;
   trivyCommand = lib.meta.getExe trivy;
 in
@@ -49,6 +55,7 @@ in
       enable = true;
       name = "Trivy local filesystem audit";
       package = trivy;
+      pass_filenames = false;
       entry = ''${trivyCommand} 'fs' "''${DEVENV_ROOT}"'';
     };
 
@@ -56,6 +63,7 @@ in
       enable = true;
       name = "Trivy configuration audit";
       package = trivy;
+      pass_filenames = false;
       entry = ''${trivyCommand} 'config' "''${DEVENV_ROOT}"'';
     };
   };
@@ -66,14 +74,14 @@ in
       description = "Lint local filesystem with trivy";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${trivyCommand} 'fs' "''${DEVENV_ROOT}"
+        ${trivyCommand} 'fs' "${root}"
       '';
     };
     "ci:secops:trivy:config" = {
       description = "Lint local configuration files with trivy";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${trivyCommand} 'config' "''${DEVENV_ROOT}"
+        ${trivyCommand} 'config' "${root}"
       '';
     };
   };
