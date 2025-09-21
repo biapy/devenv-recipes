@@ -13,13 +13,13 @@
 
   - `ci:format:tf:tflint`: Lint `.tf` files with `tflint`.
 
+  ### 👷 Commit hooks
+
+  - `tflint`: Lint `.tf` files with `tflint`.
+
   ## 🛠️ Tech Stack
 
   - [terraform-docs @ GitHub](https://github.com/terraform-linters/tflint).
-
-  ### 👷 Commit hooks
-
-  - 'tflint`: Lint `.tf` files with `tflint`.
 
   ## 🙇 Acknowledgements
 
