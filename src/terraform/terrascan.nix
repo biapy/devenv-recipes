@@ -5,6 +5,11 @@
   It detects compliance and security violations across Infrastructure as Code
   to mitigate risk before provisioning cloud native infrastructure.
 
+  :::warning
+  Terrascan is currently unmaintained.
+  Consider using Checkov or other alternatives.
+  :::
+
   ## 🧐 Features
 
   ### 🔨 Tasks
@@ -13,7 +18,8 @@
 
   ### 👷 Commit hooks
 
-  - `terrascan`: scan IaC configuration with `terrascan`.
+  - `terrascan`: scan IaC configuration with `terrascan`,
+    disabled by default, as Terrascan is unmaintained.
 
   ## 🛠️ Tech Stack
 
@@ -41,7 +47,7 @@ in
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
     terrascan = {
-      enable = true;
+      enable = false;
       name = "Terrascan";
       package = terrascan;
       pass_filenames = false;
@@ -55,7 +61,7 @@ in
       description = "Lint Infrastructure as Code with terrascan";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${terrascanCommand} 'scan'
+        ${terrascanCommand} 'scan' --iac-type 'terraform'
       '';
     };
   };

@@ -14,7 +14,6 @@
     tfupdate
 
     # Security & compliance
-    checkov # Static code analysis tool for infrastructure-as-code
     open-policy-agent # General-purpose policy engine
 
     # Testing & Verification
