@@ -16,7 +16,6 @@
     # Security & compliance
     checkov # Static code analysis tool for infrastructure-as-code
     open-policy-agent # General-purpose policy engine
-    terrascan # Detect compliance and security violations across Infrastructure
 
     # Testing & Verification
     terragrunt # Thin wrapper for Terraform that supports locking for Terraform state and enforces best practices

@@ -6,5 +6,6 @@ _: {
     ./terraform-common.nix
     ./tflint.nix
     ./trivy.nix
+    ./terrascan.nix
   ];
 }
