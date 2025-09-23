@@ -33,12 +33,12 @@
 {
   config,
   lib,
-  pkgs,
+  pkgs-unstable,
   ...
 }:
 let
   inherit (config.devenv) root;
-  inherit (pkgs) trivy;
+  inherit (pkgs-unstable) trivy;
   trivyCommand = lib.meta.getExe trivy;
 in
 {
