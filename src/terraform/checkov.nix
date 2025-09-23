@@ -30,10 +30,12 @@
 */
 {
   lib,
-  pkgs-unstable,
+  pkgs,
+  nixpkgs-unstable,
   ...
 }:
 let
+  pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
   inherit (pkgs-unstable) checkov;
   checkovCommand = lib.meta.getExe checkov;
 in

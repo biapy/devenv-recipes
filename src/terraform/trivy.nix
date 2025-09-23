@@ -33,10 +33,12 @@
 {
   config,
   lib,
-  pkgs-unstable,
+  pkgs,
+  nixpkgs-unstable,
   ...
 }:
 let
+  pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
   inherit (config.devenv) root;
   inherit (pkgs-unstable) trivy;
   trivyCommand = lib.meta.getExe trivy;
