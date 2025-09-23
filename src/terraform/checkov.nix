@@ -29,6 +29,7 @@
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
 */
 {
+  config,
   lib,
   pkgs,
   nixpkgs-unstable,
@@ -36,6 +37,7 @@
 }:
 let
   pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
+  inherit (config.devenv) root;
   inherit (pkgs-unstable) checkov;
   checkovCommand = lib.meta.getExe checkov;
 in
@@ -46,11 +48,11 @@ in
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
     checkov = {
-      enable = false;
+      enable = true;
       name = "Checkov";
       package = checkov;
       pass_filenames = false;
-      entry = ''${checkovCommand}'';
+      entry = ''${checkovCommand} --directory "${root}"'';
     };
   };
 
@@ -60,7 +62,7 @@ in
       description = "Inspect Infrastructure as Code with checkov";
       exec = ''
         cd "''${DEVENV_ROOT}"
-        ${checkovCommand}
+        ${checkovCommand} --directory "''${DEVENV_ROOT}"
       '';
     };
   };
