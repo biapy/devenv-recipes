@@ -31,11 +31,7 @@
   - [What is Terrascan? Features, Use Cases & Custom Policies @ spacelift](https://spacelift.io/blog/what-is-terrascan).
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
 */
-{
-  lib,
-  pkgs,
-  ...
-}:
+{ lib, pkgs, ... }:
 let
   inherit (pkgs) terrascan;
   terrascanCommand = lib.meta.getExe terrascan;
