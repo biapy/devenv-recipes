@@ -7,10 +7,12 @@ _:
     src/git.nix
     src/devenv-scripts.nix
     src/markdown
-    src/nix
     src/secrets/gitleaks.nix
     src/shell
   ];
+
+  biapy.go-task.enable = true;
+  biapy.nix.enable = true;
 
   # https://devenv.sh/basics/
   env.GREET = "devenv";
@@ -47,7 +49,7 @@ _:
 
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
-    commitizen.enable = true;
+    commitizen.enable = false;
     # shellcheck.enable = true;
   };
 

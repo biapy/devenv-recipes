@@ -14,22 +14,72 @@
 */
 { config, lib, ... }:
 let
-  deadnixCommand = lib.meta.getExe config.git-hooks.hooks.deadnix.package;
+  inherit (lib)
+    mkIf
+    mkDefault
+    mkOption
+    types
+    ;
+
+  nixCfg = config.biapy.nix;
+  cfg = nixCfg.deadnix;
+
+  deadnix = config.git-hooks.hooks.deadnix.package;
+  deadnixCommand = lib.meta.getExe deadnix;
 in
 {
-  imports = [ ./nix.nix ];
+  options.biapy.nix.deadnix = {
+    enable = mkOption {
+      type = types.bool;
+      description = "Enable deadnix integration";
+      default = true;
+    };
 
-  # https://devenv.sh/git-hooks/
-  git-hooks.hooks.deadnix.enable = true;
+    git-hooks = mkOption {
+      type = types.bool;
+      description = "Enable deadnix git hooks";
+      default = true;
+    };
 
-  # https://devenv.sh/tasks/
-  tasks."ci:lint:nix:deadnix" = {
-    description = "Lint *.nix files with deadnix";
-    exec = ''
-      set -o 'errexit' -o 'pipefail'
+    tasks = mkOption {
+      type = types.bool;
+      description = "Enable deadnix devenv tasks";
+      default = true;
+    };
 
-      cd "''${DEVENV_ROOT}"
-      '${deadnixCommand}' --fail
-    '';
+    go-task = mkOption {
+      type = types.bool;
+      description = "Enable deadnix Taskfile tasks";
+      default = true;
+    };
+  };
+
+  config = mkIf cfg.enable {
+    packages = [ deadnix ];
+
+    # https://devenv.sh/git-hooks/
+    git-hooks.hooks = mkIf cfg.git-hooks { deadnix.enable = true; };
+
+    # https://devenv.sh/tasks/
+    tasks = mkIf cfg.tasks {
+      "ci:lint:nix:deadnix" = {
+        description = "Lint *.nix files with deadnix";
+        exec = ''
+          set -o 'errexit' -o 'pipefail'
+
+          cd "''${DEVENV_ROOT}"
+          '${deadnixCommand}' --fail
+        '';
+      };
+    };
+
+    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+      "ci:lint:nix:deadnix" = mkDefault {
+        aliases = [ "deadnix" ];
+        desc = "Lint *.nix files with deadnix";
+        cmds = [ "'${deadnixCommand}' --fail" ];
+        requires.vars = [ "DEVENV_ROOT" ];
+      };
+    };
   };
 }

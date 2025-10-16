@@ -33,34 +33,85 @@
   - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
 {
-  pkgs,
   config,
   lib,
+  pkgs,
   ...
 }:
 let
-  nilCommand = lib.meta.getExe config.git-hooks.hooks.nil.package;
+  inherit (lib)
+    mkIf
+    mkDefault
+    mkOption
+    types
+    ;
+
+  nixCfg = config.biapy.nix;
+  cfg = nixCfg.nil;
+
+  nil = config.git-hooks.hooks.nil.package;
+  nilCommand = lib.meta.getExe nil;
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 in
 {
-  imports = [ ./nix.nix ];
+  options.biapy.nix.nil = {
+    enable = mkOption {
+      type = types.bool;
+      description = "Enable nil integration";
+      default = nixCfg.enable;
+    };
 
-  # https://devenv.sh/integrations/codespaces-devcontainer/
-  devcontainer.settings.customizations.vscode.extensions = [ "jnoortheen.nix-ide" ];
+    git-hooks = mkOption {
+      type = types.bool;
+      description = "Enable nil git hooks";
+      default = true;
+    };
 
-  packages = [ fd ];
+    tasks = mkOption {
+      type = types.bool;
+      description = "Enable nil devenv tasks";
+      default = true;
+    };
 
-  # https://devenv.sh/git-hooks/
-  git-hooks.hooks.nil.enable = true;
-
-  # https://devenv.sh/tasks/
-  tasks."ci:lint:nix:nil" = {
-    description = "Lint *.nix files with nil";
-    exec = ''
-      cd "''${DEVENV_ROOT}"
-      ${fdCommand} '\.nix$' "''${DEVENV_ROOT}" --exec-batch ${nilCommand} 'diagnostics'
-    '';
+    go-task = mkOption {
+      type = types.bool;
+      description = "Enable nil Taskfile tasks";
+      default = true;
+    };
   };
 
+  config = mkIf cfg.enable {
+    # https://devenv.sh/integrations/codespaces-devcontainer/
+    devcontainer.settings.customizations.vscode.extensions = [ "jnoortheen.nix-ide" ];
+
+    packages = [
+      fd
+      nil
+    ];
+
+    # https://devenv.sh/git-hooks/
+    git-hooks.hooks = mkIf cfg.git-hooks { nil.enable = mkDefault true; };
+
+    # https://devenv.sh/tasks/
+    tasks = mkIf cfg.tasks {
+
+      "ci:lint:nix:nil" = {
+        description = "Lint *.nix files with nil";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${fdCommand} '\.nix$' "''${DEVENV_ROOT}" --exec-batch ${nilCommand} 'diagnostics'
+        '';
+      };
+    };
+
+    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+      "ci:lint:nix:nil" = mkDefault {
+        aliases = [ "nil" ];
+        desc = "Lint *.nix files with nil";
+        cmds = [ ''${fdCommand} '\.nix$' "''${DEVENV_ROOT}" --exec-batch ${nilCommand} "diagnostics"'' ];
+        requires.vars = [ "DEVENV_ROOT" ];
+      };
+    };
+  };
 }
