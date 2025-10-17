@@ -1,48 +1,31 @@
-{ config, lib, ... }:
+{ lib, pkgs, ... }:
 let
-  inherit (lib)
-    types
-    mkOption
-    mkIf
-    mkDefault
-    ;
+  inherit (lib) mkDefault;
+  inherit (pkgs) jq;
 
-  cfg = config.biapy.nix;
+  jqCommand = lib.meta.getExe jq;
 in
 {
   imports = [
-    ./deadnix.nix
-    ./flake-checker.nix
-    ./nil.nix
-    ./nixos.nix
-    ./nix.nix
-    ./nixfmt.nix
-    ./statix.nix
+    ./markdown
+    ./nix
   ];
 
-  options.biapy.nix = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable Nix devenv recipe";
-      default = false;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable Nix Taskfile tasks";
-      default = true;
-    };
-  };
-
-  config = mkIf cfg.enable {
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
-      "ci:format:nix" = mkDefault {
-        desc = "Format *.nix files";
+  config = {
+    packages = [ jq ];
+    biapy.go-task.taskfile.tasks = {
+      "ci:format" = mkDefault {
+        aliases = [
+          "ci:fmt"
+          "format"
+          "fmt"
+        ];
+        desc = "Format all supported files";
         vars = {
           TASKS = {
             sh = lib.strings.concatStringsSep " | " [
               "task --json --list-all"
-              "jq --raw-output '.tasks[].name'"
+              "${jqCommand} --raw-output '.tasks[].name'"
               "grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'"
             ];
           };
@@ -58,13 +41,14 @@ in
         silent = true;
         requires.vars = [ "DEVENV_ROOT" ];
       };
-      "ci:lint:nix" = mkDefault {
-        desc = "Lint *.nix files";
+      "ci:lint" = mkDefault {
+        aliases = [ "lint" ];
+        desc = "Lint all supported files";
         vars = {
           TASKS = {
             sh = lib.strings.concatStringsSep " | " [
               "task --json --list-all"
-              "jq --raw-output '.tasks[].name'"
+              "${jqCommand} --raw-output '.tasks[].name'"
               "grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'"
             ];
           };

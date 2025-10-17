@@ -8,11 +8,23 @@
 
   - [Glow @ GitHub](https://github.com/charmbracelet/glow).
 */
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf;
+
+  cfg = config.biapy.markdown;
+
   inherit (pkgs) glow;
 in
 {
-  # https://devenv.sh/packages/
-  packages = [ glow ];
+  config = mkIf cfg.enable {
+
+    # https://devenv.sh/packages/
+    packages = [ glow ];
+  };
 }

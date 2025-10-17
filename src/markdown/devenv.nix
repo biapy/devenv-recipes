@@ -7,37 +7,34 @@ let
     mkDefault
     ;
 
-  cfg = config.biapy.nix;
+  cfg = config.biapy.markdown;
 in
 {
   imports = [
-    ./deadnix.nix
-    ./flake-checker.nix
-    ./nil.nix
-    ./nixos.nix
-    ./nix.nix
-    ./nixfmt.nix
-    ./statix.nix
+    ./cspell.nix
+    ./glow.nix
+    ./markdownlint.nix
+    ./mdformat.nix
   ];
 
-  options.biapy.nix = {
+  options.biapy.markdown = {
     enable = mkOption {
       type = types.bool;
-      description = "Enable Nix devenv recipe";
+      description = "Enable Markdown devenv recipe";
       default = false;
     };
 
     go-task = mkOption {
       type = types.bool;
-      description = "Enable Nix Taskfile tasks";
+      description = "Enable Markdown Taskfile tasks";
       default = true;
     };
   };
 
   config = mkIf cfg.enable {
     biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
-      "ci:format:nix" = mkDefault {
-        desc = "Format *.nix files";
+      "ci:format:md" = mkDefault {
+        desc = "Format Markdown files";
         vars = {
           TASKS = {
             sh = lib.strings.concatStringsSep " | " [
@@ -58,8 +55,8 @@ in
         silent = true;
         requires.vars = [ "DEVENV_ROOT" ];
       };
-      "ci:lint:nix" = mkDefault {
-        desc = "Lint *.nix files";
+      "ci:lint:md" = mkDefault {
+        desc = "Lint Markdown files";
         vars = {
           TASKS = {
             sh = lib.strings.concatStringsSep " | " [

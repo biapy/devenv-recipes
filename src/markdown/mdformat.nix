@@ -58,6 +58,12 @@ let
     inherit config;
     inherit lib;
   };
+
+  inherit (lib) mkIf mkOption types;
+
+  mdCfg = config.biapy.markdown;
+  cfg = mdCfg.mdformat;
+
   pythonPackages = pkgs.python3Packages;
   mdformat = config.git-hooks.hooks.mdformat.package;
   mdformatCommand = lib.meta.getExe mdformat;
@@ -70,45 +76,90 @@ let
   };
 in
 {
-  # https://devenv.sh/git-hooks/
-  git-hooks.hooks.mdformat = {
-    enable = true;
-    args = [ "--check" ];
-    package = pythonPackages.mdformat;
-    extraPackages = with pythonPackages; [
-      mdformat-admon
-      mdformat-beautysh
-      mdformat-footnote
-      mdformat-frontmatter
-      mdformat-gfm
-      mdformat-gfm-alerts
-      mdformat-mkdocs
-      mdformat-myst
-      mdformat-nix-alejandra
-      mdformat-simple-breaks
-      mdformat-tables
-      # mdformat-toc # marked as broken on 2025-08-19
-      mdformat-wikilink
-    ];
+  options.biapy.markdown.mdformat = {
+    enable = mkOption {
+      type = types.bool;
+      description = "Enable mdformat integration";
+      default = mdCfg.enable;
+    };
+
+    git-hooks = mkOption {
+      type = types.bool;
+      description = "Enable mdformat git hooks";
+      default = true;
+    };
+
+    tasks = mkOption {
+      type = types.bool;
+      description = "Enable mdformat devenv tasks";
+      default = true;
+    };
+
+    go-task = mkOption {
+      type = types.bool;
+      description = "Enable mdformat Taskfile tasks";
+      default = true;
+    };
   };
 
-  # https://devenv.sh/tasks/
-  tasks = {
-    "ci:lint:md:mdformat" = {
-      description = "Lint *.md files with Mdformat";
-      exec = ''
-        cd "''${DEVENV_ROOT}"
-        ${mdformatCommand} --check "''${DEVENV_ROOT}"
-      '';
-    };
-    "ci:format:md:mdformat" = {
-      description = "Format *.md files with Mdformat";
-      exec = ''
-        cd "''${DEVENV_ROOT}"
-        ${mdformatCommand} "''${DEVENV_ROOT}"
-      '';
-    };
-  }
-  // mdformatInilializeFilesTask;
+  config = mkIf cfg.enable {
 
+    # https://devenv.sh/git-hooks/
+    git-hooks.hooks.mdformat = mkIf cfg.git-hooks {
+      enable = true;
+      args = [ "--check" ];
+      package = pythonPackages.mdformat;
+      extraPackages = with pythonPackages; [
+        mdformat-admon
+        mdformat-beautysh
+        mdformat-footnote
+        mdformat-frontmatter
+        mdformat-gfm
+        mdformat-gfm-alerts
+        mdformat-mkdocs
+        mdformat-myst
+        mdformat-nix-alejandra
+        mdformat-simple-breaks
+        mdformat-tables
+        # mdformat-toc # marked as broken on 2025-08-19
+        mdformat-wikilink
+      ];
+    };
+
+    # https://devenv.sh/tasks/
+    tasks =
+      (mkIf cfg.tasks {
+        "ci:lint:md:mdformat" = {
+          description = "Lint *.md files with mdformat";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${mdformatCommand} --check "''${DEVENV_ROOT}"
+          '';
+        };
+
+        "ci:format:md:mdformat" = {
+          description = "Format *.md files with mdformat";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${mdformatCommand} "''${DEVENV_ROOT}"
+          '';
+        };
+      })
+      // mdformatInilializeFilesTask;
+
+    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+      "ci:lint:md:mdformat" = {
+        desc = "Lint *.md files with mdformat";
+        cmds = [ ''${mdformatCommand} --check "''${DEVENV_ROOT}"'' ];
+        requires.vars = [ "DEVENV_ROOT" ];
+      };
+
+      "ci:format:md:mdformat" = {
+        aliases = [ "mdformat" ];
+        desc = "Format *.md files with mdformat";
+        cmds = [ ''${mdformatCommand} "''${DEVENV_ROOT}"'' ];
+        requires.vars = [ "DEVENV_ROOT" ];
+      };
+    };
+  };
 }
