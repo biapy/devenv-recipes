@@ -28,18 +28,43 @@
 
   - [Protégez vos secrets DevOps avec SOPS @ DevSecOps :fr:](https://blog.stephane-robert.info/docs/securiser/secrets/sops/).
 */
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  recipes-lib,
+  ...
+}:
 let
-  inherit (pkgs) sops;
+  inherit (lib) mkIf mkOption types;
+  inherit (recipes-lib.modules) mkGitHooksOption;
+
+  secretsCfg = config.biapy-recipes.secrets;
+  cfg = secretsCfg.sops;
+
+  inherit (pkgs) age sops;
 in
 {
-  imports = [ ./age.nix ];
 
-  packages = [ sops ];
+  options.biapy-recipes.secrets.sops = {
+    enable = mkOption {
+      type = types.bool;
+      description = "Enable SOPS integration";
+      default = false;
+    };
+  }
+  // (mkGitHooksOption "SOPS");
 
-  # https://devenv.sh/integrations/codespaces-devcontainer/
-  devcontainer.settings.customizations.vscode.extensions = [ "signageos.signageos-vscode-sops" ];
+  config = mkIf cfg.enable {
+    packages = [
+      age
+      sops
+    ];
 
-  # https://devenv.sh/git-hooks/
-  git-hooks.hooks.pre-commit-hook-ensure-sops.enable = true;
+    # https://devenv.sh/integrations/codespaces-devcontainer/
+    devcontainer.settings.customizations.vscode.extensions = [ "signageos.signageos-vscode-sops" ];
+
+    # https://devenv.sh/git-hooks/
+    git-hooks.hooks.pre-commit-hook-ensure-sops.enable = true;
+  };
 }

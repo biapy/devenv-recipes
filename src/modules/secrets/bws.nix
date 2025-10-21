@@ -17,12 +17,26 @@
   - [Secrets Manager CLI @ BitWarden](https://bitwarden.com/help/secrets-manager-cli/)
     ([Bitwarden Secrets Manager SDK @ GitHub](https://github.com/bitwarden/sdk-sm)).
 */
-{ pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
+  inherit (lib) mkIf mkOption types;
+
+  secretsCfg = config.biapy-recipes.secrets;
+  cfg = secretsCfg.bitwarden;
+
   inherit (pkgs) bws;
 in
 {
-  imports = [ ./age.nix ];
+  options.biapy-recipes.secrets.bitwarden.enable = mkOption {
+    type = types.bool;
+    description = "Enable bitwarden Secrets Manager CLI integration";
+    default = false;
+  };
 
-  packages = [ bws ];
+  config = mkIf cfg.enable { packages = [ bws ]; };
 }
