@@ -13,13 +13,25 @@
   - [Ansible Molecule homepage](https://ansible.readthedocs.io/projects/molecule/)
     ([Ansible Molecule @ GitHub](https://github.com/ansible/molecule)).
 */
-{ pkgs, ... }:
 {
-  packages = with pkgs; [
-    ansible-cmdb
-    ansible-doctor
-    ansible-builder
-    ansible-navigator
-    molecule
-  ];
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+let
+  inherit (lib.modules) mkIf;
+
+  cfg = config.biapy-recipes.ansible;
+in
+{
+  config = mkIf cfg.enable {
+    packages = with pkgs; [
+      ansible-cmdb
+      ansible-doctor
+      ansible-builder
+      ansible-navigator
+      molecule
+    ];
+  };
 }

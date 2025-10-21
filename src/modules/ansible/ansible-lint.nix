@@ -28,19 +28,47 @@
   - [git-hooks.hooks.php-cs-fixer @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksphp-cs-fixer).
   - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  recipes-lib,
+  ...
+}:
 let
+  inherit (lib.modules) mkIf;
+  inherit (recipes-lib.modules) mkToolOptions;
+
+  ansibleCfg = config.biapy-recipes.ansible;
+  cfg = ansibleCfg.ansible-lint;
+
   ansible-lint = config.git-hooks.hooks.ansible-lint.package;
   ansibleLintCommand = lib.meta.getExe ansible-lint;
 in
 {
-  # https://devenv.sh/tasks/
-  tasks = {
-    "ci:lint:ansible:ansible-lint".exec = ''
-      cd "''${DEVENV_ROOT}"
-      '${ansibleLintCommand}'
-    '';
-  };
+  options.biapy-recipes.ansible.ansible-lint = mkToolOptions ansibleCfg "ansible-lint";
 
-  git-hooks.hooks.ansible-lint.enable = true;
+  config = mkIf cfg.enable {
+    packages = [ ansible-lint ];
+
+    git-hooks.hooks = mkIf cfg.git-hooks { ansible-lint.enable = true; };
+
+    # https://devenv.sh/tasks/
+    tasks = mkIf cfg.tasks {
+      "ci:lint:ansible:ansible-lint" = {
+        description = "Lint Ansible configuration with ansible-lint";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          '${ansibleLintCommand}'
+        '';
+      };
+    };
+
+    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+      "ci:lint:ansible:ansible-lint" = {
+        desc = "Lint Ansible configuration with ansible-lint";
+        cmds = [ ''${ansibleLintCommand}'' ];
+        requires.vars = [ "DEVENV_ROOT" ];
+      };
+    };
+  };
 }
