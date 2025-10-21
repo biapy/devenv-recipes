@@ -29,55 +29,27 @@
 */
 {
   config,
-  inputs,
   lib,
   pkgs,
+  pkgs-unstable,
+  recipes-lib,
   ...
 }:
 let
-  inherit (lib)
-    mkIf
-    mkDefault
-    mkOption
-    types
-    ;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.modules) mkToolOptions;
 
-  nixCfg = config.biapy.nix;
+  nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.flake-checker;
 
   # Import flake-checker from nixpkgs-unstable, to get the latest version.
-  pkgs-unstable = import inputs.nixpkgs-unstable { inherit (pkgs.stdenv) system; };
   inherit (pkgs-unstable) flake-checker;
   flakeCheckerCommand = lib.meta.getExe config.git-hooks.hooks.flake-checker.package;
   inherit (pkgs) glow;
   glowCommand = lib.meta.getExe glow;
 in
 {
-  options.biapy.nix.flake-checker = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable flake-checker integration";
-      default = false;
-    };
-
-    git-hooks = mkOption {
-      type = types.bool;
-      description = "Enable flake-checker git hooks";
-      default = true;
-    };
-
-    tasks = mkOption {
-      type = types.bool;
-      description = "Enable flake-checker devenv tasks";
-      default = true;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable flake-checker Taskfile tasks";
-      default = true;
-    };
-  };
+  options.biapy-recipes.nix.flake-checker = mkToolOptions nixCfg "flake-checker";
 
   config = mkIf cfg.enable {
     packages = [

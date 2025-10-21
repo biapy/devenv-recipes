@@ -6,6 +6,17 @@
   - `statix check` highlights antipatterns in Nix code.
   - `statix fix` can fix several such occurrences.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `ci:lint:nix:statix`: Lint `.nix` files with `statix check`.
+  - `ci:fix:nix:statix`: Fix `.nix` files with `statix fix`.
+
+  ### 👷 Commit hooks
+
+  - `statix`: Lint `.nix` files with `statix check`.
+
   ## 🛠️ Tech Stack
 
   - [statix @ git.peppe.rs](https://git.peppe.rs/languages/statix/about/).
@@ -16,47 +27,24 @@
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
   - [git-hooks.hooks.statix @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksstatix).
 */
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  recipes-lib,
+  ...
+}:
 let
-  inherit (lib)
-    mkIf
-    mkDefault
-    mkOption
-    types
-    ;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.modules) mkToolOptions;
 
-  nixCfg = config.biapy.nix;
+  nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.statix;
 
   statix = config.git-hooks.hooks.statix.package;
   statixCommand = lib.meta.getExe statix;
 in
 {
-  options.biapy.nix.statix = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable statix integration";
-      default = nixCfg.enable;
-    };
-
-    git-hooks = mkOption {
-      type = types.bool;
-      description = "Enable statix git hooks";
-      default = true;
-    };
-
-    tasks = mkOption {
-      type = types.bool;
-      description = "Enable statix devenv tasks";
-      default = true;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable statix Taskfile tasks";
-      default = true;
-    };
-  };
+  options.biapy-recipes.nix.statix = mkToolOptions nixCfg "statix";
 
   config = mkIf cfg.enable {
     packages = [ statix ];
@@ -75,7 +63,7 @@ in
           ${statixCommand} check
         '';
       };
-      "ci:format:nix:statix" = mkDefault {
+      "ci:fix:nix:statix" = mkDefault {
         description = "Fix *.nix files with statix";
         exec = ''
           set -o 'errexit'
@@ -94,8 +82,7 @@ in
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:format:nix:statix" = mkDefault {
-        aliases = [ "statix-fix" ];
+      "ci:fix:nix:statix" = mkDefault {
         desc = "Fix *.nix files with statix";
         cmds = [ ''${statixCommand} fix'' ];
         requires.vars = [ "DEVENV_ROOT" ];

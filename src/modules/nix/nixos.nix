@@ -7,14 +7,14 @@
 let
   inherit (lib) mkIf mkOption types;
 
-  nixCfg = config.biapy.nix;
+  nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.nixos;
 in
 {
-  options.biapy.nix.nixos.enable = mkOption {
+  options.biapy-recipes.nix.nixos.enable = mkOption {
     type = types.bool;
-    description = "Enable Nixfmt integration";
-    default = nixCfg.enable;
+    description = "Enable nixos-rebuild integration";
+    default = false;
   };
 
   config = mkIf cfg.enable {

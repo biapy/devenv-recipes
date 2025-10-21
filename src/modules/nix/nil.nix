@@ -36,17 +36,14 @@
   config,
   lib,
   pkgs,
+  recipes-lib,
   ...
 }:
 let
-  inherit (lib)
-    mkIf
-    mkDefault
-    mkOption
-    types
-    ;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.modules) mkToolOptions;
 
-  nixCfg = config.biapy.nix;
+  nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.nil;
 
   nil = config.git-hooks.hooks.nil.package;
@@ -55,31 +52,7 @@ let
   fdCommand = lib.meta.getExe fd;
 in
 {
-  options.biapy.nix.nil = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable nil integration";
-      default = nixCfg.enable;
-    };
-
-    git-hooks = mkOption {
-      type = types.bool;
-      description = "Enable nil git hooks";
-      default = true;
-    };
-
-    tasks = mkOption {
-      type = types.bool;
-      description = "Enable nil devenv tasks";
-      default = true;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable nil Taskfile tasks";
-      default = true;
-    };
-  };
+  options.biapy-recipes.nix.nil = mkToolOptions nixCfg "nil";
 
   config = mkIf cfg.enable {
     # https://devenv.sh/integrations/codespaces-devcontainer/

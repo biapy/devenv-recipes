@@ -26,7 +26,7 @@
 let
   inherit (lib) mkIf mkDefault;
 
-  cfg = config.biapy.nix;
+  cfg = config.biapy-recipes.nix;
 in
 {
   config = mkIf cfg.enable {

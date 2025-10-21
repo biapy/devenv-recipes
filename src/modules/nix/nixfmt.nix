@@ -23,48 +23,21 @@
   config,
   lib,
   pkgs,
+  recipes-lib,
   ...
 }:
 let
-  inherit (lib)
-    mkIf
-    mkDefault
-    mkOption
-    types
-    ;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.modules) mkToolOptions;
 
-  nixCfg = config.biapy.nix;
+  nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.nixfmt;
 
   strict-nixfmt-tree = pkgs.nixfmt-tree.override { settings.formatter.nixfmt.options = "--strict"; };
   nixfmtTreeCommand = lib.meta.getExe strict-nixfmt-tree;
 in
 {
-  options.biapy.nix.nixfmt = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable Nixfmt integration";
-      default = nixCfg.enable;
-    };
-
-    git-hooks = mkOption {
-      type = types.bool;
-      description = "Enable Nixfmt git hooks";
-      default = true;
-    };
-
-    tasks = mkOption {
-      type = types.bool;
-      description = "Enable Nixfmt devenv tasks";
-      default = true;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable Nixfmt Taskfile tasks";
-      default = true;
-    };
-  };
+  options.biapy-recipes.nix.nixfmt = mkToolOptions nixCfg "nixfmt";
 
   config = mkIf cfg.enable {
     # https://devenv.sh/packages/
