@@ -51,79 +51,57 @@
   pkgs,
   config,
   lib,
+  recipes-lib,
   ...
 }:
 let
-  utils = import ../utils {
-    inherit config;
-    inherit lib;
-  };
+  inherit (lib.modules) mkIf;
+  inherit (recipes-lib.tasks) mkInitializeFilesTask;
+  inherit (recipes-lib.modules) mkToolOptions;
 
-  inherit (lib) mkIf mkOption types;
-
-  mdCfg = config.biapy.markdown;
+  mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.mdformat;
 
   pythonPackages = pkgs.python3Packages;
   mdformat = config.git-hooks.hooks.mdformat.package;
   mdformatCommand = lib.meta.getExe mdformat;
-  mdformatInilializeFilesTask = utils.tasks.initializeFilesTask {
+  mdformatInilializeFilesTask = mkInitializeFilesTask {
     name = "Mdformat";
     namespace = "mdformat";
     configFiles = {
-      ".mdformat.toml" = ../files/markdown/.mdformat.toml;
+      ".mdformat.toml" = ../../files/markdown/.mdformat.toml;
     };
   };
+
+  mdformatExtensions = with pythonPackages; [
+    mdformat-admon
+    mdformat-beautysh
+    mdformat-footnote
+    mdformat-frontmatter
+    mdformat-gfm
+    mdformat-gfm-alerts
+    mdformat-mkdocs
+    mdformat-myst
+    mdformat-nix-alejandra
+    mdformat-simple-breaks
+    mdformat-tables
+    # mdformat-toc # marked as broken on 2025-08-19
+    mdformat-wikilink
+  ];
 in
 {
-  options.biapy.markdown.mdformat = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable mdformat integration";
-      default = mdCfg.enable;
-    };
-
-    git-hooks = mkOption {
-      type = types.bool;
-      description = "Enable mdformat git hooks";
-      default = true;
-    };
-
-    tasks = mkOption {
-      type = types.bool;
-      description = "Enable mdformat devenv tasks";
-      default = true;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable mdformat Taskfile tasks";
-      default = true;
-    };
-  };
+  options.biapy-recipes.markdown.mdformat = mkToolOptions mdCfg "mdformat";
 
   config = mkIf cfg.enable {
+
+    packages = [ mdformat ] ++ mdformatExtensions;
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks.mdformat = mkIf cfg.git-hooks {
       enable = true;
       args = [ "--check" ];
       package = pythonPackages.mdformat;
-      extraPackages = with pythonPackages; [
-        mdformat-admon
-        mdformat-beautysh
-        mdformat-footnote
-        mdformat-frontmatter
-        mdformat-gfm
-        mdformat-gfm-alerts
-        mdformat-mkdocs
-        mdformat-myst
-        mdformat-nix-alejandra
-        mdformat-simple-breaks
-        mdformat-tables
-        # mdformat-toc # marked as broken on 2025-08-19
-        mdformat-wikilink
-      ];
+      extraPackages = mdformatExtensions;
     };
 
     # https://devenv.sh/tasks/

@@ -26,47 +26,24 @@
 
   - [git-hooks.hooks.cspell @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshookscspell).
 */
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  recipes-lib,
+  ...
+}:
 let
-  inherit (lib)
-    mkIf
-    mkDefault
-    mkOption
-    types
-    ;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.modules) mkToolOptions;
 
-  mdCfg = config.biapy.markdown;
+  mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.cspell;
 
   cspell = config.git-hooks.hooks.cspell.package;
   cspellCommand = "${cspell}/bin/cspell";
 in
 {
-  options.biapy.markdown.cspell = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable cspell integration";
-      default = mdCfg.enable;
-    };
-
-    git-hooks = mkOption {
-      type = types.bool;
-      description = "Enable cspell git hooks";
-      default = true;
-    };
-
-    tasks = mkOption {
-      type = types.bool;
-      description = "Enable cspell devenv tasks";
-      default = true;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable cspell Taskfile tasks";
-      default = true;
-    };
-  };
+  options.biapy-recipes.markdown.cspell = mkToolOptions mdCfg "CSpell";
 
   config = mkIf cfg.enable {
     devcontainer.settings.customizations.vscode.extensions = [

@@ -17,7 +17,7 @@
 let
   inherit (lib) mkIf;
 
-  cfg = config.biapy.markdown;
+  cfg = config.biapy-recipes.markdown;
 
   inherit (pkgs) glow;
 in

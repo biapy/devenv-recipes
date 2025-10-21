@@ -27,49 +27,28 @@
     - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
     - [git-hooks.hooks.markdownlint @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksmarkdownlint).
 */
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  recipes-lib,
+  ...
+}:
 let
-  inherit (lib)
-    mkIf
-    mkDefault
-    mkOption
-    types
-    ;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.modules) mkToolOptions;
 
-  mdCfg = config.biapy.markdown;
+  mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.markdownlint;
 
   markdownlint = config.git-hooks.hooks.markdownlint.package;
   markdownlintCommand = lib.meta.getExe markdownlint;
 in
 {
-  options.biapy.markdown.markdownlint = {
-    enable = mkOption {
-      type = types.bool;
-      description = "Enable markdownlint integration";
-      default = mdCfg.enable;
-    };
-
-    git-hooks = mkOption {
-      type = types.bool;
-      description = "Enable markdownlint git hooks";
-      default = true;
-    };
-
-    tasks = mkOption {
-      type = types.bool;
-      description = "Enable markdownlint devenv tasks";
-      default = true;
-    };
-
-    go-task = mkOption {
-      type = types.bool;
-      description = "Enable markdownlint Taskfile tasks";
-      default = true;
-    };
-  };
+  options.biapy-recipes.markdown.markdownlint = mkToolOptions mdCfg "markdownlint";
 
   config = mkIf cfg.enable {
+    packages = [ markdownlint ];
+
     devcontainer.settings.customizations.vscode.extensions = [ "DavidAnson.vscode-markdownlint" ];
 
     # https://devenv.sh/git-hooks/
