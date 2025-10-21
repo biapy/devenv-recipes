@@ -5,7 +5,7 @@
   devenv environment:
 
   - `gitIgnoreTask`: Create a task that updates the contents of `.gitignore`.
-  - `initializeFilesTask`: Create a task that copy files from the
+  - `mkInitializeFilesTask`: Create a task that copy files from the
     devenv recipes to the project if they don't exist.
   - `initializeFiles`: Create a shell script that copy files from the
     devenv recipes to the project if they don't exist.
@@ -62,7 +62,7 @@ _: rec {
       ...
     }:
     {
-      "devenv-recipes:enterShell:initialize:git-ignore:${namespace}" = {
+      "biapy-recipes:enterShell:initialize:git-ignore:${namespace}" = {
         description = "Update .gitignore for ${name}";
         before = [ "devenv:enterShell" ];
         status = ''
@@ -131,7 +131,7 @@ _: rec {
     in {
       tasks = {
         ...
-        } // utils.tasks.initializeFilesTask {
+        } // utils.tasks.mkInitializeFilesTask {
           name = "PHPStan";
           namespace = "phpstan";
           configFiles = {
@@ -145,7 +145,7 @@ _: rec {
     # Type
 
     ```
-    initializeFilesTask :: { name: String, namespace: String, configFiles: Attrset {String = Path;} } -> Attrset
+    mkInitializeFilesTask :: { name: String, namespace: String, configFiles: Attrset {String = Path;} } -> Attrset
     ```
 
     # Arguments
@@ -162,7 +162,7 @@ _: rec {
       - the key is the initialized file path in the devenv.
       - the value is the source path in the local nix package.
   */
-  initializeFilesTask =
+  mkInitializeFilesTask =
     {
       name,
       namespace,
@@ -170,7 +170,7 @@ _: rec {
       ...
     }:
     {
-      "devenv-recipes:enterShell:initialize:files:${namespace}" = {
+      "biapy-recipes:enterShell:initialize:files:${namespace}" = {
         description = "Initialize ${name}'s configuration files presets";
         before = [ "devenv:enterShell" ];
         status = ''
@@ -342,5 +342,4 @@ _: rec {
     mkdir --parent "''${filepath}" &&
     echo "${contents}" >>"''${file}"
   '';
-
 }
