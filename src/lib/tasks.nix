@@ -4,7 +4,7 @@
   This module provides utilities for creating and managing tasks in the
   devenv environment:
 
-  - `gitIgnoreTask`: Create a task that updates the contents of `.gitignore`.
+  - `mkGitIgnoreTask`: Create a task that updates the contents of `.gitignore`.
   - `mkInitializeFilesTask`: Create a task that copy files from the
     devenv recipes to the project if they don't exist.
   - `initializeFiles`: Create a shell script that copy files from the
@@ -29,7 +29,7 @@ _: rec {
     in {
       tasks = {
         ...
-        } // utils.tasks.gitIgnoreTask {
+        } // utils.tasks.mkGitIgnoreTask {
           name = "Composer";
           namespace = "composer";
           ignoredPaths = [ "/vendor/" ];
@@ -40,7 +40,7 @@ _: rec {
     # Type
 
     ```
-    gitIgnoreTask :: { name: String, namespace: String, ignoredPaths: List String } -> Attrset
+    mkGitIgnoreTask :: { name: String, namespace: String, ignoredPaths: List String } -> Attrset
     ```
 
     # Arguments
@@ -54,7 +54,7 @@ _: rec {
     ignoredPaths
     : the paths to add to the .gitignore file.
   */
-  gitIgnoreTask =
+  mkGitIgnoreTask =
     {
       name,
       namespace,
@@ -136,7 +136,7 @@ _: rec {
           namespace = "phpstan";
           configFiles = {
             "phpstan.dist.neon" = ../files/php/phpstan.dist.neon;
-            "vendor-bin/phpstan/composer.json" = ../files/php/vendor-bin/phpstan/composer.json;
+            "tools/phpstan/composer.json" = ../files/php/tools/phpstan/composer.json;
           };
         };
     }
@@ -201,7 +201,7 @@ _: rec {
       utils = import ../utils { inherit config; inherit lib; };
     in {
       tasks.initializeConfiguration.exec =
-        utils.tasks.initializeFile { "vendor-bin/phpmd/composer.json" = ./phpmd-composer.json; };
+        utils.tasks.initializeFile { "tools/phpmd/composer.json" = ./phpmd-composer.json; };
     }
     ```
 
@@ -260,7 +260,7 @@ _: rec {
       utils = import ../utils { inherit config; inherit lib; };
     in {
       tasks.initializeConfiguration.exec =
-        utils.tasks.initializeFile "vendor-bin/phpmd/composer.json" ./phpmd-composer.json;
+        utils.tasks.initializeFile "tools/phpmd/composer.json" ./phpmd-composer.json;
     }
     ```
 
@@ -307,7 +307,7 @@ _: rec {
       utils = import ../utils { inherit config; inherit lib; };
     in {
       tasks.initializeConfiguration.exec =
-        utils.tasks.initializeFileContents "vendor-bin/phpmd/composer.json" ''
+        utils.tasks.initializeFileContents "tools/phpmd/composer.json" ''
           {
             "require-dev": {
               "phpmd/phpmd": "@stable"
