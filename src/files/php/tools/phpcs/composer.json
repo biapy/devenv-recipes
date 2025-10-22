@@ -10,16 +10,5 @@
     "allow-plugins": {
       "dealerdirect/phpcodesniffer-composer-installer": true
     }
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "@install-link"
-    ],
-    "install-link": [
-      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/phpcs' || ln --symbolic '../../vendor-bin/phpcs/vendor/bin/phpcs' '../../vendor/bin/phpcs'"
-    ]
-  },
-  "scripts-descriptions": {
-    "install-link": "Install composer bin link"
   }
 }

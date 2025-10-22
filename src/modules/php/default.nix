@@ -1,45 +1,69 @@
-/**
-  # PHP
-
-  PHP is a popular general-purpose scripting language that is especially
-  suited to web development.
-
-  ## 🧐 Features
-
-  ### 🐚 Commands
-
-  - `php-get-ini`: Get PHP ini configuration.
-  - `php-modules`: List installed PHP modules.
-
-  ## 🛠️ Tech Stack
-
-  - [PHP homepage](https://www.php.net/).
-
-  ## 🙇 Acknowledgements
-
-  - [languages.php @ devenv](https://devenv.sh/reference/options/#languagesphpenable).
-  - [scripts @ Devenv Reference Manual](https://devenv.sh/reference/options/#scripts).
-  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
-  - [lib.strings.concatStringsSep @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.strings.concatStringsSep).
-*/
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}@args:
 let
-  cfg = config.biapy.php;
+  inherit (lib) types mkOption;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.lists) map;
+  inherit (lib.attrsets) mapAttrsToList;
+
+  recipes-lib = import ../../lib args;
+  php-recipe-lib = import ./lib.nix { inherit config lib recipes-lib; };
+
+  imports-args = {
+    inherit
+      config
+      lib
+      pkgs
+      recipes-lib
+      php-recipe-lib
+      ;
+  };
+
+  cfg = config.biapy-recipes.php;
   phpCommand = lib.meta.getExe config.languages.php.package;
+
+  iniSettings = mapAttrsToList (name: value: "${name} = ${value}") cfg.ini;
 in
 {
-  config = lib.mkIf cfg.enable {
+  imports = map (path: import path imports-args) [
+    ./tools
+    ./composer.nix
+    ./symfony.nix
+  ];
+
+  options.biapy-recipes.php = (recipes-lib.modules.mkModuleOptions "PHP") // {
+    ini = mkOption {
+      type = types.attrsOf types.str;
+      default = {
+        #       "xdebug.mode" = "develop";
+        "memory_limit" = "256m";
+      };
+      description = ''
+        Additional PHP INI settings to apply.
+      '';
+    };
+
+    enterShellMessages = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''Display PHP information when entering the shell.'';
+    };
+  };
+
+  config = mkIf cfg.enable {
     # https://devenv.sh/languages/
     # https://devenv.sh/reference/options/#languagesphpenable
     languages.php = {
       inherit (cfg) enable;
 
       extensions = [ "xdebug" ];
+      version = mkDefault "8.4";
 
-      ini = lib.concatStringsSep "\n" [
-        "xdebug.mode = develop"
-        "memory_limit = 256m"
-      ];
+      ini = mkDefault (lib.concatStringsSep "\n" iniSettings);
     };
 
     # https://devenv.sh/scripts/
@@ -60,6 +84,7 @@ in
           printf '\n---------------------\n'
         '';
       };
+
       php-get-ini = {
         description = "Get PHP ini configuration";
         exec = ''
@@ -68,7 +93,7 @@ in
           print-ini-value() {
             local name="''${1}"
 
-            php --run "printf(\"''${name} = %s\n\",(string) ini_get(\"''${name}\"));"
+            ${phpCommand} --run "printf(\"''${name} = %s\n\",(string) ini_get(\"''${name}\"));"
           }
 
           php-get-ini() {
@@ -89,7 +114,7 @@ in
       };
     };
 
-    enterShell = ''
+    enterShell = mkIf cfg.enterShellMessages ''
       php --version
       php-modules
       php-get-ini 'memory_limit' 'xdebug.mode' 'xdebug.client_host' 'xdebug.client_port'

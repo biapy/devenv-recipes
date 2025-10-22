@@ -14,16 +14,5 @@
     "allow-plugins": {
       "phpstan/extension-installer": true
     }
-  },
-  "scripts": {
-    "post-install-cmd": [
-      "@install-link"
-    ],
-    "install-link": [
-      "mkdir --parent '../../vendor/bin' && test -e '../../vendor/bin/phpstan' || ln --symbolic '../../vendor-bin/phpstan/vendor/bin/phpstan' '../../vendor/bin/phpstan'"
-    ]
-  },
-  "scripts-descriptions": {
-    "install-link": "Install composer bin link"
   }
 }

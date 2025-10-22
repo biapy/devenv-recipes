@@ -5,7 +5,7 @@
     resolveFromConfigFile="true"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xmlns="https://getpsalm.org/schema/config"
-    xsi:schemaLocation="https://getpsalm.org/schema/config vendor-bin/psalm/vendor/vimeo/psalm/config.xsd"
+    xsi:schemaLocation="https://getpsalm.org/schema/config tools/psalm/vendor/vimeo/psalm/config.xsd"
     findUnusedBaselineEntry="true"
     findUnusedCode="true"
     memoizeMethodCallResults="true"
@@ -27,7 +27,7 @@
     <fileExtensions>
         <extension name=".php" />
         <extension name=".twig"
-            checker="vendor-bin/psalm/vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php" />
+            checker="tools/psalm/vendor/psalm/plugin-symfony/src/Twig/TemplateFileAnalyzer.php" />
     </fileExtensions>
     <issueHandlers>
         <ClassMustBeFinal>
