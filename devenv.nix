@@ -3,38 +3,17 @@ _:
 {
   name = "devenv recipes";
 
-  imports = [
-    src/git.nix
-    src/devenv-scripts.nix
-    src/markdown
-    src/secrets/gitleaks.nix
-    src/shell
-  ];
-
   biapy.go-task.enable = true;
-  biapy.nix.enable = true;
+  biapy-recipes = {
+    git.enable = true;
+    nix.enable = true;
+    markdown.enable = true;
+    shell.enable = true;
+    secrets.gitleaks.enable = true;
+  };
 
   # https://devenv.sh/basics/
   env.GREET = "devenv";
-
-  # https://devenv.sh/languages/
-  # languages.rust.enable = true;
-
-  # https://devenv.sh/processes/
-  # processes.cargo-watch.exec = "cargo-watch";
-
-  # https://devenv.sh/services/
-  # services.postgres.enable = true;
-
-  # https://devenv.sh/scripts/
-  scripts.hello.exec = ''
-    echo hello from $GREET
-  '';
-
-  enterShell = ''
-    hello
-    git --version
-  '';
 
   # https://devenv.sh/tasks/
   # tasks = {
@@ -50,7 +29,7 @@ _:
   # https://devenv.sh/git-hooks/
   git-hooks.hooks = {
     commitizen.enable = false;
-    # shellcheck.enable = true;
+    shellcheck.enable = false;
   };
 
   # See full reference at https://devenv.sh/reference/options/

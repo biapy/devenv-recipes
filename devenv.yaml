@@ -19,4 +19,4 @@ inputs:
 # - ./backend
 imports:
   - go-task
-  - ./src/nix
+  - ./src
