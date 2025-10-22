@@ -40,7 +40,7 @@ in
 
     # https://devenv.sh/tasks/
     tasks = {
-      "devenv-recipes:enterTest:git-version" = {
+      "biapy-recipes:enterTest:git-version" = {
         description = "Test available git command version match devenv git package";
         before = [ "devenv:enterTest" ];
         exec = ''
