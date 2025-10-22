@@ -29,7 +29,7 @@
 }:
 let
   inherit (pkgs) fd;
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
 
   shellCfg = config.biapy-recipes.shell;
@@ -54,7 +54,7 @@ in
     };
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks { shellcheck.enable = true; };
+    git-hooks.hooks = mkIf cfg.git-hooks { shellcheck.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
     tasks = mkIf cfg.tasks {

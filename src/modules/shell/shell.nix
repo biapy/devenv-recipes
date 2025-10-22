@@ -15,7 +15,7 @@
 */
 { config, lib, ... }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
 
   cfg = config.biapy-recipes.shell;
 in
@@ -23,7 +23,7 @@ in
   config = mkIf cfg.enable {
     # https://devenv.sh/languages/
     # https://devenv.sh/reference/options/#languagesshellenable
-    languages.shell.enable = true;
+    languages.shell.enable = mkDefault true;
 
     enterShell = ''
       bash --version

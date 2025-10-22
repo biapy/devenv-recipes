@@ -35,7 +35,7 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
 
   shellCfg = config.biapy-recipes.shell;
@@ -57,8 +57,8 @@ in
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = mkIf cfg.git-hooks {
       shfmt = {
-        enable = true;
-        settings.simplify = true;
+        enable = mkDefault true;
+        settings.simplify = mkDefault true;
       };
     };
 
