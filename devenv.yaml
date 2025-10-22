@@ -5,7 +5,7 @@ inputs:
   nixpkgs-unstable:
     url: github:nixos/nixpkgs/nixpkgs-unstable
   go-task:
-    url: github:landure/devenv-go-task?dir=modules/go-task
+    url: github:biapy/devenv-go-task?dir=modules/go-task
     flake: false
 # If you're using non-OSS software, you can set allowUnfree to true.
 # allowUnfree: true

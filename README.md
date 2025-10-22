@@ -16,7 +16,7 @@ inputs:
   nixpkgs-unstable:
     url: github:nixos/nixpkgs/nixpkgs-unstable
   go-task:
-    url: github:landure/devenv-go-task?dir=modules/go-task
+    url: github:biapy/devenv-go-task?dir=modules/go-task
     flake: false
   devenv-recipes:
     url: github:biapy/devenv-recipes?dir=src
