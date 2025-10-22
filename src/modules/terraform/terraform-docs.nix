@@ -58,7 +58,7 @@ in
     tasks =
       (optionalAttrs cfg.tasks {
         "ci:docs:tf:terraform-docs" = {
-          description = "Generate Terraform modules documentation files with terraform-docs";
+          description = "📚 Generate 🏗️Terraform modules documentation files with terraform-docs";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${tfDocsCommand} --recursive "''${DEVENV_ROOT}"
@@ -73,7 +73,7 @@ in
           "terraform-docs"
           "tfdocs"
         ];
-        desc = "Generate Terraform modules documentation files with terraform-docs";
+        desc = "📚 Generate 🏗️Terraform modules documentation files with terraform-docs";
         cmds = [ ''terraform-docs --recursive "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

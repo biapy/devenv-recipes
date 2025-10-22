@@ -41,7 +41,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:nix:deadnix" = {
-        description = "Lint *.nix files with deadnix";
+        description = "🔍 Lint ❄️Nix files with deadnix";
         exec = ''
           set -o 'errexit' -o 'pipefail'
 
@@ -54,7 +54,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:nix:deadnix" = mkDefault {
         aliases = [ "deadnix" ];
-        desc = "Lint *.nix files with deadnix";
+        desc = "🔍 Lint ❄️Nix files with deadnix";
         cmds = [ "deadnix --fail" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

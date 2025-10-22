@@ -57,7 +57,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:format:nix:nixfmt" = mkDefault {
-        description = "Format *.nix files with nixfmt";
+        description = "🎨 Format ❄️Nix files with nixfmt";
         exec = ''
           set -o 'errexit' -o 'pipefail'
 
@@ -70,7 +70,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:format:nix:nixfmt" = mkDefault {
         aliases = [ "nixfmt" ];
-        desc = "Format *.nix files with nixfmt";
+        desc = "🎨 Format ❄️Nix files with nixfmt";
         cmds = [ ''${nixfmtTreeCommand} --tree-root "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

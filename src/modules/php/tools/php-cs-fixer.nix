@@ -7,12 +7,12 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:php:php-cs-fixer`: Lint PHP files with `php-cs-fixer`.
-  - `ci:format:php:php-cs-fixer`: Format PHP files with `php-cs-fixer`.
+  - `ci:lint:php:php-cs-fixer`: 🔍 Lint 🐘PHP files with `php-cs-fixer`.
+  - `ci:format:php:php-cs-fixer`: 🎨 Format 🐘PHP files with `php-cs-fixer`.
 
   ### 👷 Commit hooks
 
-  - `php-cs-fixer`: Lint PHP files with `php-cs-fixer`.
+  - `php-cs-fixer`: 🔍 Lint 🐘PHP files with `php-cs-fixer`.
   - `reset:php:tools:php-cs-fixer`: Delete 'php-cs-fixer/vendor' folder.
 
   ## 🛠️ Tech Stack
@@ -105,15 +105,15 @@ in
       optionalAttrs cfg.go-task {
         "ci:format:php:php-cs-fixer" = {
           aliases = [ "php-cs-fixer" ];
-          desc = "Format PHP files with php-cs-fixer";
+          desc = "🎨 Format 🐘PHP files with php-cs-fixer";
           cmds = [
-            "php-cs-fixer 'fix' --allow-unsupported-php-version=yes --no-interaction --diff --show-progress='none' --dry-run"
+            "php-cs-fixer 'fix' --allow-unsupported-php-version=yes --no-interaction --diff --show-progress='none'"
           ];
           requires.vars = [ "DEVENV_ROOT" ];
         };
 
         "ci:lint:php:php-cs-fixer" = {
-          desc = "Lint PHP files with php-cs-fixer";
+          desc = "🔍 Lint 🐘PHP files with php-cs-fixer";
           cmds = [
             "php-cs-fixer --allow-unsupported-php-version=yes --no-interaction --diff --show-progress='none' --dry-run"
           ];

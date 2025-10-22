@@ -12,12 +12,12 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:php:phpcs`: Lint PHP files with `phpcs`.
+  - `ci:lint:php:phpcs`: 🔍 Lint 🐘PHP files with `phpcs`.
   - `reset:php:tools:phpcs`: Delete 'phpcs/vendor' folder.
 
   ### 👷 Commit hooks
 
-  - `phpcs`: Lint PHP files with `phpcs`.
+  - `phpcs`: 🔍 Lint 🐘PHP files with `phpcs`.
 
   ## 🛠️ Tech Stack
 

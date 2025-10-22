@@ -56,7 +56,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:nix:statix" = mkDefault {
-        description = "Lint *.nix files with statix";
+        description = "🔍 Lint ❄️Nix files with statix";
         exec = ''
           set -o 'errexit'
 
@@ -66,7 +66,7 @@ in
       };
 
       "ci:fix:nix:statix" = mkDefault {
-        description = "Fix *.nix files with statix";
+        description = "🧹 Fix ❄️Nix files with statix";
         exec = ''
           set -o 'errexit'
 
@@ -79,14 +79,14 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:nix:statix" = mkDefault {
         aliases = [ "statix" ];
-        desc = "Lint *.nix files with statix";
-        cmds = [ ''statix check'' ];
+        desc = "🔍 Lint ❄️Nix files with statix";
+        cmds = [ "statix check" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:fix:nix:statix" = mkDefault {
-        desc = "Fix *.nix files with statix";
-        cmds = [ ''statix fix'' ];
+        desc = "🧹 Fix ❄️Nix files with statix";
+        cmds = [ "statix fix" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

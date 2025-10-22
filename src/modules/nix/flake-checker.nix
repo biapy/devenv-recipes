@@ -69,7 +69,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:nix:flake-checker" = {
-        description = "Lint Nix flakes with flake-checker";
+        description = "🔍 Lint ❄️Nix flakes with flake-checker";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${flakeCheckerCommand} --no-telemetry --check-outdated --check-owner \
@@ -82,7 +82,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:nix:flake-checker" = mkDefault {
         aliases = [ "flake-checker" ];
-        desc = "Lint Nix flakes with flake-checker";
+        desc = "🔍 Lint ❄️Nix flakes with flake-checker";
         cmds = [
           ''flake-checker --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | glow''
         ];

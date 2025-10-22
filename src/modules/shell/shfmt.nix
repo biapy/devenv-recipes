@@ -66,14 +66,14 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:sh:shfmt" = {
-        description = "Lint shell files with shfmt";
+        description = "🔍 Lint 🐚shell files with shfmt";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${shfmtCommand} --simplify --diff "''${DEVENV_ROOT}"
         '';
       };
       "ci:format:sh:shfmt" = {
-        description = "Format shell files with shfmt";
+        description = "🎨 Format 🐚shell files with shfmt";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${shfmtCommand} --simplify --diff --write "''${DEVENV_ROOT}" || true
@@ -83,14 +83,14 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:shfmt" = {
-        desc = "Lint shell files with shfmt";
+        desc = "🔍 Lint 🐚shell files with shfmt";
         cmds = [ ''shfmt --simplify --diff "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:format:sh:shfmt" = {
         aliases = [ "shfmt" ];
-        desc = "Format shell files with shfmt";
+        desc = "🎨 Format 🐚shell files with shfmt";
         cmds = [ ''shfmt --simplify --diff --write "''${DEVENV_ROOT}" || true'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

@@ -71,7 +71,7 @@ in
     tasks = optionalAttrs cfg.tasks {
 
       "ci:lint:nix:nil" = {
-        description = "Lint *.nix files with nil";
+        description = "🔍 Lint ❄️Nix files with nil";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.nix$' "''${DEVENV_ROOT}" --exec-batch ${nilCommand} 'diagnostics'
@@ -82,7 +82,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:nix:nil" = mkDefault {
         aliases = [ "nil" ];
-        desc = "Lint *.nix files with nil";
+        desc = "🔍 Lint ❄️Nix files with nil";
         cmds = [ ''fd '\.nix$' "''${DEVENV_ROOT}" --exec-batch nil "diagnostics"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

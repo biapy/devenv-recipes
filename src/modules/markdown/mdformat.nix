@@ -112,7 +112,7 @@ in
       mdformatInilializeFilesTask
       // optionalAttrs cfg.tasks {
         "ci:lint:md:mdformat" = {
-          description = "Lint *.md files with mdformat";
+          description = "🔍 Lint 📝Markdown files with mdformat";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${mdformatCommand} --check "''${DEVENV_ROOT}"
@@ -120,7 +120,7 @@ in
         };
 
         "ci:format:md:mdformat" = {
-          description = "Format *.md files with mdformat";
+          description = "🎨 Format 📝Markdown files with mdformat";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${mdformatCommand} "''${DEVENV_ROOT}"
@@ -130,14 +130,14 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:mdformat" = {
-        desc = "Lint *.md files with mdformat";
+        desc = "🔍 Lint 📝Markdown files with mdformat";
         cmds = [ ''mdformat --check "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:format:md:mdformat" = {
         aliases = [ "mdformat" ];
-        desc = "Format *.md files with mdformat";
+        desc = "🎨 Format 📝Markdown files with mdformat";
         cmds = [ ''mdformat "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

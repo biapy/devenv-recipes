@@ -44,7 +44,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:secrets:gitleaks:git" = {
-        description = "Check for secrets leaks in Git repository with gitleaks";
+        description = "🕵️‍♂️ Check for 🔐secrets leaks in Git repository with gitleaks";
         exec = ''
           set -o 'errexit'
           ${gitleaksCommand} --report-format='json' --report-path="$DEVENV_TASK_OUTPUT_FILE" 'git'
@@ -52,7 +52,7 @@ in
       };
 
       "ci:lint:secrets:gitleaks:dir" = {
-        description = "Check for secrets leaks in project files with gitleaks";
+        description = "🕵️‍♂️ Check for 🔐secrets leaks in project files with gitleaks";
         exec = ''
           set -o 'errexit'
           ${gitleaksCommand} --report-format='json' --report-path="$DEVENV_TASK_OUTPUT_FILE" 'dir'
@@ -62,13 +62,13 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:secrets:gitleaks:git" = {
-        desc = "Check for secrets leaks in Git repository with gitleaks";
+        desc = "🕵️‍♂️ Check for 🔐secrets leaks in Git repository with gitleaks";
         cmds = [ "gitleaks 'git'" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:secrets:gitleaks:dir" = {
-        desc = "Check for secrets leaks in project files with gitleaks";
+        desc = "🕵️‍♂️ Check for 🔐secrets leaks in project files with gitleaks";
         cmds = [ "gitleaks 'dir'" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

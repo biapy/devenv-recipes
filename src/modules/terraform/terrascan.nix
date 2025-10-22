@@ -70,7 +70,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:tf:terrascan" = {
-        description = "Lint Infrastructure as Code with terrascan";
+        description = "🔍 Lint 🏗️Infrastructure as Code with terrascan";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${terrascanCommand} 'scan' --iac-type 'terraform'
@@ -81,7 +81,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:tf:terrascan" = {
         aliases = [ "terrascan" ];
-        desc = "Lint Infrastructure as Code with terrascan";
+        desc = "🔍 Lint 🏗️Infrastructure as Code with terrascan";
         cmds = [ ''terrascan 'scan' --iac-type "terraform"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

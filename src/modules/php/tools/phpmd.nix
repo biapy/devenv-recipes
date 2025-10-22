@@ -95,7 +95,7 @@ in
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
         "ci:lint:php:phpmd" = {
-          description = "Lint 'src' and 'tests' with PHP Mess Detector";
+          description = "🔍 Lint 🐘PHP files with PHP Mess Detector";
           exec = ''
             cd "''${DEVENV_ROOT}"
             phpmd {src,tests} 'ansi' 'phpmd.xml'
@@ -107,7 +107,7 @@ in
       optionalAttrs cfg.go-task {
         "ci:lint:php:phpmd" = {
           aliases = [ "phpmd" ];
-          desc = "Lint 'src' and 'tests' with PHP Mess Detector";
+          desc = "🔍 Lint 🐘PHP files with PHP Mess Detector";
           cmds = [ "phpmd {src,tests} 'ansi' 'phpmd.xml" ];
           requires.vars = [ "DEVENV_ROOT" ];
         };

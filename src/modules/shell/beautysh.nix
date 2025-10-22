@@ -59,7 +59,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:sh:beautysh" = {
-        description = "Lint *.{sh|bash|dash|ksh} files with beautysh";
+        description = "🔍 Lint 🐚shell files with beautysh";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" \
@@ -67,7 +67,7 @@ in
         '';
       };
       "ci:format:sh:beautysh" = {
-        description = "Format *.{sh|bash|dash|ksh} files with beautysh";
+        description = "🎨 Format 🐚shell files with beautysh";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" \
@@ -78,14 +78,14 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:beautysh" = {
-        desc = "Lint shell files with beautysh";
+        desc = "🔍 Lint 🐚shell files with beautysh";
         cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec beautysh --tab --check'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:format:sh:beautysh" = {
         aliases = [ "beautysh" ];
-        desc = "Format shell files with beautysh";
+        desc = "🎨 Format 🐚shell files with beautysh";
         cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec beautysh --tab'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

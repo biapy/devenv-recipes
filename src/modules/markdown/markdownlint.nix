@@ -65,7 +65,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:md:markdownlint" = mkDefault {
-        description = "Lint *.md files with markdownlint";
+        description = "🔍 Lint 📝Markdown files with markdownlint";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.md$' "''${DEVENV_ROOT}" --exec-batch ${markdownlintCommand} {}
@@ -76,7 +76,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:markdownlint" = mkDefault {
         aliases = [ "markdownlint" ];
-        desc = "Lint *.md files with markdownlint";
+        desc = "🔍 Lint 📝Markdown files with markdownlint";
         cmds = [ ''fd '\.md$' "''${DEVENV_ROOT}" --exec-batch markdownlint {}'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

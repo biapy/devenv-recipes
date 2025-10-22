@@ -68,7 +68,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:tf:checkov" = {
-        description = "Inspect Infrastructure as Code with checkov";
+        description = "🔍 Lint 🏗️Infrastructure as Code with checkov";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${checkovCommand} --directory "''${DEVENV_ROOT}"
@@ -79,7 +79,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:tf:checkov" = {
         aliases = [ "checkov" ];
-        desc = "Inspect Infrastructure as Code with checkov";
+        desc = "🔍 Lint 🏗️Infrastructure as Code with checkov";
         cmds = [ ''checkov --directory "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

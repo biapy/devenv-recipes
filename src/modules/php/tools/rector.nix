@@ -73,7 +73,7 @@ in
       (mkPhpToolTasks toolConfiguration)
       // lib.attrsets.optionalAttrs cfg.tasks {
         "ci:fix:php:rector" = {
-          description = "Apply Rector recommendations";
+          description = "🧹 Fix 🐘PHP files with Rector";
           before = [ "ci:format:php:php-cs-fixer" ];
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -81,7 +81,7 @@ in
           '';
         };
         "ci:lint:php:rector" = {
-          description = "Lint '.php' files with Rector";
+          description = "🔍 Lint 🐘PHP files with Rector";
           exec = ''
             cd "''${DEVENV_ROOT}"
             rector 'process' '--no-progress-bar' '--dry-run'
@@ -93,13 +93,13 @@ in
       optionalAttrs cfg.go-task {
         "ci:fix:php:rector" = {
           aliases = [ "rector" ];
-          desc = "Apply Rector recommendations";
+          desc = "🧹 Fix 🐘PHP files with Rector";
           cmds = [ "rector 'process' '--no-progress-bar'" ];
           requires.vars = [ "DEVENV_ROOT" ];
         };
 
         "ci:lint:php:rector" = {
-          desc = "Apply Rector recommendations";
+          desc = "🔍 Lint 🐘PHP files with Rector";
           cmds = [ "rector 'process' '--no-progress-bar' '--dry-run'" ];
           requires.vars = [ "DEVENV_ROOT" ];
         };

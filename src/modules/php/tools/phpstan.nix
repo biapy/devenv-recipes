@@ -7,12 +7,12 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:php:phpstan`: Lint PHP files with PHPStan.
+  - `ci:lint:php:phpstan`: 🔍 Lint 🐘PHP files with PHPStan.
   - `reset:php:tools:phpstan`: Delete 'rector/phpstan' folder.
 
   ### 👷 Commit hooks
 
-  - `phpstan`: Lint PHP files with PHPStan.
+  - `phpstan`: 🔍 Lint 🐘PHP files with PHPStan.
 
   ## 🛠️ Tech Stack
 
@@ -102,7 +102,7 @@ in
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
         "ci:lint:php:phpstan" = {
-          description = "Lint '.php' files with PHPStan";
+          description = "🔍 Lint 🐘PHP files with PHPStan";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${phpCommand} '${toolCommand}' 'analyse' --no-progress
@@ -114,7 +114,7 @@ in
       optionalAttrs cfg.go-task {
         "ci:lint:php:phpstan" = {
           aliases = [ "phpstan" ];
-          desc = "Lint '*.php' files with PHPStan";
+          desc = "🔍 Lint 🐘PHP files with PHPStan";
           cmds = [ "phpstan 'analyse' --no-progress" ];
           requires.vars = [ "DEVENV_ROOT" ];
         };

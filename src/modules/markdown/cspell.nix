@@ -62,7 +62,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:md:cspell" = {
-        description = "Lint *.md files with cspell";
+        description = "🔍 Lint 📝Markdown files with cspell";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${cspellCommand} --root "''${DEVENV_ROOT}" ./**/*.md
@@ -73,7 +73,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:cspell" = mkDefault {
         aliases = [ "cspell" ];
-        desc = "Lint *.md files with cspell";
+        desc = "🔍 Lint 📝Markdown files with cspell";
         cmds = [ ''cspell --root "''${DEVENV_ROOT}" ./**/*.md'' ];
         requires.vars = [ "DEVENV_ROOT" ];
         shopt = [ "globstar" ];

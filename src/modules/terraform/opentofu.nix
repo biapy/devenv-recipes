@@ -55,14 +55,14 @@ in
     # https://devenv.sh/tasks/
     tasks = {
       "ci:format:tf:tofu-fmt" = {
-        description = "Format OpenTofu files";
+        description = "🎨 Format 🏗️OpenTofu files";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${tofuCommand} fmt --recursive
         '';
       };
       "ci:lint:tf:tofu-validate" = {
-        description = "Lint OpenTofu files with tofu validate";
+        description = "🔍 Lint 🏗️OpenTofu files with tofu validate";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${tofuCommand} validate
@@ -79,14 +79,14 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:format:tf:tofu-fmt" = {
         aliases = [ "tf-fmt" ];
-        description = "Format OpenTofu files";
+        description = "🎨 Format 🏗️OpenTofu files";
         cmds = [ ''tofu fmt --recursive'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:tf:tofu-validate" = {
         aliases = [ "tf-validate" ];
-        desc = "Lint OpenTofu files with tofu validate";
+        desc = "🔍 Lint 🏗️OpenTofu files with tofu validate";
         cmds = [ ''tofu validate'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

@@ -7,12 +7,12 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:php:psalm`: Lint PHP files with Psalm.
+  - `ci:lint:php:psalm`: 🔍 Lint 🐘PHP files with Psalm.
   - `reset:php:tools:psalm`: Delete 'psalm/vendor' folder.
 
   ### 👷 Commit hooks
 
-  - `psalm`: Lint PHP files with Psalm.
+  - `psalm`: 🔍 Lint 🐘PHP files with Psalm.
 
   ## 🛠️ Tech Stack
 
@@ -90,7 +90,7 @@ in
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
         "ci:lint:php:psalm" = {
-          description = "Lint '*.php' files with Psalm";
+          description = "🔍 Lint 🐘PHP files with Psalm";
           exec = ''
             cd "''${DEVENV_ROOT}"
             psalm --no-progress --show-info --show-snippet
@@ -103,7 +103,7 @@ in
       // optionalAttrs cfg.go-task {
         "ci:lint:php:psalm" = {
           aliases = [ "psalm" ];
-          desc = "Lint '*.php' files with Psalm";
+          desc = "🔍 Lint 🐘PHP files with Psalm";
           cmds = [ "psalm --no-progress --show-info --show-snippet" ];
           requires.vars = [ "DEVENV_ROOT" ];
         };

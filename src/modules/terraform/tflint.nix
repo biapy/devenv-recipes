@@ -55,7 +55,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:tf:tflint" = {
-        description = "Lint *.tf files with tflint";
+        description = "🔍 Lint 🏗️Terraform files with tflint";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${tflintCommand} --chdir="''${DEVENV_ROOT}"
@@ -66,7 +66,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:tf:tflint" = {
         aliases = [ "tflint" ];
-        desc = "Lint *.tf files with tflint";
+        desc = "🔍 Lint 🏗️Terraform files with tflint";
         cmds = [ ''tflint --chdir="''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

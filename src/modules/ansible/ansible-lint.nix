@@ -56,7 +56,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:ansible:ansible-lint" = {
-        description = "Lint Ansible configuration with ansible-lint";
+        description = "🔍 Lint 🔧Ansible configuration with ansible-lint";
         exec = ''
           cd "''${DEVENV_ROOT}"
           '${ansibleLintCommand}'
@@ -66,7 +66,7 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:ansible:ansible-lint" = {
-        desc = "Lint Ansible configuration with ansible-lint";
+        desc = "🔍 Lint 🔧Ansible configuration with ansible-lint";
         cmds = [ ''${ansibleLintCommand}'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

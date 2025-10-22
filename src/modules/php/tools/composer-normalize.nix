@@ -95,7 +95,7 @@ in
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
         "ci:format:php:composer:normalize" = {
-          description = "Format composer.json files with composer normalize";
+          description = "🎨🐘 Format composer.json files with composer normalize";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${fdCommand} '^composer\.json$' "''${DEVENV_ROOT}" --exec \
@@ -109,7 +109,7 @@ in
       // optionalAttrs cfg.go-task {
         "ci:format:php:composer:normalize" = {
           aliases = [ "composer-normalize" ];
-          desc = "Format composer.json files with composer normalize";
+          desc = "🎨🐘 Format composer.json files with composer normalize";
           cmds = [ ''fd '^composer\.json$' "''${DEVENV_ROOT}" --exec composer-normalize {}'' ];
           requires.vars = [ "DEVENV_ROOT" ];
         };

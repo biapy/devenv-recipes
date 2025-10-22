@@ -60,7 +60,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:lint:sh:shellcheck" = {
-        description = "Lint *.{sh|bash|dash|ksh} files with ShellCheck";
+        description = "🔍 Lint 🐚shell files with ShellCheck";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec ${shellcheckCommand}
@@ -70,7 +70,7 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:shellcheck" = {
-        desc = "Lint shell files with ShellCheck";
+        desc = "🔍 Lint 🐚shell files with ShellCheck";
         cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec shellcheck'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
