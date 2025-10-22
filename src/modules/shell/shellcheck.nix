@@ -69,7 +69,7 @@ in
 
     biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
       "ci:lint:sh:shellcheck" = {
-        desc = "Lint shell files with shfmt";
+        desc = "Lint shell files with ShellCheck";
         cmds = [ ''${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec ${shellcheckCommand}'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
