@@ -131,14 +131,14 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:mdformat" = {
         desc = "Lint *.md files with mdformat";
-        cmds = [ ''${mdformatCommand} --check "''${DEVENV_ROOT}"'' ];
+        cmds = [ ''mdformat --check "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:format:md:mdformat" = {
         aliases = [ "mdformat" ];
         desc = "Format *.md files with mdformat";
-        cmds = [ ''${mdformatCommand} "''${DEVENV_ROOT}"'' ];
+        cmds = [ ''mdformat "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

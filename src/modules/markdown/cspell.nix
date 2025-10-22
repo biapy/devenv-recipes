@@ -65,7 +65,7 @@ in
         description = "Lint *.md files with cspell";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${cspellCommand} --root "''${DEVENV_ROOT}" "./**/*.md"
+          ${cspellCommand} --root "''${DEVENV_ROOT}" ./**/*.md
         '';
       };
     };
@@ -74,7 +74,7 @@ in
       "ci:lint:md:cspell" = mkDefault {
         aliases = [ "cspell" ];
         desc = "Lint *.md files with cspell";
-        cmds = [ ''${cspellCommand} --root "''${DEVENV_ROOT}" "./**/*.md"'' ];
+        cmds = [ ''cspell --root "''${DEVENV_ROOT}" ./**/*.md'' ];
         requires.vars = [ "DEVENV_ROOT" ];
         shopt = [ "globstar" ];
       };

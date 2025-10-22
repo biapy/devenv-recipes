@@ -30,6 +30,7 @@
 {
   config,
   lib,
+  pkgs,
   recipes-lib,
   ...
 }:
@@ -43,12 +44,18 @@ let
 
   markdownlint = config.git-hooks.hooks.markdownlint.package;
   markdownlintCommand = lib.meta.getExe markdownlint;
+
+  inherit (pkgs) fd;
+  fdCommand = lib.meta.getExe fd;
 in
 {
   options.biapy-recipes.markdown.markdownlint = mkToolOptions mdCfg "markdownlint";
 
   config = mkIf cfg.enable {
-    packages = [ markdownlint ];
+    packages = [
+      markdownlint
+      fd
+    ];
 
     devcontainer.settings.customizations.vscode.extensions = [ "DavidAnson.vscode-markdownlint" ];
 
@@ -61,7 +68,7 @@ in
         description = "Lint *.md files with markdownlint";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${markdownlintCommand} "./**/*.md"
+          ${fdCommand} '\.md$' "''${DEVENV_ROOT}" --exec-batch ${markdownlintCommand} {}
         '';
       };
     };
@@ -70,9 +77,8 @@ in
       "ci:lint:md:markdownlint" = mkDefault {
         aliases = [ "markdownlint" ];
         desc = "Lint *.md files with markdownlint";
-        cmds = [ ''${markdownlintCommand} "./**/*.md"'' ];
+        cmds = [ ''fd '\.md$' "''${DEVENV_ROOT}" --exec-batch markdownlint {}'' ];
         requires.vars = [ "DEVENV_ROOT" ];
-        shopt = [ "globstar" ];
       };
     };
   };
