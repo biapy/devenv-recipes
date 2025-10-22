@@ -1,68 +1,74 @@
-{ lib, pkgs, ... }:
-let
-  inherit (lib) mkDefault;
-  inherit (pkgs) jq;
+/**
+  # Biapy devenv recipes
 
-  jqCommand = lib.meta.getExe jq;
+  Recipes and scripts to ease devenv use.
+
+  ## 🧐 Features
+
+  ### 🐚 Commands
+
+  - `detr`: Alias to `devenv tasks run`.
+
+  ## 🛠️ Tech Stack
+
+  - [devenv homepage](https://devenv.sh/).
+  - [direnv homepage](https://direnv.net/).
+
+  ### 🧑‍💻 Visual Studio Code
+
+  - [direnv @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=mkhl.direnv).
+
+  ## 🙇 Acknowledgements
+
+  - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
+*/
+{ config, lib, ... }:
+let
+  inherit (lib.modules) mkIf;
+
+  taskCfg = config.biapy.go-task;
 in
 {
-  imports = [
-    ./markdown
-    ./nix
-  ];
+  imports = [ ./modules ];
 
   config = {
-    packages = [ jq ];
-    biapy.go-task.taskfile.tasks = {
-      "ci:format" = mkDefault {
+    biapy.go-task.taskfile.tasks = mkIf taskCfg.prefixed-tasks.enable {
+      "ci:lint" = {
+        aliases = [ "lint" ];
+        desc = "Run all linting tasks";
+      };
+
+      "ci:fix" = {
+        aliases = [ "fix" ];
+        desc = "Run all fixing tasks";
+      };
+
+      "ci:format" = {
         aliases = [
-          "ci:fmt"
           "format"
           "fmt"
         ];
-        desc = "Format all supported files";
-        vars = {
-          TASKS = {
-            sh = lib.strings.concatStringsSep " | " [
-              "task --json --list-all"
-              "${jqCommand} --raw-output '.tasks[].name'"
-              "grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'"
-            ];
-          };
-        };
-        cmds = [
-          {
-            for = {
-              var = "TASKS";
-            };
-            cmd = "task '{{.ITEM}}'";
-          }
-        ];
-        silent = true;
-        requires.vars = [ "DEVENV_ROOT" ];
+        desc = "Run all formatting tasks";
       };
-      "ci:lint" = mkDefault {
-        aliases = [ "lint" ];
-        desc = "Lint all supported files";
-        vars = {
-          TASKS = {
-            sh = lib.strings.concatStringsSep " | " [
-              "task --json --list-all"
-              "${jqCommand} --raw-output '.tasks[].name'"
-              "grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'"
-            ];
-          };
-        };
-        cmds = [
-          {
-            for = {
-              var = "TASKS";
-            };
-            cmd = "task '{{.ITEM}}'";
-          }
-        ];
-        silent = true;
-        requires.vars = [ "DEVENV_ROOT" ];
+    };
+
+    devcontainer.settings.customizations.vscode.extensions = [ "mkhl.direnv" ];
+
+    scripts = {
+      detr = {
+        description = "Alias of devenv tasks run";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          devenv tasks run "''${@}"
+        '';
+      };
+
+      detl = {
+        description = "Alias of devenv tasks list";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          devenv tasks list "''${@}"
+        '';
       };
     };
   };
