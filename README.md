@@ -18,9 +18,13 @@ inputs:
   go-task:
     url: github:biapy/devenv-go-task?dir=modules/go-task
     flake: false
-  devenv-recipes:
+  biapy-recipes:
     url: github:biapy/devenv-recipes?dir=src
     flake: false
+
+imports:
+  - go-task
+  - biapy-recipes
 ```
 
 <!-- CSpell:ignore biapy nixpkgs nixos landure -->
