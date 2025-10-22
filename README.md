@@ -6,7 +6,8 @@ Recipes for [Cachix devenv](https://devenv.sh/).
 
 ## 🧑🏻‍💻 Usage
 
-Add `nixpkgs-unstable` and `devenv-recipes` inputs to `devenv.yaml`:
+Add `nixpkgs-unstable`, `landure/devenv-go-tasks`,
+and `devenv-recipes` inputs to `devenv.yaml`:
 
 ```yaml
 # devenv.yaml
@@ -14,12 +15,15 @@ inputs:
   …
   nixpkgs-unstable:
     url: github:nixos/nixpkgs/nixpkgs-unstable
+  go-task:
+    url: github:landure/devenv-go-task?dir=modules/go-task
+    flake: false
   devenv-recipes:
     url: github:biapy/devenv-recipes?dir=src
     flake: false
 ```
 
-<!-- CSpell:ignore biapy nixpkgs nixos -->
+<!-- CSpell:ignore biapy nixpkgs nixos landure -->
 
 Update `devenv.lock`:
 
@@ -27,19 +31,19 @@ Update `devenv.lock`:
 devenv update
 ```
 
-Add the wished imports to `devenv.nix`, here for a Nix project:
+Enable the wished recipes in `devenv.nix`, here for a Nix project:
 
 ```nix
 # devenv.nix
 {inputs, ...}: {
-  imports = [
-    "${inputs.devenv-recipes}/devenv-scripts.nix"
-    "${inputs.devenv-recipes}/git.nix"
-    "${inputs.devenv-recipes}/devcontainer.nix"
-    "${inputs.devenv-recipes}/markdown"
-    "${inputs.devenv-recipes}/nix"
-    "${inputs.devenv-recipes}/secrets"
-  ];
+  biapy.go-task.enable = true;
+  biapy-recipes = {
+    git.enable = true;
+    nix.enable = true;
+    markdown.enable = true;
+    shell.enable = true;
+    secrets.gitleaks.enable = true;
+  };
   # …
 }
 ```
