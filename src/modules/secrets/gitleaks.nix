@@ -63,13 +63,13 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:secrets:gitleaks:git" = {
         desc = "Check for secrets leaks in Git repository with gitleaks";
-        cmds = [ ''${gitleaksCommand} "git"'' ];
+        cmds = [ "gitleaks 'git'" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:secrets:gitleaks:dir" = {
         desc = "Check for secrets leaks in project files with gitleaks";
-        cmds = [ ''${gitleaksCommand} "dir"'' ];
+        cmds = [ "gitleaks 'dir'" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };
