@@ -80,13 +80,13 @@ in
       "ci:lint:nix:statix" = mkDefault {
         aliases = [ "statix" ];
         desc = "Lint *.nix files with statix";
-        cmds = [ ''${statixCommand} check'' ];
+        cmds = [ ''statix check'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:fix:nix:statix" = mkDefault {
         desc = "Fix *.nix files with statix";
-        cmds = [ ''${statixCommand} fix'' ];
+        cmds = [ ''statix fix'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

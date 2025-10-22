@@ -83,7 +83,7 @@ in
       "ci:lint:nix:nil" = mkDefault {
         aliases = [ "nil" ];
         desc = "Lint *.nix files with nil";
-        cmds = [ ''${fdCommand} '\.nix$' "''${DEVENV_ROOT}" --exec-batch ${nilCommand} "diagnostics"'' ];
+        cmds = [ ''fd '\.nix$' "''${DEVENV_ROOT}" --exec-batch nil "diagnostics"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

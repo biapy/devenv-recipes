@@ -55,7 +55,7 @@ in
       "ci:lint:nix:deadnix" = mkDefault {
         aliases = [ "deadnix" ];
         desc = "Lint *.nix files with deadnix";
-        cmds = [ "'${deadnixCommand}' --fail" ];
+        cmds = [ "deadnix --fail" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

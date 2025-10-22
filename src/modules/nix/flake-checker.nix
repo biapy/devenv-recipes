@@ -84,9 +84,7 @@ in
         aliases = [ "flake-checker" ];
         desc = "Lint Nix flakes with flake-checker";
         cmds = [
-          ''
-            ${flakeCheckerCommand} --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | ${glowCommand}
-          ''
+          ''flake-checker --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | glow''
         ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
