@@ -35,12 +35,12 @@ in
     biapy.go-task.taskfile.tasks = mkIf taskCfg.prefixed-tasks.enable {
       "ci:lint" = {
         aliases = [ "lint" ];
-        desc = "Run all linting tasks";
+        desc = "🔍 Run all linting tasks";
       };
 
       "ci:fix" = {
         aliases = [ "fix" ];
-        desc = "Run all fixing tasks";
+        desc = "🧹 Run all fixing tasks";
       };
 
       "ci:format" = {
@@ -48,7 +48,12 @@ in
           "format"
           "fmt"
         ];
-        desc = "Run all formatting tasks";
+        desc = "🎨 Run all formatting tasks";
+      };
+
+      "ci:secops" = {
+        aliases = [ "secops" ];
+        desc = "🕵️‍♂️ Run all SecOps tasks";
       };
     };
 

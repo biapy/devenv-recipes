@@ -82,7 +82,7 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:lint:trivy:fs" = {
+      "ci:secops:security:trivy:fs" = {
         description = "🕵️‍♂️ Check local filesystem with trivy";
         exec = ''
           cd "''${DEVENV_ROOT}"
@@ -90,7 +90,7 @@ in
         '';
       };
 
-      "ci:lint:trivy:config" = {
+      "ci:secops:security:trivy:config" = {
         description = "🕵️‍♂️ Check local configuration files with trivy";
         exec = ''
           cd "''${DEVENV_ROOT}"
@@ -100,14 +100,14 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:trivy".aliases = [ "trivy" ];
-      "ci:lint:trivy:fs" = {
+      "ci:secops:security:trivy".aliases = [ "trivy" ];
+      "ci:secops:security:trivy:fs" = {
         desc = "🕵️‍♂️ Check local filesystem with trivy";
         cmds = [ ''trivy 'fs' "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:lint:trivy:config" = {
+      "ci:secops:security:trivy:config" = {
         desc = "🕵️‍♂️ Check local configuration files with trivy";
         cmds = [ ''trivy 'config' "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
