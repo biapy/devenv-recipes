@@ -37,6 +37,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   shellCfg = config.biapy-recipes.shell;
   cfg = shellCfg.shfmt;
@@ -55,7 +56,7 @@ in
     };
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       shfmt = {
         enable = mkDefault true;
         settings.simplify = mkDefault true;
@@ -63,7 +64,7 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:sh:shfmt" = {
         description = "Lint shell files with shfmt";
         exec = ''
@@ -80,7 +81,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:shfmt" = {
         desc = "Lint shell files with shfmt";
         cmds = [ ''shfmt --simplify --diff "''${DEVENV_ROOT}"'' ];

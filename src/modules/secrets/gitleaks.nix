@@ -20,6 +20,7 @@ let
   inherit (pkgs) gitleaks;
   inherit (lib.modules) mkIf;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   secretsCfg = config.biapy-recipes.secrets;
   cfg = secretsCfg.gitleaks;
@@ -31,7 +32,7 @@ in
 
   config = mkIf cfg.enable {
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       gitleaks = {
         enable = true;
         package = gitleaks;
@@ -41,7 +42,7 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:secrets:gitleaks:git" = {
         description = "Check for secrets leaks in Git repository with gitleaks";
         exec = ''
@@ -59,7 +60,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:secrets:gitleaks:git" = {
         desc = "Check for secrets leaks in Git repository with gitleaks";
         cmds = [ ''${gitleaksCommand} "git"'' ];

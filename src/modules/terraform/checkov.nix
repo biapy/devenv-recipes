@@ -36,8 +36,9 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
   cfg = terraformCfg.checkov;
@@ -54,18 +55,18 @@ in
     packages = [ checkov ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       checkov = {
-        enable = true;
+        enable = mkDefault true;
         name = "Checkov";
         package = checkov;
-        pass_filenames = false;
-        entry = ''${checkovCommand} --directory "${root}"'';
+        pass_filenames = mkDefault false;
+        entry = mkDefault ''${checkovCommand} --directory "${root}"'';
       };
     };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:tf:checkov" = {
         description = "Inspect Infrastructure as Code with checkov";
         exec = ''
@@ -75,7 +76,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:tf:checkov" = {
         aliases = [ "checkov" ];
         desc = "Inspect Infrastructure as Code with checkov";

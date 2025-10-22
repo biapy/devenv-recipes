@@ -39,8 +39,9 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
   cfg = terraformCfg.terrascan;
@@ -56,9 +57,9 @@ in
     packages = [ terrascan ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       terrascan = {
-        enable = false;
+        enable = mkDefault false;
         name = "Terrascan";
         package = terrascan;
         pass_filenames = false;
@@ -67,7 +68,7 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:tf:terrascan" = {
         description = "Lint Infrastructure as Code with terrascan";
         exec = ''
@@ -77,7 +78,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:tf:terrascan" = {
         aliases = [ "terrascan" ];
         desc = "Lint Infrastructure as Code with terrascan";

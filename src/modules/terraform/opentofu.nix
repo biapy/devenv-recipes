@@ -34,7 +34,8 @@
 */
 { config, lib, ... }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.attrsets) optionalAttrs;
 
   cfg = config.biapy-recipes.terraform;
 
@@ -71,11 +72,11 @@ in
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = {
-      terraform-format.enable = true;
-      terraform-validate.enable = true;
+      terraform-format.enable = mkDefault true;
+      terraform-validate.enable = mkDefault true;
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:format:tf:tofu-fmt" = {
         aliases = [ "tf-fmt" ];
         description = "Format OpenTofu files";

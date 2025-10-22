@@ -38,6 +38,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.flake-checker;
@@ -58,15 +59,15 @@ in
     ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       flake-checker = {
-        enable = true;
+        enable = mkDefault true;
         package = flake-checker;
       };
     };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:nix:flake-checker" = {
         description = "Lint Nix flakes with flake-checker";
         exec = ''
@@ -78,7 +79,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:nix:flake-checker" = mkDefault {
         aliases = [ "flake-checker" ];
         desc = "Lint Nix flakes with flake-checker";

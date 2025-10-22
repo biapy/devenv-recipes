@@ -38,25 +38,33 @@
 }:
 let
   inherit (lib) mkOption types;
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
 
   databaseCfg = config.biapy-recipes.database;
   cfg = databaseCfg.postgresql;
 in
 {
-  options.biapy-recipes.database.postgresql.enable = mkOption {
-    type = types.bool;
-    description = "Enable PostgreSQL integration";
-    default = false;
+  options.biapy-recipes.database.postgresql = {
+    enable = mkOption {
+      type = types.bool;
+      description = "Enable PostgreSQL integration";
+      default = false;
+    };
+
+    enterShellMessages = mkOption {
+      type = types.bool;
+      default = true;
+      description = ''Display PostgreSQL information when entering the shell.'';
+    };
   };
 
   config = mkIf cfg.enable {
     # https://devenv.sh/basics/
     env = {
-      POSTGRES_USER = lib.mkDefault "postgres";
-      POSTGRES_PASSWORD = lib.mkDefault "postgres";
-      POSTGRES_DB = lib.mkDefault "postgres_doctrine_test";
-      POSTGRES_PORT = lib.mkDefault "5432";
+      POSTGRES_USER = mkDefault "postgres";
+      POSTGRES_PASSWORD = mkDefault "postgres";
+      POSTGRES_DB = mkDefault "postgres_doctrine_test";
+      POSTGRES_PORT = mkDefault "5432";
     };
 
     # https://devenv.sh/packages/
@@ -68,8 +76,8 @@ in
     ];
 
     # https://devenv.sh/services/
-    services.postgres = lib.mkDefault {
-      enable = true;
+    services.postgres = mkDefault {
+      enable = mkDefault true;
 
       listen_addresses = "127.0.0.1";
       port = lib.strings.toInt config.env.POSTGRES_PORT;
@@ -84,7 +92,7 @@ in
 
     # https://devenv.sh/tasks/
     tasks = {
-      "biapy-recipes:reset:services:postgresql" = {
+      "reset:database:postgresql" = {
         description = "Delete PostgreSQL data";
         exec = ''
           echo "Deleting PostgreSQL data in ''${PGDATA}"
@@ -95,7 +103,8 @@ in
     };
 
     biapy.go-task.taskfile.tasks = {
-      "biapy-recipes:reset:services:postgresql" = {
+      "reset:database:postgresql" = {
+        aliases = [ "reset:database:pgsql" ];
         desc = "Delete PostgreSQL data";
         cmds = [
           ''echo "Deleting PostgreSQL data in ''${PGDATA}"''
@@ -108,7 +117,7 @@ in
       };
     };
 
-    enterShell = ''
+    enterShell = mkIf cfg.enterShellMessages ''
       postgres --version
       echo "Storage: ''${PGDATA}"
     '';

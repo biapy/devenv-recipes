@@ -38,9 +38,10 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (config.devenv) root;
+  inherit (lib.attrsets) optionalAttrs;
 
   securityCfg = config.biapy-recipes.security;
   cfg = securityCfg.trivy;
@@ -61,9 +62,9 @@ in
     ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       trivy-fs = {
-        enable = true;
+        enable = mkDefault true;
         name = "Trivy local filesystem audit";
         package = trivy;
         pass_filenames = false;
@@ -71,7 +72,7 @@ in
       };
 
       trivy-config = {
-        enable = true;
+        enable = mkDefault true;
         name = "Trivy configuration audit";
         package = trivy;
         pass_filenames = false;
@@ -80,7 +81,7 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:trivy:fs" = {
         description = "Lint local filesystem with trivy";
         exec = ''
@@ -98,17 +99,17 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:trivy".aliases = [ "trivy" ];
       "ci:lint:trivy:fs" = {
         desc = "Lint local filesystem with trivy";
-        cmds = [ ''${trivyCommand} 'fs' "''${DEVENV_ROOT}"'' ];
+        cmds = [ ''trivy 'fs' "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:trivy:config" = {
         desc = "Lint local configuration files with trivy";
-        cmds = [ ''${trivyCommand} 'config' "''${DEVENV_ROOT}"'' ];
+        cmds = [ ''trivy 'config' "''${DEVENV_ROOT}"'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

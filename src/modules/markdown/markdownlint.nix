@@ -36,6 +36,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.markdownlint;
@@ -52,10 +53,10 @@ in
     devcontainer.settings.customizations.vscode.extensions = [ "DavidAnson.vscode-markdownlint" ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks { markdownlint.enable = mkDefault true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks { markdownlint.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:md:markdownlint" = mkDefault {
         description = "Lint *.md files with markdownlint";
         exec = ''
@@ -65,7 +66,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:markdownlint" = mkDefault {
         aliases = [ "markdownlint" ];
         desc = "Lint *.md files with markdownlint";

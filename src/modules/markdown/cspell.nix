@@ -35,6 +35,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.cspell;
@@ -51,15 +52,15 @@ in
     ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       cspell = {
-        enable = true;
+        enable = mkDefault true;
         files = ".*\.md$";
       };
     };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:md:cspell" = {
         description = "Lint *.md files with cspell";
         exec = ''
@@ -69,7 +70,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:cspell" = mkDefault {
         aliases = [ "cspell" ];
         desc = "Lint *.md files with cspell";

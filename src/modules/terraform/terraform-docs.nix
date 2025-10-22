@@ -29,6 +29,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.tasks) mkInitializeFilesTask;
+  inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
   cfg = terraformCfg.terraform-docs;
@@ -55,7 +56,7 @@ in
 
     # https://devenv.sh/tasks/
     tasks =
-      (mkIf cfg.tasks {
+      (optionalAttrs cfg.tasks {
         "ci:docs:tf:terraform-docs" = {
           description = "Generate Terraform modules documentation files with terraform-docs";
           exec = ''
@@ -66,7 +67,7 @@ in
       })
       // initializeFilesTask;
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:docs:tf:terraform-docs" = {
         aliases = [
           "terraform-docs"

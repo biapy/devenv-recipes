@@ -36,6 +36,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.statix;
@@ -50,10 +51,10 @@ in
     packages = [ statix ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks { statix.enable = mkDefault true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks { statix.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:nix:statix" = mkDefault {
         description = "Lint *.nix files with statix";
         exec = ''
@@ -63,6 +64,7 @@ in
           ${statixCommand} check
         '';
       };
+
       "ci:fix:nix:statix" = mkDefault {
         description = "Fix *.nix files with statix";
         exec = ''
@@ -74,7 +76,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:nix:statix" = mkDefault {
         aliases = [ "statix" ];
         desc = "Lint *.nix files with statix";

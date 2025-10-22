@@ -31,6 +31,7 @@ let
   inherit (pkgs) fd;
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   shellCfg = config.biapy-recipes.shell;
   cfg = shellCfg.shellcheck;
@@ -54,10 +55,10 @@ in
     };
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks { shellcheck.enable = mkDefault true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks { shellcheck.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:sh:shellcheck" = {
         description = "Lint *.{sh|bash|dash|ksh} files with ShellCheck";
         exec = ''
@@ -67,10 +68,10 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:shellcheck" = {
         desc = "Lint shell files with ShellCheck";
-        cmds = [ ''${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec ${shellcheckCommand}'' ];
+        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec shellcheck'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

@@ -21,6 +21,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.deadnix;
@@ -35,10 +36,10 @@ in
     packages = [ deadnix ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks { deadnix.enable = true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks { deadnix.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:nix:deadnix" = {
         description = "Lint *.nix files with deadnix";
         exec = ''
@@ -50,7 +51,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:nix:deadnix" = mkDefault {
         aliases = [ "deadnix" ];
         desc = "Lint *.nix files with deadnix";

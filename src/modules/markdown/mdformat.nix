@@ -55,9 +55,10 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.tasks) mkInitializeFilesTask;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.mdformat;
@@ -97,16 +98,19 @@ in
     packages = [ mdformat ] ++ mdformatExtensions;
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks.mdformat = mkIf cfg.git-hooks {
-      enable = true;
-      args = [ "--check" ];
-      package = pythonPackages.mdformat;
-      extraPackages = mdformatExtensions;
+    git-hooks.hooks = optionalAttrs cfg.go-task {
+      mdformat = {
+        enable = mkDefault true;
+        args = [ "--check" ];
+        package = pythonPackages.mdformat;
+        extraPackages = mdformatExtensions;
+      };
     };
 
     # https://devenv.sh/tasks/
     tasks =
-      (mkIf cfg.tasks {
+      mdformatInilializeFilesTask
+      // optionalAttrs cfg.tasks {
         "ci:lint:md:mdformat" = {
           description = "Lint *.md files with mdformat";
           exec = ''
@@ -122,10 +126,9 @@ in
             ${mdformatCommand} "''${DEVENV_ROOT}"
           '';
         };
-      })
-      // mdformatInilializeFilesTask;
+      };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:mdformat" = {
         desc = "Lint *.md files with mdformat";
         cmds = [ ''${mdformatCommand} --check "''${DEVENV_ROOT}"'' ];

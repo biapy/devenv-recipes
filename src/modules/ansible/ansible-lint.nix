@@ -35,8 +35,9 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   ansibleCfg = config.biapy-recipes.ansible;
   cfg = ansibleCfg.ansible-lint;
@@ -50,10 +51,10 @@ in
   config = mkIf cfg.enable {
     packages = [ ansible-lint ];
 
-    git-hooks.hooks = mkIf cfg.git-hooks { ansible-lint.enable = true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks { ansible-lint.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:ansible:ansible-lint" = {
         description = "Lint Ansible configuration with ansible-lint";
         exec = ''
@@ -63,7 +64,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:ansible:ansible-lint" = {
         desc = "Lint Ansible configuration with ansible-lint";
         cmds = [ ''${ansibleLintCommand}'' ];

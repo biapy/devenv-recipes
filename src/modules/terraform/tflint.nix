@@ -33,8 +33,9 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
   cfg = terraformCfg.tflint;
@@ -49,10 +50,10 @@ in
     packages = [ tflint ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks { tflint.enable = true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks { tflint.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:tf:tflint" = {
         description = "Lint *.tf files with tflint";
         exec = ''
@@ -62,7 +63,7 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:tf:tflint" = {
         aliases = [ "tflint" ];
         desc = "Lint *.tf files with tflint";

@@ -31,6 +31,7 @@ let
   inherit (pkgs) fd;
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib.attrsets) optionalAttrs;
 
   shellCfg = config.biapy-recipes.shell;
   cfg = shellCfg.beautysh;
@@ -53,10 +54,10 @@ in
     };
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = mkIf cfg.git-hooks { beautysh.enable = mkDefault true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks { beautysh.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = mkIf cfg.tasks {
+    tasks = optionalAttrs cfg.tasks {
       "ci:lint:sh:beautysh" = {
         description = "Lint *.{sh|bash|dash|ksh} files with beautysh";
         exec = ''
@@ -75,21 +76,17 @@ in
       };
     };
 
-    biapy.go-task.taskfile.tasks = mkIf cfg.go-task {
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:beautysh" = {
         desc = "Lint shell files with beautysh";
-        cmds = [
-          ''${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec ${beautyshCommand} --tab --check''
-        ];
+        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec beautysh --tab --check'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:format:sh:beautysh" = {
         aliases = [ "beautysh" ];
         desc = "Format shell files with beautysh";
-        cmds = [
-          ''${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec ${beautyshCommand} --tab''
-        ];
+        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec beautysh --tab'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };
