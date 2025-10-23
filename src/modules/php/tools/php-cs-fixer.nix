@@ -115,7 +115,7 @@ in
         "ci:lint:php:php-cs-fixer" = {
           desc = "🔍 Lint 🐘PHP files with php-cs-fixer";
           cmds = [
-            "php-cs-fixer --allow-unsupported-php-version=yes --no-interaction --diff --show-progress='none' --dry-run"
+            "php-cs-fixer 'fix' --allow-unsupported-php-version=yes --no-interaction --diff --show-progress='none' --dry-run"
           ];
           requires.vars = [ "DEVENV_ROOT" ];
         };
