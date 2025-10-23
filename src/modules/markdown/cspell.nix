@@ -29,6 +29,7 @@
 {
   config,
   lib,
+  pkgs,
   recipes-lib,
   ...
 }:
@@ -42,6 +43,9 @@ let
 
   cspell = config.git-hooks.hooks.cspell.package;
   cspellCommand = "${cspell}/bin/cspell";
+
+  inherit (pkgs) fd;
+  fdCommand = lib.meta.getExe fd;
 in
 {
   options.biapy-recipes.markdown.cspell = mkToolOptions mdCfg "CSpell";
@@ -65,7 +69,7 @@ in
         description = "🔍 Lint 📝Markdown files with cspell";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${cspellCommand} --root "''${DEVENV_ROOT}" ./**/*.md
+          ${fdCommand} '\.md$' "''${DEVENV_ROOT}" --exec-batch ${cspellCommand} --root "''${DEVENV_ROOT}" {}
         '';
       };
     };
@@ -74,7 +78,7 @@ in
       "ci:lint:md:cspell" = mkDefault {
         aliases = [ "cspell" ];
         desc = "🔍 Lint 📝Markdown files with cspell";
-        cmds = [ ''cspell --root "''${DEVENV_ROOT}" ./**/*.md'' ];
+        cmds = [ ''fd '\.md$' "''${DEVENV_ROOT}" --exec-batch cspell --root "''${DEVENV_ROOT}" {}'' ];
         requires.vars = [ "DEVENV_ROOT" ];
         shopt = [ "globstar" ];
       };

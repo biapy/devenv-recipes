@@ -173,7 +173,7 @@ tasks:
     aliases:
       - cspell
     cmds:
-      - cspell --root "${DEVENV_ROOT}" ./**/*.md
+      - fd '\.md$' "${DEVENV_ROOT}" --exec-batch cspell --root "${DEVENV_ROOT}" {}
     desc: "\U0001F50D Lint \U0001F4DDMarkdown files with cspell"
     requires:
       vars:
