@@ -47,11 +47,14 @@
   ...
 }:
 let
+  inherit (lib) types;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkVendorResetGoTask;
+  inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
 
+  phpCfg = config.biapy-recipes.php;
   phpToolsCfg = config.biapy-recipes.php.tools;
   cfg = phpToolsCfg.phpstan;
 
@@ -64,13 +67,21 @@ let
     composerJsonPath = ../../../files/php/tools/phpstan/composer.json;
     configFiles = {
       "phpstan.dist.neon" = ../../../files/php/phpstan.dist.neon;
+    }
+    // optionalAttrs cfg.doctrineObjectManagerLoader {
       "tests/PHPStan" = ../../../files/php/tests/PHPStan;
     };
     ignoredPaths = [ "phpstan.neon" ];
   };
 in
 {
-  options.biapy-recipes.php.tools.phpstan = mkToolOptions phpToolsCfg "phpstan";
+  options.biapy-recipes.php.tools.phpstan = mkToolOptions phpToolsCfg "phpstan" // {
+    doctrineObjectManagerLoader = mkOption {
+      type = types.bool;
+      default = phpCfg.symfony.enable;
+      description = "Install the Doctrine Object Manager loader for PHPStan.";
+    };
+  };
 
   config = mkIf cfg.enable {
     scripts = {

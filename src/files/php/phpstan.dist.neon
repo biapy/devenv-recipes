@@ -23,12 +23,12 @@ parameters:
         - public/
         - src/
         - tests/
-    symfony:
-        containerXmlPath: "var/cache/dev/App_KernelDevDebugContainer.xml"
-        consoleApplicationLoader: "tests/PHPStan/PhpStanConsoleApplicationLoader.php"
+    # symfony:
+    #     containerXmlPath: "var/cache/dev/App_KernelDevDebugContainer.xml"
+    #     consoleApplicationLoader: "tests/PHPStan/PhpStanConsoleApplicationLoader.php"
 
-    doctrine:
-        objectManagerLoader: "tests/PHPStan/PhpStanObjectManagerLoader.php"
+    # doctrine:
+    #     objectManagerLoader: "tests/PHPStan/PhpStanObjectManagerLoader.php"
 
     excludePaths:
         # Exclude PHP CS Fixer configuration file from scans
