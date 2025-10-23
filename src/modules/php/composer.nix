@@ -82,7 +82,7 @@ in
     tasks =
       optionalAttrs cfg.tasks {
         "biapy-recipes:enterShell:install:php:composer" = {
-          description = "Install composer packages";
+          description = "Install 🐘composer packages";
           before = [ "devenv:enterShell" ];
           status = ''test -e "''${DEVENV_ROOT}/vendor/autoload.php"'';
           exec = ''
@@ -94,11 +94,22 @@ in
         };
 
         "reset:php:composer" = {
-          description = "Delete Composer 'vendor' folder";
+          description = "🔥 Delete 🐘composer 'vendor' folder";
           exec = ''
             echo "Deleting Composer 'vendor' folder"
             [[ -e "''${DEVENV_ROOT}/vendor/" ]] &&
               rm -r "''${DEVENV_ROOT}/vendor/"
+          '';
+          status = ''test ! -d "''${DEVENV_ROOT}/vendor/"'';
+        };
+
+        "update:php:composer" = {
+          description = "⬆️ Update 🐘composer packages";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            if [[ -e "''${DEVENV_ROOT}/composer.json" ]]; then
+              ${composerCommand} --working-dir="''${DEVENV_ROOT}" 'update'
+            fi
           '';
         };
       }
@@ -110,11 +121,29 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "reset:php:composer" = {
-        desc = "Delete Composer 'vendor' folder";
+        desc = "🔥 Delete 🐘composer 'vendor' folder";
+        preconditions = [
+          {
+            sh = ''test -d "''${DEVENV_ROOT}/vendor/"'';
+            msg = "Project's vendor folder does not exist, skipping.";
+          }
+        ];
         cmds = [
-          ''echo "Deleting Composer 'vendor' folder"''
+          ''echo "Deleting composer 'vendor' folder"''
           ''[[ -e "''${DEVENV_ROOT}/vendor/" ]] && rm -r "''${DEVENV_ROOT}/vendor/"''
         ];
+        requires.vars = [ "DEVENV_ROOT" ];
+      };
+
+      "update:php:composer" = {
+        desc = "⬆️ Update 🐘composer packages";
+        preconditions = [
+          {
+            sh = ''test -e "''${DEVENV_ROOT}/composer.json"'';
+            msg = "Project's composer.json does not exist, skipping.";
+          }
+        ];
+        cmds = [ ''composer --working-dir="''${DEVENV_ROOT}" update'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };

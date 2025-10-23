@@ -89,7 +89,7 @@ in
     tasks =
       optionalAttrs cfg.tasks {
         "ci:lint:symfony:container" = {
-          description = "Lint services container with Symfony console";
+          description = "🔍 Lint services container with Symfony console";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'lint:container'
@@ -97,7 +97,7 @@ in
         };
 
         "ci:lint:symfony:translations" = {
-          description = "Lint translations with Symfony console";
+          description = "🔍 Lint translations with Symfony console";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'lint:translations'
@@ -105,7 +105,7 @@ in
         };
 
         "ci:lint:symfony:twig" = {
-          description = "Lint 'twig' files with Symfony console";
+          description = "🔍 Lint 'twig' files with Symfony console";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${fdCommand} --extension='twig' --type='file' --exec-batch \
@@ -114,7 +114,7 @@ in
         };
 
         "ci:lint:symfony:xliff" = {
-          description = "Lint 'xlf' files with Symfony console";
+          description = "🔍 Lint 'xlf' files with Symfony console";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${fdCommand} --extension='xlf' --type='file' --exec-batch \
@@ -123,7 +123,7 @@ in
         };
 
         "ci:lint:symfony:yaml" = {
-          description = "Lint 'yml' files with Symfony console";
+          description = "🔍 Lint 'yml' files with Symfony console";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch \
@@ -139,35 +139,35 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:symfony:container" = {
-        desc = "Lint services container with Symfony console";
+        desc = "🔍 Lint services container with Symfony console";
         cmds = [ "symfony console 'lint:container'" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:symfony:translations" = {
-        desc = "Lint translations with Symfony console";
+        desc = "🔍 Lint translations with Symfony console";
         cmds = [ "symfony console 'lint:translations'" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:symfony:twig" = {
-        desc = "Lint 'twig' files with Symfony console";
+        desc = "🔍 Lint 'twig' files with Symfony console";
         cmds = [
-          ''fd --extension='twig' --type='file' --exec-batch symfony console 'lint:twig' '--show-deprecations''
+          "fd --extension='twig' --type='file' --exec-batch symfony console 'lint:twig' --show-deprecations"
         ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:symfony:xliff" = {
-        desc = "Lint 'xlf' files with Symfony console";
-        cmds = [ ''fd --extension='xlf' --type='file' --exec-batch symfony console 'lint:xliff'' ];
+        desc = "🔍 Lint 'xlf' files with Symfony console";
+        cmds = [ "fd --extension='xlf' --type='file' --exec-batch symfony console 'lint:xliff'" ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:lint:symfony:yaml" = {
-        desc = "Lint 'yml' files with Symfony console";
+        desc = "🔍 Lint 'yml' files with Symfony console";
         cmds = [
-          ''fd --extension='yml' --extension='yaml' --type='file' --exec-batch symfony console 'lint:yaml''
+          "fd --extension='yml' --extension='yaml' --type='file' --exec-batch symfony console 'lint:yaml'"
         ];
         requires.vars = [ "DEVENV_ROOT" ];
       };

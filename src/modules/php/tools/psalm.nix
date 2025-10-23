@@ -44,7 +44,7 @@
 }:
 let
   inherit (recipes-lib.modules) mkToolOptions;
-  inherit (php-recipe-lib) mkPhpToolTasks mkVendorResetGoTask;
+  inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
 
@@ -99,7 +99,7 @@ in
       };
 
     biapy.go-task.taskfile.tasks =
-      (mkVendorResetGoTask toolConfiguration)
+      (mkPhpToolGoTasks toolConfiguration)
       // optionalAttrs cfg.go-task {
         "ci:lint:php:psalm" = {
           aliases = [ "psalm" ];

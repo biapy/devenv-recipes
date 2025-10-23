@@ -49,7 +49,7 @@
 let
   inherit (lib) types;
   inherit (recipes-lib.modules) mkToolOptions;
-  inherit (php-recipe-lib) mkPhpToolTasks mkVendorResetGoTask;
+  inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
   inherit (lib.options) mkOption;
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
@@ -130,7 +130,7 @@ in
           requires.vars = [ "DEVENV_ROOT" ];
         };
       }
-      // mkVendorResetGoTask toolConfiguration;
+      // mkPhpToolGoTasks toolConfiguration;
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {

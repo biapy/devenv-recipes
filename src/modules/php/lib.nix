@@ -38,6 +38,7 @@ rec {
       initializeComposerJsonTask = mkInitializeComposerJsonTask toolConfiguration;
       installTask = mkInstallTask toolConfiguration;
       resetTask = mkResetTask toolConfiguration;
+      updateTask = mkUpdateTask toolConfiguration;
       initializeConfigFilesTask = optionalAttrs (isAttrs (toolConfiguration.configFiles or null)) (
         mkInitializeConfigFilesTask toolConfiguration
       );
@@ -49,9 +50,21 @@ rec {
     mergeAttrsList [
       initializeComposerJsonTask
       installTask
+      updateTask
       resetTask
       initializeConfigFilesTask
       gitIgnoreTask
+    ];
+
+  mkPhpToolGoTasks =
+    toolConfiguration:
+    let
+      resetTask = mkVendorResetGoTask toolConfiguration;
+      updateTask = mkUpdateGoTask toolConfiguration;
+    in
+    mergeAttrsList [
+      updateTask
+      resetTask
     ];
 
   mkInitializeComposerJsonTask =
@@ -125,12 +138,48 @@ rec {
           toolVendorPath = "${toolsPath}/${namespace}/vendor";
         in
         {
-          description = "Delete ${name} '${toolVendorPath}' folder";
+          description = "🔥 Delete 🐘${name} '${toolVendorPath}' folder";
           exec = ''
             echo "Deleting '''''${DEVENV_ROOT}/${toolVendorPath}' folder"
-            [[ -e "''${DEVENV_ROOT}/${toolVendorPath}" ]] &&
+            [[ -d "''${DEVENV_ROOT}/${toolVendorPath}" ]] &&
               rm -r "''${DEVENV_ROOT}/${toolVendorPath}"
           '';
+          status = ''test ! -d "''${DEVENV_ROOT}/${toolVendorPath}"'';
+        };
+    };
+
+  mkUpdateTask =
+    { name, namespace, ... }:
+    {
+      "update:php:tools:${namespace}" =
+        let
+          toolPath = "${toolsPath}/${namespace}";
+        in
+        {
+          description = "⬆️ Update 🐘${name}";
+          exec = ''
+            '${composerCommand}' --working-dir="''${DEVENV_ROOT}/${toolPath}" 'update'
+          '';
+        };
+    };
+
+  mkUpdateGoTask =
+    { name, namespace, ... }:
+    {
+      "update:php:tools:${namespace}" =
+        let
+          toolPath = "${toolsPath}/${namespace}";
+        in
+        {
+          desc = "⬆️ Update 🐘${name}";
+          preconditions = [
+            {
+              sh = ''test -e "''${DEVENV_ROOT}/${toolPath}/composer.json"'';
+              msg = "${name}'s composer.json does not exist, skipping.";
+            }
+          ];
+          cmds = [ ''composer --working-dir="''${DEVENV_ROOT}/${toolPath}" update'' ];
+          requires.vars = [ "DEVENV_ROOT" ];
         };
     };
 
@@ -142,7 +191,13 @@ rec {
           toolVendorPath = "${toolsPath}/${namespace}/vendor";
         in
         {
-          desc = "Delete ${name} '${toolVendorPath}' folder";
+          desc = "🔥 Delete 🐘${name} '${toolVendorPath}' folder";
+          preconditions = [
+            {
+              sh = ''test -d "''${DEVENV_ROOT}/${toolVendorPath}"'';
+              msg = "${name}'s vendor folder '${toolVendorPath}' does not exist, skipping.";
+            }
+          ];
           cmds = [
             ''echo "Deleting '''''${DEVENV_ROOT}/${toolVendorPath}' folder"''
             ''[[ -e "''${DEVENV_ROOT}/${toolVendorPath}" ]] && rm -r "''${DEVENV_ROOT}/${toolVendorPath}"''

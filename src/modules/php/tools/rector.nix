@@ -31,7 +31,7 @@
 }:
 let
   inherit (recipes-lib.modules) mkToolOptions;
-  inherit (php-recipe-lib) mkPhpToolTasks mkVendorResetGoTask;
+  inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
 
@@ -80,6 +80,7 @@ in
             rector 'process' '--no-progress-bar'
           '';
         };
+
         "ci:lint:php:rector" = {
           description = "🔍 Lint 🐘PHP files with Rector";
           exec = ''
@@ -90,7 +91,8 @@ in
       };
 
     biapy.go-task.taskfile.tasks =
-      optionalAttrs cfg.go-task {
+      (mkPhpToolGoTasks toolConfiguration)
+      // optionalAttrs cfg.go-task {
         "ci:fix:php:rector" = {
           aliases = [ "rector" ];
           desc = "🧹 Fix 🐘PHP files with Rector";
@@ -103,8 +105,7 @@ in
           cmds = [ "rector 'process' '--no-progress-bar' '--dry-run'" ];
           requires.vars = [ "DEVENV_ROOT" ];
         };
-      }
-      // mkVendorResetGoTask toolConfiguration;
+      };
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
