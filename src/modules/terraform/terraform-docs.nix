@@ -21,7 +21,7 @@
 {
   config,
   lib,
-  pkgs,
+  pkgs-unstable,
   recipes-lib,
   ...
 }:
@@ -29,12 +29,14 @@ let
   inherit (lib.modules) mkIf;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.tasks) mkInitializeFilesTask;
+  inherit (lib.lists) optional;
   inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
+  mdCfg = config.biapy-recipes.markdown;
   cfg = terraformCfg.terraform-docs;
 
-  inherit (pkgs) terraform-docs;
+  inherit (pkgs-unstable) terraform-docs;
   tfDocsCommand = lib.meta.getExe terraform-docs;
 
   initializeFilesTask = mkInitializeFilesTask {
@@ -63,6 +65,7 @@ in
             cd "''${DEVENV_ROOT}"
             ${tfDocsCommand} --recursive "''${DEVENV_ROOT}"
           '';
+          before = mkIf mdCfg.mdformat.enable [ "ci:format:md:mdformat" ];
         };
       })
       // initializeFilesTask;
@@ -74,7 +77,14 @@ in
           "tfdocs"
         ];
         desc = "📚 Generate 🏗️Terraform modules documentation files with terraform-docs";
-        cmds = [ ''terraform-docs --recursive "''${DEVENV_ROOT}"'' ];
+        cmds = [
+          ''terraform-docs --recursive "''${DEVENV_ROOT}"''
+        ]
+        ++ optional mdCfg.mdformat.enable {
+          defer = {
+            task = "ci:format:md:mdformat";
+          };
+        };
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };
