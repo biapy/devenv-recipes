@@ -21,12 +21,13 @@
 {
   config,
   lib,
-  pkgs-unstable,
+  pkgs,
   recipes-lib,
   ...
 }:
 let
   inherit (lib.modules) mkIf;
+  inherit (lib.options) mkPackageOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.tasks) mkInitializeFilesTask;
   inherit (lib.lists) optional;
@@ -36,7 +37,7 @@ let
   mdCfg = config.biapy-recipes.markdown;
   cfg = terraformCfg.terraform-docs;
 
-  inherit (pkgs-unstable) terraform-docs;
+  terraform-docs = cfg.package;
   tfDocsCommand = lib.meta.getExe terraform-docs;
 
   initializeFilesTask = mkInitializeFilesTask {
@@ -48,7 +49,9 @@ let
   };
 in
 {
-  options.biapy-recipes.terraform.terraform-docs = mkToolOptions terraformCfg "terraform-docs";
+  options.biapy-recipes.terraform.terraform-docs = mkToolOptions terraformCfg "terraform-docs" // {
+    package = mkPackageOption pkgs "terraform-docs";
+  };
 
   config = mkIf cfg.enable {
     # https://devenv.sh/packages/
