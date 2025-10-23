@@ -31,6 +31,7 @@
 {
   config,
   lib,
+  pkgs,
   recipes-lib,
   ...
 }:
@@ -42,6 +43,9 @@ let
   shellCfg = config.biapy-recipes.shell;
   cfg = shellCfg.shfmt;
 
+  inherit (pkgs) fd;
+  fdCommand = lib.meta.getExe fd;
+
   shfmt = config.git-hooks.hooks.shfmt.package;
   shfmtCommand = lib.meta.getExe shfmt;
 in
@@ -49,7 +53,10 @@ in
   options.biapy-recipes.shell.shfmt = mkToolOptions shellCfg "shfmt";
 
   config = mkIf cfg.enable {
-    packages = [ shfmt ];
+    packages = [
+      shfmt
+      fd
+    ];
 
     devcontainer.settings.customizations.vscode = {
       extensions = [ "mkhl.shfmt" ];
@@ -69,14 +76,14 @@ in
         description = "🔍 Lint 🐚shell files with shfmt";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${shfmtCommand} --simplify --diff "''${DEVENV_ROOT}"
+          ${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec-batch ${shfmtCommand} --simplify --diff {}
         '';
       };
       "ci:format:sh:shfmt" = {
         description = "🎨 Format 🐚shell files with shfmt";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${shfmtCommand} --simplify --diff --write "''${DEVENV_ROOT}" || true
+          ${fdCommand} '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec-batch ${shfmtCommand} --simplify --diff --write {} || true
         '';
       };
     };
@@ -84,14 +91,18 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:shfmt" = {
         desc = "🔍 Lint 🐚shell files with shfmt";
-        cmds = [ ''shfmt --simplify --diff "''${DEVENV_ROOT}"'' ];
+        cmds = [
+          ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec-batch shfmt --simplify --diff {}''
+        ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
       "ci:format:sh:shfmt" = {
         aliases = [ "shfmt" ];
         desc = "🎨 Format 🐚shell files with shfmt";
-        cmds = [ ''shfmt --simplify --diff --write "''${DEVENV_ROOT}" || true'' ];
+        cmds = [
+          ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec-batch shfmt --simplify --diff --write {} || true''
+        ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
     };
