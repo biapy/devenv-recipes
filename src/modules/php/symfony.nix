@@ -49,6 +49,7 @@
 let
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.tasks) mkGitIgnoreTask;
+  inherit (lib.options) mkPackageOption;
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
 
@@ -56,13 +57,15 @@ let
   cfg = phpCfg.symfony;
 
   inherit (config.devenv) root;
-  inherit (pkgs) symfony-cli;
+  symfony-cli = cfg.package;
   symfonyCommand = lib.meta.getExe symfony-cli;
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 in
 {
-  options.biapy-recipes.php.symfony = mkToolOptions phpCfg "symfony";
+  options.biapy-recipes.php.symfony = mkToolOptions { enable = false; } "symfony" // {
+    package = mkPackageOption pkgs "symfony-cli";
+  };
 
   config = mkIf cfg.enable {
     packages = [ fd ];
