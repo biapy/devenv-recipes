@@ -108,7 +108,7 @@ in
         "ci:lint:php:phpmd" = {
           aliases = [ "phpmd" ];
           desc = "🔍 Lint 🐘PHP files with PHP Mess Detector";
-          cmds = [ "phpmd {src,tests} 'ansi' 'phpmd.xml" ];
+          cmds = [ "phpmd {src,tests} 'ansi' 'phpmd.xml'" ];
           requires.vars = [ "DEVENV_ROOT" ];
         };
       }
