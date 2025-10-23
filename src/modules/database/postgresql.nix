@@ -93,7 +93,7 @@ in
     # https://devenv.sh/tasks/
     tasks = {
       "reset:database:postgresql" = {
-        description = "Delete PostgreSQL data";
+        description = "🔥 Delete 🗃️PostgreSQL data";
         exec = ''
           echo "Deleting PostgreSQL data in ''${PGDATA}"
           [[ -e "''${PGDATA}" ]] &&
@@ -105,7 +105,7 @@ in
     biapy.go-task.taskfile.tasks = {
       "reset:database:postgresql" = {
         aliases = [ "reset:database:pgsql" ];
-        desc = "Delete PostgreSQL data";
+        desc = "🔥 Delete 🗃️PostgreSQL data";
         cmds = [
           ''echo "Deleting PostgreSQL data in ''${PGDATA}"''
           ''[[ -e "''${PGDATA}" ]] && rm -r "''${PGDATA}"''
