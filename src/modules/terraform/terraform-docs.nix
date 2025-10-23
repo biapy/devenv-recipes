@@ -50,7 +50,7 @@ let
 in
 {
   options.biapy-recipes.terraform.terraform-docs = mkToolOptions terraformCfg "terraform-docs" // {
-    package = mkPackageOption pkgs "terraform-docs";
+    package = mkPackageOption pkgs "terraform-docs" { };
   };
 
   config = mkIf cfg.enable {

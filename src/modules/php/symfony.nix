@@ -64,7 +64,7 @@ let
 in
 {
   options.biapy-recipes.php.symfony = mkToolOptions { enable = false; } "symfony" // {
-    package = mkPackageOption pkgs "symfony-cli";
+    package = mkPackageOption pkgs "symfony-cli" { };
   };
 
   config = mkIf cfg.enable {

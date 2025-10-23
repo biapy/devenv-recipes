@@ -34,7 +34,7 @@ in
 
   options.biapy-recipes.devcontainer = {
     enable = mkEnableOption "devcontainer";
-    package = mkPackageOption pkgs "devcontainer";
+    package = mkPackageOption pkgs "devcontainer" { };
   };
 
   config = mkIf cfg.enable {
