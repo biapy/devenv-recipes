@@ -41,7 +41,6 @@ in
       # Docs & Workflow management
       atlantis # Terraform Pull Request Automation
       # tenv # OpenTofu, Terraform, Terragrunt and Atmos version manager written in Go
-      terraform-docs # Utility to generate documentation from Terraform modules in various output formats
       terramate # Adds code generation, stacks, orchestration, change detection, data sharing and more to Terraform
       tfproviderdocs # Terraform Provider Documentation Tool
       # tfswitch # A command line tool to switch between different versions of terraform
