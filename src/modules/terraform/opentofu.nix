@@ -79,7 +79,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:format:tf:tofu-fmt" = {
         aliases = [ "tf-fmt" ];
-        description = "🎨 Format 🏗️OpenTofu files";
+        desc = "🎨 Format 🏗️OpenTofu files";
         cmds = [ ''tofu fmt --recursive'' ];
         requires.vars = [ "DEVENV_ROOT" ];
       };
