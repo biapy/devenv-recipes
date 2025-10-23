@@ -80,7 +80,7 @@ in
               exit 1
             fi
 
-            ${composerCommand} --working-dir="''${toolPath}" normalize "''${@}"
+            ${composerCommand} --working-dir="${toolPath}" normalize "''${@}"
           '';
         };
     };
