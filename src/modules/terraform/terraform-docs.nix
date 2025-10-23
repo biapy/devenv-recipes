@@ -41,7 +41,7 @@ let
     name = "terraform-docs";
     namespace = "terraform-docs";
     configFiles = {
-      ".terraform-docs.yml" = ../files/terraform/.terraform-docs.yml;
+      ".terraform-docs.yml" = ../../files/terraform/.terraform-docs.yml;
     };
   };
 in
