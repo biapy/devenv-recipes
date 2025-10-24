@@ -8,6 +8,7 @@ in
     ./glow.nix
     ./markdownlint.nix
     ./mdformat.nix
+    ./vale.nix
   ];
 
   options.biapy-recipes.markdown = recipes-lib.modules.mkModuleOptions "Markdown";
