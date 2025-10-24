@@ -1,9 +1,9 @@
 tasks:
   ci:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -17,9 +17,9 @@ tasks:
     aliases:
       - fix
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     desc: "\U0001F9F9 Run all fixing tasks"
     ignore_error: true
     requires:
@@ -32,9 +32,9 @@ tasks:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
   ci:fix:nix:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -46,8 +46,11 @@ tasks:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
   ci:fix:nix:statix:
     cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F9F9 Fix ❄️Nix files with statix ===\\033[0m\""
+        silent: true
       - statix fix
     desc: "\U0001F9F9 Fix ❄️Nix files with statix"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
@@ -56,9 +59,9 @@ tasks:
       - format
       - fmt
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     desc: "\U0001F3A8 Run all formatting tasks"
     ignore_error: true
     requires:
@@ -71,9 +74,9 @@ tasks:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
   ci:format:md:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -87,16 +90,19 @@ tasks:
     aliases:
       - mdformat
     cmds:
-      - mdformat "${DEVENV_ROOT}"
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F3A8 Format \U0001F4DDMarkdown files with mdformat ===\\033[0m\""
+        silent: true
+      - mdformat './'
     desc: "\U0001F3A8 Format \U0001F4DDMarkdown files with mdformat"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
   ci:format:nix:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -110,16 +116,19 @@ tasks:
     aliases:
       - nixfmt
     cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F3A8 Format ❄️Nix files with nixfmt ===\\033[0m\""
+        silent: true
       - /nix/store/p1fba2h03iawzgfaya2zlx0mfd5sikq3-nixfmt-tree/bin/treefmt --tree-root "${DEVENV_ROOT}"
     desc: "\U0001F3A8 Format ❄️Nix files with nixfmt"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
   ci:format:sh:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -133,8 +142,11 @@ tasks:
     aliases:
       - shfmt
     cmds:
-      - shfmt --simplify --diff --write "${DEVENV_ROOT}" || true
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F3A8 Format \U0001F41Ashell files with shfmt ===\\033[0m\""
+        silent: true
+      - fd '.(sh|bash|dash|ksh)$' --exec-batch shfmt --simplify --diff --write {} || true
     desc: "\U0001F3A8 Format \U0001F41Ashell files with shfmt"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
@@ -142,9 +154,9 @@ tasks:
     aliases:
       - lint
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     desc: "\U0001F50D Run all linting tasks"
     ignore_error: true
     requires:
@@ -157,9 +169,9 @@ tasks:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
   ci:lint:md:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -173,34 +185,41 @@ tasks:
     aliases:
       - cspell
     cmds:
-      - fd '\.md$' "${DEVENV_ROOT}" --exec-batch cspell --root "${DEVENV_ROOT}" {}
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint \U0001F4DDMarkdown files with cspell ===\\033[0m\""
+        silent: true
+      - fd '\.md$' --exec-batch cspell {}
     desc: "\U0001F50D Lint \U0001F4DDMarkdown files with cspell"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
-    shopt:
-      - globstar
   ci:lint:md:markdownlint:
     aliases:
       - markdownlint
     cmds:
-      - fd '\.md$' "${DEVENV_ROOT}" --exec-batch markdownlint {}
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint \U0001F4DDMarkdown files with markdownlint ===\\033[0m\""
+        silent: true
+      - fd '\.md$' --exec-batch markdownlint {}
     desc: "\U0001F50D Lint \U0001F4DDMarkdown files with markdownlint"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
   ci:lint:md:mdformat:
     cmds:
-      - mdformat --check "${DEVENV_ROOT}"
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint \U0001F4DDMarkdown files with mdformat ===\\033[0m\""
+        silent: true
+      - mdformat --check './'
     desc: "\U0001F50D Lint \U0001F4DDMarkdown files with mdformat"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
   ci:lint:nix:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -210,21 +229,15 @@ tasks:
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
-  ci:lint:nix:deadnix:
-    aliases:
-      - deadnix
-    cmds:
-      - deadnix --fail
-    desc: "\U0001F50D Lint ❄️Nix files with deadnix"
-    requires:
-      vars:
-        - DEVENV_ROOT
   ci:lint:nix:flake-checker:
     aliases:
       - flake-checker
     cmds:
-      - flake-checker --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | glow
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint ❄️Nix flakes with flake-checker ===\\033[0m\""
+        silent: true
+      - fd '^flake\.lock$' --exec flake-checker --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | glow
     desc: "\U0001F50D Lint ❄️Nix flakes with flake-checker"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
@@ -232,8 +245,11 @@ tasks:
     aliases:
       - nil
     cmds:
-      - fd '\.nix$' "${DEVENV_ROOT}" --exec-batch nil "diagnostics"
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint ❄️Nix files with nil ===\\033[0m\""
+        silent: true
+      - fd '\.nix$' --exec-batch nil "diagnostics"
     desc: "\U0001F50D Lint ❄️Nix files with nil"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
@@ -241,16 +257,19 @@ tasks:
     aliases:
       - statix
     cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint ❄️Nix files with statix ===\\033[0m\""
+        silent: true
       - statix check
     desc: "\U0001F50D Lint ❄️Nix files with statix"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
   ci:lint:sh:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -262,15 +281,21 @@ tasks:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
   ci:lint:sh:shellcheck:
     cmds:
-      - fd '\.(sh|bash|dash|ksh)$' "${DEVENV_ROOT}" --exec shellcheck
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint \U0001F41Ashell files with ShellCheck ===\\033[0m\""
+        silent: true
+      - fd '\.(sh|bash|dash|ksh)$' --exec shellcheck
     desc: "\U0001F50D Lint \U0001F41Ashell files with ShellCheck"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
   ci:lint:sh:shfmt:
     cmds:
-      - shfmt --simplify --diff "${DEVENV_ROOT}"
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint \U0001F41Ashell files with shfmt ===\\033[0m\""
+        silent: true
+      - fd '.(sh|bash|dash|ksh)$' --exec-batch shfmt --simplify --diff {}
     desc: "\U0001F50D Lint \U0001F41Ashell files with shfmt"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
@@ -278,9 +303,9 @@ tasks:
     aliases:
       - secops
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     desc: "\U0001F575️‍♂️ Run all SecOps tasks"
     ignore_error: true
     requires:
@@ -293,9 +318,9 @@ tasks:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
   ci:secops:secrets:
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -309,9 +334,9 @@ tasks:
     aliases:
       - gitleaks
     cmds:
-      - cmd: task '{{.ITEM}}'
-        for:
+      - for:
           var: TASKS
+        task: '{{.ITEM}}'
     ignore_error: true
     requires:
       vars:
@@ -323,15 +348,71 @@ tasks:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
   ci:secops:secrets:gitleaks:dir:
     cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check for \U0001F510secrets leaks in project files with gitleaks ===\\033[0m\""
+        silent: true
       - gitleaks 'dir'
     desc: "\U0001F575️‍♂️ Check for \U0001F510secrets leaks in project files with gitleaks"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT
   ci:secops:secrets:gitleaks:git:
     cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check for \U0001F510secrets leaks in Git repository with gitleaks ===\\033[0m\""
+        silent: true
       - gitleaks 'git'
     desc: "\U0001F575️‍♂️ Check for \U0001F510secrets leaks in Git repository with gitleaks"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
+  ci:secops:security:
+    cmds:
+      - for:
+          var: TASKS
+        task: '{{.ITEM}}'
+    ignore_error: true
+    requires:
+      vars:
+        - DEVENV_ROOT
+    silent: true
+    summary: "\U0001F5C2️ Run 'ci:secops:security:*' tasks"
+    vars:
+      TASKS:
+        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:secops:security:trivy:
+    aliases:
+      - trivy
+    cmds:
+      - for:
+          var: TASKS
+        task: '{{.ITEM}}'
+    ignore_error: true
+    requires:
+      vars:
+        - DEVENV_ROOT
+    silent: true
+    summary: "\U0001F5C2️ Run 'ci:secops:security:trivy:*' tasks"
+    vars:
+      TASKS:
+        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:secops:security:trivy:config:
+    cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check local configuration files with trivy ===\\033[0m\""
+        silent: true
+      - trivy 'config' './'
+    desc: "\U0001F575️‍♂️ Check local configuration files with trivy"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
+  ci:secops:security:trivy:fs:
+    cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check local filesystem with trivy ===\\033[0m\""
+        silent: true
+      - trivy 'fs' './'
+    desc: "\U0001F575️‍♂️ Check local filesystem with trivy"
+    dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
         - DEVENV_ROOT

@@ -9,6 +9,7 @@ _:
     nix.enable = true;
     markdown.enable = true;
     shell.enable = true;
+    security.enable = true;
     secrets.gitleaks.enable = true;
   };
 

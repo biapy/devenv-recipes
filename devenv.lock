@@ -3,10 +3,10 @@
     "devenv": {
       "locked": {
         "dir": "src/modules",
-        "lastModified": 1761156818,
+        "lastModified": 1761312573,
         "owner": "cachix",
         "repo": "devenv",
-        "rev": "949fc6dc8f36f38e1cceb1bf1673c4e995a6a766",
+        "rev": "105db6350884b8c2d3d7df4d155d8688cd5229f7",
         "type": "github"
       },
       "original": {
@@ -76,10 +76,10 @@
       "flake": false,
       "locked": {
         "dir": "modules/go-task",
-        "lastModified": 1761163409,
+        "lastModified": 1761302161,
         "owner": "biapy",
         "repo": "devenv-go-task",
-        "rev": "f2cc0b4a89407ced05b9bfa94a2f02d31322e769",
+        "rev": "524f4814f39550d733c23a8ea4afc97e6dfd6d3f",
         "type": "github"
       },
       "original": {
@@ -106,10 +106,10 @@
     },
     "nixpkgs-unstable": {
       "locked": {
-        "lastModified": 1760965567,
+        "lastModified": 1761236834,
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "cb82756ecc37fa623f8cf3e88854f9bf7f64af93",
+        "rev": "d5faa84122bc0a1fd5d378492efce4e289f8eac1",
         "type": "github"
       },
       "original": {
