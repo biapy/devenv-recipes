@@ -41,6 +41,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
@@ -79,11 +80,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:tf:terrascan" = {
+      "ci:lint:tf:terrascan" = patchGoTask {
         aliases = [ "terrascan" ];
         desc = "🔍 Lint 🏗️Infrastructure as Code with terrascan";
         cmds = [ ''terrascan 'scan' --iac-type "terraform"'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

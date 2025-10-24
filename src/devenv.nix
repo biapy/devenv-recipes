@@ -22,14 +22,30 @@
 
   - [devcontainer @ Devenv Reference Manual](https://devenv.sh/reference/options/#devcontainerenable).
 */
-{ config, lib, ... }:
+args@{
+  config,
+  lib,
+  pkgs,
+  nixpkgs-unstable,
+  ...
+}:
 let
   inherit (lib.modules) mkIf;
+  inherit (lib.lists) map;
+
+  pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
+  recipes-lib = import ./lib args;
+
+  imports-args = args // {
+    inherit recipes-lib;
+    inherit pkgs-unstable;
+  };
 
   taskCfg = config.biapy.go-task;
 in
 {
-  imports = [ ./modules ];
+
+  imports = map (path: import path imports-args) [ ./modules ];
 
   config = {
     biapy.go-task.taskfile.tasks = mkIf taskCfg.prefixed-tasks.enable {

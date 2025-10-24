@@ -50,11 +50,11 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (lib.attrsets) optionalAttrs;
-
-  inherit (lib.modules) mkIf mkDefault;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
   cfg = phpToolsCfg.phpcs;
@@ -125,11 +125,10 @@ in
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:lint:php:phpcs" = {
+        "ci:lint:php:phpcs" = patchGoTask {
           aliases = [ "phpcs" ];
           desc = "Lint '.php' files with PHP CodeSniffer";
           cmds = [ ''phpcs --colors'' ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
       }
       // mkPhpToolGoTasks toolConfiguration;

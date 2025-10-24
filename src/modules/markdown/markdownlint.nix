@@ -35,21 +35,30 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (recipes-lib.modules) mkToolOptions;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.markdownlint;
 
-  markdownlint = config.git-hooks.hooks.markdownlint.package;
+  markdownlint = cfg.package;
   markdownlintCommand = lib.meta.getExe markdownlint;
 
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 in
 {
-  options.biapy-recipes.markdown.markdownlint = mkToolOptions mdCfg "markdownlint";
+  options.biapy-recipes.markdown.markdownlint = mkToolOptions mdCfg "markdownlint" // {
+    package = mkOption {
+      description = "The markdownlint package to use.";
+      defaultText = "pkgs.markdownlint";
+      type = lib.types.package;
+      default = config.git-hooks.hooks.markdownlint.package;
+    };
+  };
 
   config = mkIf cfg.enable {
     packages = [
@@ -74,11 +83,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:md:markdownlint" = mkDefault {
+      "ci:lint:md:markdownlint" = patchGoTask {
         aliases = [ "markdownlint" ];
         desc = "🔍 Lint 📝Markdown files with markdownlint";
-        cmds = [ ''fd '\.md$' "''${DEVENV_ROOT}" --exec-batch markdownlint {}'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ "fd '\\.md$' --exec-batch markdownlint {}" ];
       };
     };
   };

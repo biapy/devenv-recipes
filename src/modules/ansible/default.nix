@@ -8,27 +8,12 @@
 
   - [Ansible Community homepage](https://docs.ansible.com/ansible/latest/index.html).
 */
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}@args:
+args@{ lib, recipes-lib, ... }:
 let
   inherit (lib.lists) map;
-  recipes-lib = import ../../lib args;
-  imports-args = {
-    inherit
-      config
-      lib
-      pkgs
-      recipes-lib
-      ;
-  };
-
 in
 {
-  imports = map (path: import path imports-args) [
+  imports = map (path: import path args) [
     ./ansible.nix
     ./ansible-lint.nix
     ./ansible-tools.nix

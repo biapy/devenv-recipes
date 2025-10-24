@@ -40,10 +40,11 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.tasks) mkGitIgnoreTask;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   inherit (config.devenv) root;
   inherit (config.languages.php.packages) composer;
@@ -120,7 +121,7 @@ in
       };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "reset:php:composer" = {
+      "reset:php:composer" = patchGoTask {
         desc = "🔥 Delete 🐘composer 'vendor' folder";
         preconditions = [
           {
@@ -130,12 +131,11 @@ in
         ];
         cmds = [
           ''echo "Deleting composer 'vendor' folder"''
-          ''[[ -e "''${DEVENV_ROOT}/vendor/" ]] && rm -r "''${DEVENV_ROOT}/vendor/"''
+          "[[ -e './vendor/' ]] && rm -r './vendor/'"
         ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "update:php:composer" = {
+      "update:php:composer" = patchGoTask {
         desc = "⬆️ Update 🐘composer packages";
         preconditions = [
           {
@@ -143,8 +143,7 @@ in
             msg = "Project's composer.json does not exist, skipping.";
           }
         ];
-        cmds = [ ''composer --working-dir="''${DEVENV_ROOT}" update'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ ''composer update'' ];
       };
     };
 

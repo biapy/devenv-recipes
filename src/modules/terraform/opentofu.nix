@@ -32,10 +32,16 @@
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
   - [Cloud Development Kit for Terraform](https://developer.hashicorp.com/terraform/cdktf).
 */
-{ config, lib, ... }:
+{
+  config,
+  lib,
+  recipes-lib,
+  ...
+}:
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   cfg = config.biapy-recipes.terraform;
 
@@ -77,18 +83,16 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:format:tf:tofu-fmt" = {
+      "ci:format:tf:tofu-fmt" = patchGoTask {
         aliases = [ "tf-fmt" ];
         desc = "🎨 Format 🏗️OpenTofu files";
         cmds = [ ''tofu fmt --recursive'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:lint:tf:tofu-validate" = {
+      "ci:lint:tf:tofu-validate" = patchGoTask {
         aliases = [ "tf-validate" ];
         desc = "🔍 Lint 🏗️OpenTofu files with tofu validate";
         cmds = [ ''tofu validate'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

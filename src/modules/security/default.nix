@@ -6,34 +6,21 @@
   - [Syft @ GitHub](https://github.com/anchore/syft).
   - [Grype @ GitHub](https://github.com/anchore/grype).
 */
-{
+args@{
   config,
   lib,
   pkgs,
-  nixpkgs-unstable,
+  recipes-lib,
   ...
-}@args:
+}:
 let
   inherit (lib.lists) map;
   inherit (lib.modules) mkIf;
 
-  pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
-  recipes-lib = import ../../lib args;
-
-  imports-args = {
-    inherit
-      config
-      lib
-      pkgs
-      recipes-lib
-      pkgs-unstable
-      ;
-  };
-
   cfg = config.biapy-recipes.security;
 in
 {
-  imports = map (path: import path imports-args) [ ./trivy.nix ];
+  imports = map (path: import path args) [ ./trivy.nix ];
 
   options.biapy-recipes.security = recipes-lib.modules.mkModuleOptions "Security and Supply Chain";
 

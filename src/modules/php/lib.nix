@@ -23,6 +23,7 @@ let
     optionalAttrs
     mergeAttrsList
     ;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.tasks) initializeFile mkGitIgnoreTask initializeFiles;
 
   cfg = config.biapy-recipes.php;
@@ -170,16 +171,15 @@ rec {
         let
           toolPath = "${toolsPath}/${namespace}";
         in
-        {
+        patchGoTask {
           desc = "⬆️ Update 🐘${name}";
           preconditions = [
             {
               sh = ''test -e "''${DEVENV_ROOT}/${toolPath}/composer.json"'';
-              msg = "${name}'s composer.json does not exist, skipping.";
+              msg = "${name}' '${toolPath}/composer.json' does not exist, skipping.";
             }
           ];
-          cmds = [ ''composer --working-dir="''${DEVENV_ROOT}/${toolPath}" update'' ];
-          requires.vars = [ "DEVENV_ROOT" ];
+          cmds = [ "composer --working-dir='./${toolPath}' update" ];
         };
     };
 
@@ -190,19 +190,18 @@ rec {
         let
           toolVendorPath = "${toolsPath}/${namespace}/vendor";
         in
-        {
+        patchGoTask {
           desc = "🔥 Delete 🐘${name} '${toolVendorPath}' folder";
           preconditions = [
             {
               sh = ''test -d "''${DEVENV_ROOT}/${toolVendorPath}"'';
-              msg = "${name}'s vendor folder '${toolVendorPath}' does not exist, skipping.";
+              msg = "${name}'s vendor folder './${toolVendorPath}' does not exist, skipping.";
             }
           ];
           cmds = [
-            ''echo "Deleting '''''${DEVENV_ROOT}/${toolVendorPath}' folder"''
-            ''[[ -e "''${DEVENV_ROOT}/${toolVendorPath}" ]] && rm -r "''${DEVENV_ROOT}/${toolVendorPath}"''
+            ''echo "Deleting './${toolVendorPath}' folder"''
+            "[[ -e './${toolVendorPath}' ]] && rm -r './${toolVendorPath}'"
           ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
     };
 }

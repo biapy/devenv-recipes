@@ -29,6 +29,7 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkPackageOption;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.tasks) mkInitializeFilesTask;
   inherit (lib.lists) optional;
   inherit (lib.attrsets) optionalAttrs;
@@ -74,7 +75,7 @@ in
       // initializeFilesTask;
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:docs:tf:terraform-docs" = {
+      "ci:docs:tf:terraform-docs" = patchGoTask {
         aliases = [
           "terraform-docs"
           "tfdocs"
@@ -88,7 +89,6 @@ in
             task = "ci:format:md:mdformat";
           };
         };
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

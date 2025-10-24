@@ -1,24 +1,9 @@
-{
-  config,
-  lib,
-  pkgs,
-  ...
-}@args:
+args@{ lib, recipes-lib, ... }:
 let
   inherit (lib.lists) map;
-  recipes-lib = import ../../lib args;
-  imports-args = args // {
-    inherit
-      config
-      lib
-      pkgs
-      recipes-lib
-      ;
-  };
-
 in
 {
-  imports = map (path: import path imports-args) [
+  imports = map (path: import path args) [
     ./age.nix
     ./gitleaks.nix
     ./sops.nix

@@ -20,17 +20,26 @@
 }:
 let
   inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (lib.attrsets) optionalAttrs;
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.deadnix;
 
-  deadnix = config.git-hooks.hooks.deadnix.package;
+  deadnix = cfg.package;
   deadnixCommand = lib.meta.getExe deadnix;
 in
 {
-  options.biapy-recipes.nix.deadnix = mkToolOptions nixCfg "deadnix";
+  options.biapy-recipes.nix.deadnix = mkToolOptions { enable = false; } "deadnix" // {
+    package = mkOption {
+      description = "The deadnix package to use.";
+      defaultText = "pkgs.deadnix";
+      type = lib.types.package;
+      default = config.git-hooks.hooks.deadnix.package;
+    };
+  };
 
   config = mkIf cfg.enable {
     packages = [ deadnix ];
@@ -52,11 +61,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:nix:deadnix" = mkDefault {
+      "ci:lint:nix:deadnix" = patchGoTask {
         aliases = [ "deadnix" ];
         desc = "🔍 Lint ❄️Nix files with deadnix";
         cmds = [ "deadnix --fail" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

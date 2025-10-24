@@ -17,25 +17,29 @@
   ...
 }:
 let
-  inherit (pkgs) gitleaks;
-  inherit (lib.modules) mkIf;
-  inherit (recipes-lib.modules) mkToolOptions;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkPackageOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   secretsCfg = config.biapy-recipes.secrets;
   cfg = secretsCfg.gitleaks;
 
+  gitleaks = cfg.package;
   gitleaksCommand = lib.meta.getExe gitleaks;
 in
 {
-  options.biapy-recipes.secrets.gitleaks = mkToolOptions secretsCfg "gitleaks";
+  options.biapy-recipes.secrets.gitleaks = mkToolOptions secretsCfg "gitleaks" // {
+    package = mkPackageOption pkgs "gitleaks" { };
+  };
 
   config = mkIf cfg.enable {
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
       gitleaks = {
-        enable = true;
-        package = gitleaks;
+        enable = mkDefault true;
+        package = mkDefault gitleaks;
         pass_filenames = false;
         entry = "${gitleaksCommand} dir";
       };
@@ -62,16 +66,14 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:secops:secrets:gitleaks".aliases = [ "gitleaks" ];
-      "ci:secops:secrets:gitleaks:git" = {
+      "ci:secops:secrets:gitleaks:git" = patchGoTask {
         desc = "🕵️‍♂️ Check for 🔐secrets leaks in Git repository with gitleaks";
         cmds = [ "gitleaks 'git'" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:secops:secrets:gitleaks:dir" = {
+      "ci:secops:secrets:gitleaks:dir" = patchGoTask {
         desc = "🕵️‍♂️ Check for 🔐secrets leaks in project files with gitleaks";
         cmds = [ "gitleaks 'dir'" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

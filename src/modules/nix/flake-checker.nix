@@ -36,14 +36,17 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
-  inherit (lib.attrsets) optionalAttrs;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.flake-checker;
 
   # Import flake-checker from nixpkgs-unstable, to get the latest version.
+  inherit (pkgs) fd;
+  fdCommand = lib.meta.getExe fd;
   inherit (pkgs-unstable) flake-checker;
   flakeCheckerCommand = lib.meta.getExe config.git-hooks.hooks.flake-checker.package;
   inherit (pkgs) glow;
@@ -54,6 +57,7 @@ in
 
   config = mkIf cfg.enable {
     packages = [
+      fd
       flake-checker
       glow
     ];
@@ -72,21 +76,20 @@ in
         description = "🔍 Lint ❄️Nix flakes with flake-checker";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${flakeCheckerCommand} --no-telemetry --check-outdated --check-owner \
-            --check-supported --fail-mode |
+          ${fdCommand} '^flake\.lock$' --exec ${flakeCheckerCommand} --no-telemetry --check-outdated --check-owner \
+            --check-supported --fail-mode {} |
             ${glowCommand}
         '';
       };
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:nix:flake-checker" = mkDefault {
+      "ci:lint:nix:flake-checker" = patchGoTask {
         aliases = [ "flake-checker" ];
         desc = "🔍 Lint ❄️Nix flakes with flake-checker";
         cmds = [
-          ''flake-checker --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | glow''
+          "fd '^flake\\.lock$' --exec flake-checker --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | glow"
         ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

@@ -41,19 +41,28 @@
 }:
 let
   inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (lib.attrsets) optionalAttrs;
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.nil;
 
-  nil = config.git-hooks.hooks.nil.package;
+  nil = cfg.package;
   nilCommand = lib.meta.getExe nil;
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 in
 {
-  options.biapy-recipes.nix.nil = mkToolOptions nixCfg "nil";
+  options.biapy-recipes.nix.nil = mkToolOptions nixCfg "nil" // {
+    package = mkOption {
+      description = "The nil package to use.";
+      defaultText = "config.git-hooks.hooks.nil.package";
+      type = lib.types.package;
+      default = config.git-hooks.hooks.nil.package;
+    };
+  };
 
   config = mkIf cfg.enable {
     # https://devenv.sh/integrations/codespaces-devcontainer/
@@ -65,7 +74,13 @@ in
     ];
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = optionalAttrs cfg.git-hooks { nil.enable = mkDefault true; };
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
+      nil = {
+        enable = mkDefault true;
+        entry = "${nilCommand} diagnostics";
+        args = [ "--deny-warnings" ];
+      };
+    };
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
@@ -80,11 +95,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:nix:nil" = mkDefault {
+      "ci:lint:nix:nil" = patchGoTask {
         aliases = [ "nil" ];
         desc = "🔍 Lint ❄️Nix files with nil";
-        cmds = [ ''fd '\.nix$' "''${DEVENV_ROOT}" --exec-batch nil "diagnostics"'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ ''fd '\.nix$' --exec-batch nil "diagnostics"'' ];
       };
     };
   };

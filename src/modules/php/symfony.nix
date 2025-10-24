@@ -47,11 +47,12 @@
   ...
 }:
 let
-  inherit (recipes-lib.modules) mkToolOptions;
-  inherit (recipes-lib.tasks) mkGitIgnoreTask;
+  inherit (lib.attrsets) optionalAttrs;
   inherit (lib.options) mkPackageOption;
   inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.tasks) mkGitIgnoreTask;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   phpCfg = config.biapy-recipes.php;
   cfg = phpCfg.symfony;
@@ -138,19 +139,17 @@ in
       };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:symfony:container" = {
+      "ci:lint:symfony:container" = patchGoTask {
         desc = "🔍 Lint services container with Symfony console";
         cmds = [ "symfony console 'lint:container'" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:lint:symfony:translations" = {
+      "ci:lint:symfony:translations" = patchGoTask {
         desc = "🔍 Lint translations with Symfony console";
         cmds = [ "symfony console 'lint:translations'" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:lint:symfony:twig" = {
+      "ci:lint:symfony:twig" = patchGoTask {
         desc = "🔍 Lint 'twig' files with Symfony console";
         cmds = [
           "fd --extension='twig' --type='file' --exec-batch symfony console 'lint:twig' --show-deprecations"
@@ -158,18 +157,16 @@ in
         requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:lint:symfony:xliff" = {
+      "ci:lint:symfony:xliff" = patchGoTask {
         desc = "🔍 Lint 'xlf' files with Symfony console";
         cmds = [ "fd --extension='xlf' --type='file' --exec-batch symfony console 'lint:xliff'" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:lint:symfony:yaml" = {
+      "ci:lint:symfony:yaml" = patchGoTask {
         desc = "🔍 Lint 'yml' files with Symfony console";
         cmds = [
           "fd --extension='yml' --extension='yaml' --type='file' --exec-batch symfony console 'lint:yaml'"
         ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
 

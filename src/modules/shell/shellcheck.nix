@@ -29,22 +29,30 @@
 }:
 let
   inherit (pkgs) fd;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (recipes-lib.modules) mkToolOptions;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   shellCfg = config.biapy-recipes.shell;
   cfg = shellCfg.shellcheck;
 
   fdCommand = lib.meta.getExe fd;
-  shellcheck = config.git-hooks.hooks.shellcheck.package;
+  shellcheck = cfg.package;
   shellcheckCommand = lib.meta.getExe shellcheck;
 in
 {
-  options.biapy-recipes.shell.shellcheck = mkToolOptions shellCfg "shellcheck";
+  options.biapy-recipes.shell.shellcheck = mkToolOptions shellCfg "shellcheck" // {
+    package = mkOption {
+      description = "The shellcheck package to use.";
+      defaultText = "pkgs.shellcheck";
+      type = lib.types.package;
+      default = config.git-hooks.hooks.shellcheck.package;
+    };
+  };
 
   config = mkIf cfg.enable {
-
     packages = [
       fd
       shellcheck
@@ -69,10 +77,9 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:sh:shellcheck" = {
+      "ci:lint:sh:shellcheck" = patchGoTask {
         desc = "🔍 Lint 🐚shell files with ShellCheck";
-        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec shellcheck'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' --exec shellcheck'' ];
       };
     };
   };

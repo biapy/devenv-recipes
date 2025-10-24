@@ -1,9 +1,9 @@
-{
+args@{
   config,
   lib,
-  pkgs,
+  recipes-lib,
   ...
-}@args:
+}:
 let
   inherit (lib) types mkOption;
   inherit (lib.modules) mkIf mkDefault;
@@ -11,22 +11,14 @@ let
   inherit (lib.attrsets) mapAttrsToList;
   inherit (lib.strings) concatStringsSep;
 
-  recipes-lib = import ../../lib args;
-  php-recipe-lib = import ./lib.nix { inherit config lib recipes-lib; };
+  php-recipe-lib = import ./lib.nix args;
 
-  imports-args = {
-    inherit
-      config
-      lib
-      pkgs
-      recipes-lib
-      php-recipe-lib
-      ;
+  imports-args = args // {
+    inherit php-recipe-lib;
   };
 
   cfg = config.biapy-recipes.php;
   phpCommand = lib.meta.getExe config.languages.php.package;
-
 in
 {
   imports = map (path: import path imports-args) [

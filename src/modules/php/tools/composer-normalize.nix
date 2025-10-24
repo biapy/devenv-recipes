@@ -38,11 +38,11 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
-
   inherit (config.devenv) root;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
@@ -107,11 +107,10 @@ in
     biapy.go-task.taskfile.tasks =
       (mkPhpToolGoTasks toolConfiguration)
       // optionalAttrs cfg.go-task {
-        "ci:format:php:composer:normalize" = {
+        "ci:format:php:composer:normalize" = patchGoTask {
           aliases = [ "composer-normalize" ];
           desc = "🎨 Format 🐘composer.json files with composer normalize";
-          cmds = [ ''fd '^composer\.json$' "''${DEVENV_ROOT}" --exec composer-normalize {}'' ];
-          requires.vars = [ "DEVENV_ROOT" ];
+          cmds = [ "fd '^composer\\.json$' --exec composer-normalize {}" ];
         };
       };
 

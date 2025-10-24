@@ -38,11 +38,11 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
-
   inherit (config.devenv) root;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
@@ -103,21 +103,19 @@ in
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:format:php:php-cs-fixer" = {
+        "ci:format:php:php-cs-fixer" = patchGoTask {
           aliases = [ "php-cs-fixer" ];
           desc = "🎨 Format 🐘PHP files with php-cs-fixer";
           cmds = [
             "php-cs-fixer 'fix' --allow-unsupported-php-version=yes --no-interaction --diff --show-progress='none'"
           ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
 
-        "ci:lint:php:php-cs-fixer" = {
+        "ci:lint:php:php-cs-fixer" = patchGoTask {
           desc = "🔍 Lint 🐘PHP files with php-cs-fixer";
           cmds = [
             "php-cs-fixer 'fix' --allow-unsupported-php-version=yes --no-interaction --diff --show-progress='none' --dry-run"
           ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
       }
       // mkPhpToolGoTasks toolConfiguration;

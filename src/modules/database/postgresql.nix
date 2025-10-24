@@ -34,11 +34,13 @@
   config,
   lib,
   pkgs,
+  recipes-lib,
   ...
 }:
 let
   inherit (lib) mkOption types;
   inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   databaseCfg = config.biapy-recipes.database;
   cfg = databaseCfg.postgresql;
@@ -103,17 +105,14 @@ in
     };
 
     biapy.go-task.taskfile.tasks = {
-      "reset:database:postgresql" = {
+      "reset:database:postgresql" = patchGoTask {
         aliases = [ "reset:database:pgsql" ];
         desc = "🔥 Delete 🗃️PostgreSQL data";
         cmds = [
           ''echo "Deleting PostgreSQL data in ''${PGDATA}"''
           ''[[ -e "''${PGDATA}" ]] && rm -r "''${PGDATA}"''
         ];
-        requires.vars = [
-          "DEVENV_ROOT"
-          "PGDATA"
-        ];
+        requires.vars = [ "PGDATA" ];
       };
     };
 

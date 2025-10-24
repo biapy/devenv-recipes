@@ -38,22 +38,25 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (recipes-lib.modules) mkToolOptions;
-  inherit (config.devenv) root;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkPackageOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (config.devenv) root;
 
   securityCfg = config.biapy-recipes.security;
   cfg = securityCfg.trivy;
 
-  inherit (pkgs-unstable) trivy;
+  trivy = cfg.package;
   trivyCommand = lib.meta.getExe trivy;
 in
 {
-  options.biapy-recipes.security.trivy = mkToolOptions securityCfg "Trivy";
+  options.biapy-recipes.security.trivy = mkToolOptions securityCfg "Trivy" // {
+    package = mkPackageOption pkgs-unstable "trivy" { };
+  };
 
   config = mkIf cfg.enable {
-
     # https://devenv.sh/packages/
     packages = [ trivy ];
 
@@ -101,16 +104,14 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:secops:security:trivy".aliases = [ "trivy" ];
-      "ci:secops:security:trivy:fs" = {
+      "ci:secops:security:trivy:fs" = patchGoTask {
         desc = "🕵️‍♂️ Check local filesystem with trivy";
-        cmds = [ ''trivy 'fs' "''${DEVENV_ROOT}"'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ "trivy 'fs' './'" ];
       };
 
-      "ci:secops:security:trivy:config" = {
+      "ci:secops:security:trivy:config" = patchGoTask {
         desc = "🕵️‍♂️ Check local configuration files with trivy";
-        cmds = [ ''trivy 'config' "''${DEVENV_ROOT}"'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ "trivy 'config' './'" ];
       };
     };
   };

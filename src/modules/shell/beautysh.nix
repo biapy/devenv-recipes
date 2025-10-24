@@ -29,19 +29,29 @@
 }:
 let
   inherit (pkgs) fd;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (recipes-lib.modules) mkToolOptions;
+
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   shellCfg = config.biapy-recipes.shell;
   cfg = shellCfg.beautysh;
 
   fdCommand = lib.meta.getExe fd;
-  beautysh = config.git-hooks.hooks.beautysh.package;
+  beautysh = cfg.package;
   beautyshCommand = lib.meta.getExe beautysh;
 in
 {
-  options.biapy-recipes.shell.beautysh = mkToolOptions { enable = false; } "beautysh";
+  options.biapy-recipes.shell.beautysh = mkToolOptions { enable = false; } "beautysh" // {
+    package = mkOption {
+      description = "The beautysh package to use.";
+      defaultText = "pkgs.beautysh";
+      type = lib.types.package;
+      default = config.git-hooks.hooks.beautysh.package;
+    };
+  };
 
   config = mkIf cfg.enable {
     packages = [
@@ -77,17 +87,15 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:sh:beautysh" = {
+      "ci:lint:sh:beautysh" = patchGoTask {
         desc = "🔍 Lint 🐚shell files with beautysh";
-        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec beautysh --tab --check'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' --exec beautysh --tab --check'' ];
       };
 
-      "ci:format:sh:beautysh" = {
+      "ci:format:sh:beautysh" = patchGoTask {
         aliases = [ "beautysh" ];
         desc = "🎨 Format 🐚shell files with beautysh";
-        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec beautysh --tab'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ ''fd '\.(sh|bash|dash|ksh)$' --exec beautysh --tab'' ];
       };
     };
   };

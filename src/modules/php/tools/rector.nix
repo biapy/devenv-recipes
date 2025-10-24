@@ -30,10 +30,11 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
   cfg = phpToolsCfg.rector;
@@ -93,17 +94,15 @@ in
     biapy.go-task.taskfile.tasks =
       (mkPhpToolGoTasks toolConfiguration)
       // optionalAttrs cfg.go-task {
-        "ci:fix:php:rector" = {
+        "ci:fix:php:rector" = patchGoTask {
           aliases = [ "rector" ];
           desc = "🧹 Fix 🐘PHP files with Rector";
           cmds = [ "rector 'process' '--no-progress-bar'" ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
 
-        "ci:lint:php:rector" = {
+        "ci:lint:php:rector" = patchGoTask {
           desc = "🔍 Lint 🐘PHP files with Rector";
           cmds = [ "rector 'process' '--no-progress-bar' '--dry-run'" ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
       };
 

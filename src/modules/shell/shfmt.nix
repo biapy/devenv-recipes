@@ -36,9 +36,11 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (recipes-lib.modules) mkToolOptions;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   shellCfg = config.biapy-recipes.shell;
   cfg = shellCfg.shfmt;
@@ -46,11 +48,18 @@ let
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 
-  shfmt = config.git-hooks.hooks.shfmt.package;
+  shfmt = cfg.package;
   shfmtCommand = lib.meta.getExe shfmt;
 in
 {
-  options.biapy-recipes.shell.shfmt = mkToolOptions shellCfg "shfmt";
+  options.biapy-recipes.shell.shfmt = mkToolOptions shellCfg "shfmt" // {
+    package = mkOption {
+      description = "The shfmt package to use.";
+      defaultText = "pkgs.shfmt";
+      type = lib.types.package;
+      default = config.git-hooks.hooks.shfmt.package;
+    };
+  };
 
   config = mkIf cfg.enable {
     packages = [
@@ -89,21 +98,15 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:sh:shfmt" = {
+      "ci:lint:sh:shfmt" = patchGoTask {
         desc = "🔍 Lint 🐚shell files with shfmt";
-        cmds = [
-          ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec-batch shfmt --simplify --diff {}''
-        ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ "fd '\.(sh|bash|dash|ksh)$' --exec-batch shfmt --simplify --diff {}" ];
       };
 
-      "ci:format:sh:shfmt" = {
+      "ci:format:sh:shfmt" = patchGoTask {
         aliases = [ "shfmt" ];
         desc = "🎨 Format 🐚shell files with shfmt";
-        cmds = [
-          ''fd '\.(sh|bash|dash|ksh)$' "''${DEVENV_ROOT}" --exec-batch shfmt --simplify --diff --write {} || true''
-        ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ "fd '\.(sh|bash|dash|ksh)$' --exec-batch shfmt --simplify --diff --write {} || true" ];
       };
     };
   };

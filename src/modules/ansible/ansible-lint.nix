@@ -37,6 +37,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (lib.attrsets) optionalAttrs;
 
   ansibleCfg = config.biapy-recipes.ansible;
@@ -65,10 +66,9 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:ansible:ansible-lint" = {
+      "ci:lint:ansible:ansible-lint" = patchGoTask {
         desc = "🔍 Lint 🔧Ansible configuration with ansible-lint";
-        cmds = [ ''${ansibleLintCommand}'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ "ansible-lint" ];
       };
     };
   };

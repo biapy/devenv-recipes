@@ -35,6 +35,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
@@ -64,11 +65,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:tf:tflint" = {
+      "ci:lint:tf:tflint" = patchGoTask {
         aliases = [ "tflint" ];
         desc = "🔍 Lint 🏗️Terraform files with tflint";
-        cmds = [ ''tflint --chdir="''${DEVENV_ROOT}"'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ ''tflint'' ];
       };
     };
   };

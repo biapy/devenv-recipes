@@ -48,11 +48,12 @@
 }:
 let
   inherit (lib) types;
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (lib.options) mkOption;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
 
   phpCfg = config.biapy-recipes.php;
   phpToolsCfg = config.biapy-recipes.php.tools;
@@ -123,11 +124,10 @@ in
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:lint:php:phpstan" = {
+        "ci:lint:php:phpstan" = patchGoTask {
           aliases = [ "phpstan" ];
           desc = "🔍 Lint 🐘PHP files with PHPStan";
           cmds = [ "phpstan 'analyse' --no-progress" ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
       }
       // mkPhpToolGoTasks toolConfiguration;

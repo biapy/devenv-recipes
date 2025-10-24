@@ -41,10 +41,11 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
 
   inherit (config.devenv) root;
 
@@ -105,11 +106,10 @@ in
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:lint:php:phpmd" = {
+        "ci:lint:php:phpmd" = patchGoTask {
           aliases = [ "phpmd" ];
           desc = "🔍 Lint 🐘PHP files with PHP Mess Detector";
           cmds = [ "phpmd {src,tests} 'ansi' 'phpmd.xml'" ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
       }
       // mkPhpToolGoTasks toolConfiguration;

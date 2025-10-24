@@ -34,21 +34,30 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (recipes-lib.modules) mkToolOptions;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.cspell;
 
-  cspell = config.git-hooks.hooks.cspell.package;
+  cspell = cfg.package;
   cspellCommand = "${cspell}/bin/cspell";
 
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 in
 {
-  options.biapy-recipes.markdown.cspell = mkToolOptions mdCfg "CSpell";
+  options.biapy-recipes.markdown.cspell = mkToolOptions mdCfg "CSpell" // {
+    package = mkOption {
+      description = "The cspell package to use.";
+      defaultText = "pkgs.cspell";
+      type = lib.types.package;
+      default = config.git-hooks.hooks.cspell.package;
+    };
+  };
 
   config = mkIf cfg.enable {
     devcontainer.settings.customizations.vscode.extensions = [
@@ -75,12 +84,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:md:cspell" = mkDefault {
+      "ci:lint:md:cspell" = patchGoTask {
         aliases = [ "cspell" ];
         desc = "🔍 Lint 📝Markdown files with cspell";
-        cmds = [ ''fd '\.md$' "''${DEVENV_ROOT}" --exec-batch cspell --root "''${DEVENV_ROOT}" {}'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
-        shopt = [ "globstar" ];
+        cmds = [ "fd '\\.md$' --exec-batch cspell {}" ];
       };
     };
   };

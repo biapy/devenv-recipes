@@ -34,18 +34,28 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (lib) types;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.options) mkOption;
+  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.statix;
 
-  statix = config.git-hooks.hooks.statix.package;
+  statix = cfg.package;
   statixCommand = lib.meta.getExe statix;
 in
 {
-  options.biapy-recipes.nix.statix = mkToolOptions nixCfg "statix";
+  options.biapy-recipes.nix.statix = mkToolOptions nixCfg "statix" // {
+    package = mkOption {
+      description = "The statix package to use.";
+      defaultText = "pkgs.statix";
+      type = types.package;
+      default = config.git-hooks.hooks.statix.package;
+    };
+  };
 
   config = mkIf cfg.enable {
     packages = [ statix ];
@@ -77,17 +87,15 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:nix:statix" = mkDefault {
+      "ci:lint:nix:statix" = patchGoTask {
         aliases = [ "statix" ];
         desc = "🔍 Lint ❄️Nix files with statix";
         cmds = [ "statix check" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
 
-      "ci:fix:nix:statix" = mkDefault {
+      "ci:fix:nix:statix" = patchGoTask {
         desc = "🧹 Fix ❄️Nix files with statix";
         cmds = [ "statix fix" ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

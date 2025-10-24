@@ -29,6 +29,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (lib.attrsets) optionalAttrs;
 
   nixCfg = config.biapy-recipes.nix;
@@ -68,11 +69,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:format:nix:nixfmt" = mkDefault {
+      "ci:format:nix:nixfmt" = patchGoTask {
         aliases = [ "nixfmt" ];
         desc = "🎨 Format ❄️Nix files with nixfmt";
         cmds = [ ''${nixfmtTreeCommand} --tree-root "''${DEVENV_ROOT}"'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
       };
     };
   };

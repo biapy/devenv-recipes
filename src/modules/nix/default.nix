@@ -1,28 +1,7 @@
-{
-  config,
-  lib,
-  pkgs,
-  nixpkgs-unstable,
-  ...
-}@args:
-let
-  inherit (lib.lists) map;
-  recipes-lib = import ../../lib args;
-  pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
+args@{ recipes-lib, ... }:
 
-  imports-args = {
-    inherit
-      config
-      lib
-      pkgs
-      pkgs-unstable
-      recipes-lib
-      ;
-  };
-
-in
 {
-  imports = map (path: import path imports-args) [
+  imports = map (path: import path args) [
     ./deadnix.nix
     ./flake-checker.nix
     ./nil.nix

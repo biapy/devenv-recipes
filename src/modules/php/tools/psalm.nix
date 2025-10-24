@@ -43,10 +43,11 @@
   ...
 }:
 let
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.modules) mkIf mkDefault;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (lib.modules) mkIf mkDefault;
-  inherit (lib.attrsets) optionalAttrs;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
   cfg = phpToolsCfg.psalm;
@@ -101,11 +102,10 @@ in
     biapy.go-task.taskfile.tasks =
       (mkPhpToolGoTasks toolConfiguration)
       // optionalAttrs cfg.go-task {
-        "ci:lint:php:psalm" = {
+        "ci:lint:php:psalm" = patchGoTask {
           aliases = [ "psalm" ];
           desc = "🔍 Lint 🐘PHP files with Psalm";
           cmds = [ "psalm --no-progress --show-info --show-snippet" ];
-          requires.vars = [ "DEVENV_ROOT" ];
         };
       };
 

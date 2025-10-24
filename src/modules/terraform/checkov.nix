@@ -38,6 +38,7 @@
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (lib.attrsets) optionalAttrs;
 
   terraformCfg = config.biapy-recipes.terraform;
@@ -77,11 +78,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:tf:checkov" = {
+      "ci:lint:tf:checkov" = patchGoTask {
         aliases = [ "checkov" ];
         desc = "🔍 Lint 🏗️Infrastructure as Code with checkov";
-        cmds = [ ''checkov --directory "''${DEVENV_ROOT}"'' ];
-        requires.vars = [ "DEVENV_ROOT" ];
+        cmds = [ ''checkov'' ];
       };
     };
   };
