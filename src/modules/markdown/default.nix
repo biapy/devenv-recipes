@@ -6,6 +6,7 @@ in
   imports = map (path: import path args) [
     ./cspell.nix
     ./glow.nix
+    ./lychee.nix
     ./markdownlint.nix
     ./mdformat.nix
     ./vale.nix
