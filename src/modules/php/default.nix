@@ -9,6 +9,7 @@ let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.lists) map;
   inherit (lib.attrsets) mapAttrsToList;
+  inherit (lib.strings) concatStringsSep;
 
   recipes-lib = import ../../lib args;
   php-recipe-lib = import ./lib.nix { inherit config lib recipes-lib; };
@@ -26,7 +27,6 @@ let
   cfg = config.biapy-recipes.php;
   phpCommand = lib.meta.getExe config.languages.php.package;
 
-  iniSettings = mapAttrsToList (name: value: "${name} = ${value}") cfg.ini;
 in
 {
   imports = map (path: import path imports-args) [
@@ -42,6 +42,8 @@ in
         #       "xdebug.mode" = "develop";
         "memory_limit" = "256m";
       };
+      apply =
+        iniSettings: concatStringsSep "\n" (mapAttrsToList (name: value: "${name} = ${value}") iniSettings);
       description = ''
         Additional PHP INI settings to apply.
       '';
@@ -58,12 +60,10 @@ in
     # https://devenv.sh/languages/
     # https://devenv.sh/reference/options/#languagesphpenable
     languages.php = {
-      inherit (cfg) enable;
+      inherit (cfg) enable ini;
 
       extensions = [ "xdebug" ];
       version = mkDefault "8.4";
-
-      ini = mkDefault (lib.concatStringsSep "\n" iniSettings);
     };
 
     # https://devenv.sh/scripts/
