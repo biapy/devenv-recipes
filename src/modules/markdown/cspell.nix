@@ -20,7 +20,7 @@
 
   ### 🧑‍💻 Visual Studio Code
 
-  - [Code Spell Checker @ Visual Studio Code Marketplace](hhttps://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker).
+  - [Code Spell Checker @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=streetsidesoftware.code-spell-checker).
 
   ## 🙇 Acknowledgements
 
