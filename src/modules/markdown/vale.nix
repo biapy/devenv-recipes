@@ -91,7 +91,7 @@ in
         '';
       };
 
-      "update:md:vale" = patchGoTask {
+      "update:md:vale" = {
         description = "⬆️ Update 📝Vale external configuration sources.";
         exec = ''
           cd "''${DEVENV_ROOT}"
