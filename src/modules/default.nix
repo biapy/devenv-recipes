@@ -6,6 +6,7 @@ in
   imports = map (path: import path args) [
     ./ansible
     ./database
+    ./go
     ./markdown
     ./nix
     ./php

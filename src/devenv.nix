@@ -71,6 +71,11 @@ in
         aliases = [ "secops" ];
         desc = "🕵️‍♂️ Run all SecOps tasks";
       };
+
+      "cd:build" = {
+        aliases = [ "build" ];
+        desc = "🔨 Run all building and compiling tasks";
+      };
     };
 
     devcontainer.settings.customizations.vscode.extensions = [ "mkhl.direnv" ];
