@@ -36,6 +36,7 @@
 {
   config,
   lib,
+  pkgs,
   recipes-lib,
   ...
 }:
@@ -53,6 +54,8 @@ let
   phpCfg = config.biapy-recipes.php;
   cfg = phpCfg.composer;
 
+  inherit (pkgs) fd;
+  fdCommand = lib.meta.getExe fd;
   parallel = config.biapy-recipes.gnu-parallel.package;
   parallelCommand = lib.meta.getExe parallel;
 in
@@ -94,12 +97,32 @@ in
           '';
         };
 
+        "ci:lint:php:composer-validate" = {
+          description = "🔍 Lint 🐘composer.json files";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${fdCommand} '^composer\.(json|lock)$' --exec ${composerCommand} validate --no-check-publish {}
+          '';
+
+        };
+
+        "ci:secops:php:composer-audit" = patchGoTask {
+          description = "🕵️‍♂️ Audit 🐘composer.json file";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            if [[ -e "''${DEVENV_ROOT}/composer.json" ]]; then
+              ${composerCommand} audit
+            fi
+          '';
+        };
+
         "reset:php:composer" = {
           description = "🔥 Delete 🐘composer 'vendor' folder";
           exec = ''
             echo "Deleting Composer 'vendor' folder"
-            [[ -e "''${DEVENV_ROOT}/vendor/" ]] &&
+            if [[ -e "''${DEVENV_ROOT}/vendor/" ]]; then
               rm -r "''${DEVENV_ROOT}/vendor/"
+            fi
           '';
           status = ''test ! -d "''${DEVENV_ROOT}/vendor/"'';
         };
@@ -121,6 +144,16 @@ in
       };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
+      "ci:lint:php:composer-validate" = patchGoTask {
+        desc = "🔍 Lint 🐘composer.json files";
+        cmds = [ "fd '^composer\\.(json|lock)$' --exec composer validate --no-check-publish {}" ];
+      };
+
+      "ci:secops:php:composer-audit" = patchGoTask {
+        desc = "🕵️‍♂️ Audit 🐘composer.json file";
+        cmds = [ "composer audit" ];
+      };
+
       "reset:php:composer" = patchGoTask {
         desc = "🔥 Delete 🐘composer 'vendor' folder";
         preconditions = [
