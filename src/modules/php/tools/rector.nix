@@ -112,7 +112,8 @@ in
         enable = mkDefault true;
         name = "Rector";
         inherit (config.languages.php) package;
-        pass_filenames = false;
+        files = "\\.php$";
+        pass_filenames = true;
         entry = ''${phpCommand} '${toolCommand}' "process"'';
         args = [
           "--no-progress-bar"
