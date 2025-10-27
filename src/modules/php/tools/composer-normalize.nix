@@ -43,7 +43,6 @@ let
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
-  inherit (config.devenv) root;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
   cfg = phpToolsCfg.composer-normalize;
@@ -70,17 +69,43 @@ in
     scripts = {
       composer-normalize =
         let
-          toolPath = "${root}/${phpToolsCfg.path}/${toolConfiguration.namespace}";
+          toolPath = "\${DEVENV_ROOT}/${phpToolsCfg.path}/${toolConfiguration.namespace}";
         in
         {
           description = "Composer Normalize";
           exec = ''
-            if [[ ! -d '${toolPath}/vendor' ]]; then
+            if [[ ! -d "${toolPath}/vendor" ]]; then
               echo "Composer Normalize is not installed."
               exit 1
             fi
 
-            ${composerCommand} --working-dir="${toolPath}" normalize "''${@}"
+            absolute-path() {
+              local inputPath="''${1}"
+
+              if [[ -e "''${inputPath}" && ! "''${inputPath}" =~ ^/ ]]; then
+                # If it's a file and not already an absolute path, rewrite it
+                echo "$(cd "$(dirname "''${inputPath}")" && pwd)/$(basename "''${inputPath}")"
+
+                return 0
+              fi
+
+              # Otherwise, leave as-is
+              echo "''${inputPath}"
+
+              return 0
+            }
+
+            composer-normalize() {
+              local args=()
+
+              for arg in "''${@}"; do
+                args+=("$(absolute-path "''${arg}")")
+              done
+
+              ${composerCommand} --working-dir="${toolPath}" normalize "''${args[@]}"
+            }
+
+            composer-normalize "''${@}"
           '';
         };
     };
@@ -123,7 +148,7 @@ in
         package = composer;
         extraPackages = [ parallel ];
         files = "composer.json";
-        entry = ''"${parallelCommand}" composer-normalize --dry-run "${root}/"{} ::: '';
+        entry = ''"${parallelCommand}" composer-normalize --dry-run {} ::: '';
       };
     };
 
