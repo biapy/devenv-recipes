@@ -7,9 +7,9 @@ args@{
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.lists) map;
-  inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.attrsets) optionalAttrs mergeAttrsList;
   inherit (recipes-lib.go-tasks) patchGoTask;
-  inherit (recipes-lib.modules) mkModuleOptions;
+  inherit (recipes-lib.modules) mkModuleOptions mkTasksOption mkGitHooksOption;
 
   cfg = config.biapy-recipes.go;
   goCommand = lib.meta.getExe config.languages.go.package;
@@ -17,7 +17,11 @@ in
 {
   imports = map (path: import path args) [ ];
 
-  options.biapy-recipes.go = mkModuleOptions "Go";
+  options.biapy-recipes.go = mergeAttrsList [
+    (mkModuleOptions "Go")
+    (mkGitHooksOption "Go")
+    (mkTasksOption "Go")
+  ];
 
   config = mkIf cfg.enable {
     # https://devenv.sh/languages/
@@ -25,16 +29,40 @@ in
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
-      nixfmt-rfc-style = {
-        enable = mkDefault true;
-        args = mkDefault [ "--strict" ];
-      };
+      gofmt.enable = mkDefault true;
+      govet.enable = mkDefault true;
+      # golangci-lint = mkDefault true;
+      # golines.enable = mkDefault true;
+      # gotest.enable = mkDefault true;
+      # revive.enable = mkDefault true;
+      # staticcheck = mkDefault true;
     };
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:format:go:go-fmt" = mkDefault {
-        description = "🎨 Format 🐹Go files with `go fmt`";
+
+      "ci:lint:go:vet" = mkDefault {
+        description = "🔍 Lint 🐹Go files with `vet`";
+        exec = ''
+          set -o 'errexit' -o 'pipefail'
+
+          cd "''${DEVENV_ROOT}"
+          ${goCommand} 'vet'
+        '';
+      };
+
+      "ci:fix:go:fix" = mkDefault {
+        description = "🧹 Fix 🐹Go files with `fix`";
+        exec = ''
+          set -o 'errexit' -o 'pipefail'
+
+          cd "''${DEVENV_ROOT}"
+          ${goCommand} 'fix'
+        '';
+      };
+
+      "ci:format:go:gofmt" = mkDefault {
+        description = "🎨 Format 🐹Go files with `gofmt`";
         exec = ''
           set -o 'errexit' -o 'pipefail'
 
@@ -81,45 +109,36 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
+      "ci:lint:go:vet" = mkDefault {
+        desc = "🔍 Lint 🐹Go files with `vet`";
+        cmds = [ "go 'vet'" ];
+      };
+
+      "ci:fix:go:fix" = mkDefault {
+        desc = "🧹 Fix 🐹Go files with `fix`";
+        cmds = [ "go 'fix'" ];
+      };
+
       "ci:format:go:go-fmt" = patchGoTask {
-        aliases = [ "go-fmt" ];
-        desc = "🎨 Format 🐹Go files with `go fmt`";
-        cmds = [ "go fmt" ];
+        desc = "🎨 Format 🐹Go files with `gofmt`";
+        cmds = [ "go 'fmt'" ];
       };
 
       "cd:build:go:go-build" = patchGoTask {
         aliases = [ "go-tidy" ];
         desc = "🔨 Build 🐹Go sources with `go build`";
-        preconditions = [
-          {
-            sh = ''test -e "''${DEVENV_ROOT}/go.mod"'';
-            msg = "Project's 'go.mod' does not exist, skipping.";
-          }
-        ];
         cmds = [ "go 'build'" ];
       };
 
       "update:go:tidy" = patchGoTask {
         aliases = [ "go-tidy" ];
         desc = "⬆️ Update 🐹Go modules with `go mod tidy`";
-        preconditions = [
-          {
-            sh = ''test -e "''${DEVENV_ROOT}/go.mod"'';
-            msg = "Project's 'go.mod' does not exist, skipping.";
-          }
-        ];
         cmds = [ "go 'mod' 'tidy'" ];
       };
 
       "ci:secops:go:verify" = patchGoTask {
         aliases = [ "go-verify" ];
         desc = "🕵️‍♂️ Verify 🐹Go modules with `go mod verify`";
-        preconditions = [
-          {
-            sh = ''test -e "''${DEVENV_ROOT}/go.mod"'';
-            msg = "Project's 'go.mod' does not exist, skipping.";
-          }
-        ];
         cmds = [ "go 'mod' 'verify'" ];
       };
     };
