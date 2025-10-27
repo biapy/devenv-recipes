@@ -106,7 +106,7 @@ in
 
         };
 
-        "ci:secops:php:composer-audit" = patchGoTask {
+        "ci:secops:php:composer-audit" = {
           description = "🕵️‍♂️ Audit 🐘composer.json file";
           exec = ''
             cd "''${DEVENV_ROOT}"
