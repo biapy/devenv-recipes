@@ -115,7 +115,7 @@ in
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
         "ci:lint:php:phpcs" = {
-          description = "Lint '.php' files with PHP CodeSniffer";
+          description = "🔍 Lint 🐘PHP files with PHP CodeSniffer";
           exec = ''
             cd "''${DEVENV_ROOT}"
             phpcs --colors
@@ -127,7 +127,7 @@ in
       optionalAttrs cfg.go-task {
         "ci:lint:php:phpcs" = patchGoTask {
           aliases = [ "phpcs" ];
-          desc = "Lint '.php' files with PHP CodeSniffer";
+          desc = "🔍 Lint 🐘PHP files with PHP CodeSniffer";
           cmds = [ ''phpcs --colors'' ];
         };
       }
