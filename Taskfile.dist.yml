@@ -1,4 +1,23 @@
 tasks:
+  cd:
+    cmds:
+      - for:
+          var: TASKS
+        task: '{{.ITEM}}'
+    ignore_error: true
+    requires:
+      vars:
+        - DEVENV_ROOT
+    silent: true
+    summary: "\U0001F5C2️ Run 'cd:*' tasks"
+    vars:
+      TASKS:
+        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  cd:build:
+    aliases:
+      - build
+    desc: "\U0001F528 Run all building and compiling tasks"
+    requires: {}
   ci:
     cmds:
       - for:
@@ -118,7 +137,7 @@ tasks:
     cmds:
       - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F3A8 Format ❄️Nix files with nixfmt ===\\033[0m\""
         silent: true
-      - /nix/store/p1fba2h03iawzgfaya2zlx0mfd5sikq3-nixfmt-tree/bin/treefmt --tree-root "${DEVENV_ROOT}"
+      - /nix/store/yvccw7navba7rcfvxz97ibsb1m5jxdk0-nixfmt-tree/bin/treefmt --tree-root "${DEVENV_ROOT}"
     desc: "\U0001F3A8 Format ❄️Nix files with nixfmt"
     dir: '{{.DEVENV_ROOT}}'
     requires:
