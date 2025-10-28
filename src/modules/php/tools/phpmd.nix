@@ -120,6 +120,7 @@ in
         enable = mkDefault true;
         name = "PHP Mess Detector";
         inherit (config.languages.php) package;
+        files = "\\.php$";
         extraPackages = [ parallel ];
         # Using parallel allows to run phpmd on staged files only
         entry = ''${parallelCommand} phpmd {} 'ansi' '${root}/phpmd.xml' ::: '';
