@@ -89,7 +89,7 @@ in
         "ci:lint:php:phplint" = patchGoTask {
           aliases = [ "phplint" ];
           desc = "🔍 Lint 🐘PHP files with PHPLint";
-          cmds = [ ''phplint --colors'' ];
+          cmds = [ "phplint" ];
         };
       }
       // mkPhpToolGoTasks toolConfiguration;

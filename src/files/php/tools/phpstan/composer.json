@@ -1,4 +1,5 @@
 {
+  "license": "MIT",
   "require-dev": {
     "phpstan/extension-installer": "^1.4",
     "phpstan/phpstan": "^2.1",
