@@ -51,6 +51,7 @@ let
     configFiles = {
       ".phplint.yml" = ../../../files/php/.phplint.yml;
     };
+    ignoredPaths = [ ".phplint.cache" ];
   };
 in
 {
