@@ -37,6 +37,7 @@ in
     ./composer-normalize.nix
     ./php-cs-fixer.nix
     ./phpcs.nix
+    ./phplint.nix
     ./phpmd.nix
     ./phpstan.nix
     ./rector.nix

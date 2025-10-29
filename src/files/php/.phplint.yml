@@ -1,0 +1,18 @@
+# PHPLint configuration file
+# see https://github.com/overtrue/phplint/blob/main/docs/configuration.md
+path:
+  - src/
+  - tests/
+# jobs: 5
+extensions:
+  - php
+exclude:
+  - vendor
+  - tools
+  - node_modules
+  - .devenv
+warning: true
+memory-limit: 256M
+no-cache: false
+cache-ttl: 3600
+#cache-dir: /tmp/symfony-cache

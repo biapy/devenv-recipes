@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require-dev": {
+    "overtrue/phplint": "^9.6"
+  }
+}
