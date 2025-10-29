@@ -101,7 +101,7 @@ in
           description = "🔍 Lint 🐘composer.json files";
           exec = ''
             cd "''${DEVENV_ROOT}"
-            ${fdCommand} '^composer\.(json|lock)$' --exec ${composerCommand} validate --no-check-publish {}
+            ${fdCommand} '^composer\.json$' --exec ${composerCommand} validate --no-check-publish {}
           '';
 
         };
@@ -146,7 +146,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:php:composer-validate" = patchGoTask {
         desc = "🔍 Lint 🐘composer.json files";
-        cmds = [ "fd '^composer\\.(json|lock)$' --exec composer validate --no-check-publish {}" ];
+        cmds = [ "fd '^composer\\.json$' --exec composer validate --no-check-publish {}" ];
       };
 
       "ci:secops:php:composer-audit" = patchGoTask {
@@ -187,7 +187,7 @@ in
         name = "composer validate";
         package = composer;
         extraPackages = [ parallel ];
-        files = "composer\.(json|lock)$";
+        files = "composer\\.json$";
         entry = "'${parallelCommand}' '${composerCommand}' 'validate' --no-check-publish {} ::: ";
         stages = [
           "pre-commit"
@@ -200,7 +200,7 @@ in
         name = "composer audit";
         after = [ "composer-validate" ];
         package = composer;
-        files = "composer\.(json|lock)$";
+        files = "composer\\.json$";
         pass_filenames = false;
         entry = "'${composerCommand}' 'audit'";
         stages = [
