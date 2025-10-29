@@ -1,0 +1,11 @@
+{
+  "license": "MIT",
+  "require-dev": {
+    "phpdocumentor/shim": "^3.8"
+  },
+  "config": {
+    "allow-plugins": {
+      "phpdocumentor/shim": true
+    }
+  }
+}
