@@ -8,6 +8,7 @@ in
     ./glow.nix
     ./lychee.nix
     ./markdownlint.nix
+    ./marksman.nix
     ./mdformat.nix
     ./vale.nix
   ];
