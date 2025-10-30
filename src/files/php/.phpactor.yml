@@ -1,0 +1,44 @@
+# Phpactor configuration file
+# see https://phpactor.readthedocs.io/en/master/reference/configuration.html
+
+# Language Server's PHPStan extension
+# see https://phpactor.readthedocs.io/en/master/reference/configuration.html#languageserverphpstanextension
+language_server_phpstan.enabled: true
+language_server_phpstan.bin: "%project_root%\/tools\/phpstan\/vendor\/bin\/phpstan"
+# language_server_phpstan.mem_limit: "512M"
+# language_server_phpstan.tmp_file_disabled: false
+language_server_phpstan.editor_mode: true
+
+# Language Server's Psalm extension
+# see https://phpactor.readthedocs.io/en/master/reference/configuration.html#languages
+language_server_psalm.enable: false
+language_server_psalm.bin: "%project_root%\/tools\/psalm\/vendor\/bin\/psalm"
+language_server_psalm.show_info: true
+language_server_psalm.use_cache: true
+language_server_psalm.threads: 1
+language_server_psalm.timeout: 15
+
+
+# Language Server's PHP CS Fixer extension
+# see https://phpactor.readthedocs.io/en/master/reference/configuration.html#languageserverphpcsfixerextension
+language_server_php_cs_fixer.enabled: true
+language_server_php_cs_fixer.bin: "%project_root%\/tools\/php-cs-fixer\/vendor\/bin\/php-cs-fixer"
+language_server_php_cs_fixer.env:
+  XDEBUG_MODE: "off"
+  PHP_CS_FIXER_IGNORE_ENV: true
+
+# PHP Code Sniffer extension
+# see https://phpactor.readthedocs.io/en/master/reference/configuration.html#phpcodesnifferextension
+php_code_sniffer.enabled: true
+php_code_sniffer.bin: "%project_root%\/tools\/phpcs\/vendor\/bin\/phpcs"
+php_code_sniffer.env:
+  XDEBUG_MODE: "off"
+
+# Symfony extension
+# see https://phpactor.readthedocs.io/en/master/reference/configuration.html#symfonyextension
+symfony.enable: false
+symfony.xml_path: "%project_root%\/var\/cache\/dev\/App_KernelDevDebugContainer.xml"
+
+# PHPUnit extension
+# see https://phpactor.readthedocs.io/en/master/reference/configuration.html#symfonyextension
+phpunit.enabled: true

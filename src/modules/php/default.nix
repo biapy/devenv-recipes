@@ -24,6 +24,7 @@ in
   imports = map (path: import path imports-args) [
     ./tools
     ./composer.nix
+    ./phpactor.nix
     ./symfony.nix
   ];
 
