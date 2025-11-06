@@ -67,11 +67,38 @@ in
           ${tofuCommand} fmt --recursive
         '';
       };
+
       "ci:lint:tf:tofu-validate" = {
         description = "🔍 Lint 🏗️OpenTofu files with tofu validate";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${tofuCommand} validate
+        '';
+      };
+
+      "reset:tf:tofu" = {
+        description = "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
+        exec = ''
+          echo "Deleting OpenTofu '.terraform.lock.hcl' file"
+          if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
+            rm "''${DEVENV_ROOT}/.terraform.lock.hcl"
+          fi
+
+          echo "Deleting OpenTofu '.terraform' folder"
+          if [[ -d "''${DEVENV_ROOT}/.terraform/" ]]; then
+            rm -r "''${DEVENV_ROOT}/.terraform/"
+          fi
+        '';
+        status = ''test ! -d "''${DEVENV_ROOT}/.terraform/"'';
+      };
+
+      "update:tf:tofu" = {
+        description = "⬆️ Update 🏗️OpenTofu modules and providers";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
+            ${tofuCommand} 'init' -upgrade
+          fi
         '';
       };
     };
@@ -93,6 +120,37 @@ in
         aliases = [ "tf-validate" ];
         desc = "🔍 Lint 🏗️OpenTofu files with tofu validate";
         cmds = [ ''tofu validate'' ];
+      };
+
+      "reset:tf:tofu" = patchGoTask {
+        desc = "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
+        preconditions = [
+          {
+            sh = ''test -d "''${DEVENV_ROOT}/.terraform/"'';
+            msg = "Project's '.terraform' folder does not exist, skipping.";
+          }
+          {
+            sh = ''test -e "''${DEVENV_ROOT}/.terraform.lock.hcl"'';
+            msg = "Project's '.terraform.lock.hcl' file does not exist, skipping.";
+          }
+        ];
+        cmds = [
+          ''echo "Deleting OpenTofu '.terraform.lock.hcl' file"''
+          "[[ -e './.terraform.lock.hcl' ]] && rm -r './.terraform.lock.hcl' || true"
+          ''echo "Deleting OpenTofu '.terraform' folder"''
+          "[[ -d './.terraform/' ]] && rm -r './.terraform/' || true"
+        ];
+      };
+
+      "update:tf:tofu" = patchGoTask {
+        desc = "⬆️ Update 🏗️OpenTofu modules and providers";
+        preconditions = [
+          {
+            sh = ''test -e "''${DEVENV_ROOT}/.terraform.lock.hcl"'';
+            msg = "Project's .terraform.lock.hcl does not exist, skipping.";
+          }
+        ];
+        cmds = [ ''tofu init -upgrade'' ];
       };
     };
   };
