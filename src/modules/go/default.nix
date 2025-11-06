@@ -9,7 +9,7 @@ let
   inherit (lib.lists) map;
   inherit (lib.attrsets) optionalAttrs;
   inherit (recipes-lib.go-tasks) patchGoTask;
-  inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.modules) mkCompleteModuleOptions;
 
   cfg = config.biapy-recipes.go;
   goCommand = lib.meta.getExe config.languages.go.package;
@@ -17,7 +17,7 @@ in
 {
   imports = map (path: import path args) [ ];
 
-  options.biapy-recipes.go = mkToolOptions "Go";
+  options.biapy-recipes.go = mkCompleteModuleOptions "Go";
 
   config = mkIf cfg.enable {
     # https://devenv.sh/languages/

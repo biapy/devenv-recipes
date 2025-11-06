@@ -25,6 +25,15 @@ rec {
       };
     };
 
+  mkCompleteModuleOptions =
+    name:
+    assert isString name;
+    mergeAttrsList [
+      (mkModuleOptions name)
+      (mkGitHooksOption name)
+      (mkTasksOption name)
+    ];
+
   mkToolOptions =
     cfg: name:
     assert isString name;
