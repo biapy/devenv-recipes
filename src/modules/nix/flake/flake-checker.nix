@@ -41,8 +41,8 @@ let
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
 
-  nixCfg = config.biapy-recipes.nix;
-  cfg = nixCfg.flake-checker;
+  flakeCfg = config.biapy-recipes.nix.flake;
+  cfg = flakeCfg.flake-checker;
 
   # Import flake-checker from nixpkgs-unstable, to get the latest version.
   inherit (pkgs) fd;
@@ -53,7 +53,7 @@ let
   glowCommand = lib.meta.getExe glow;
 in
 {
-  options.biapy-recipes.nix.flake-checker = mkToolOptions nixCfg "flake-checker";
+  options.biapy-recipes.nix.flake.flake-checker = mkToolOptions flakeCfg "flake-checker";
 
   config = mkIf cfg.enable {
     packages = [
