@@ -13,6 +13,9 @@
   - `ci:format:tf:tofu-fmt`: Format OpenTofu files `tofu fmt`.
   - `ci:lint:tf:tofu-validate`: Lint OpenTofu files with `tofu validate`.
 
+  Tasks automatically use `sops run tofu` when SOPS recipe is enabled,
+  allowing secure access to encrypted secrets during Terraform operations.
+
   ### 👷 Commit hooks
 
   - `terraform-format`: Format Terraform (`.tf`) files.
@@ -44,9 +47,14 @@ let
   inherit (recipes-lib.go-tasks) patchGoTask;
 
   cfg = config.biapy-recipes.terraform;
+  sopsCfg = config.biapy-recipes.secrets.sops;
 
   opentofu = config.languages.opentofu.package;
   tofuCommand = lib.meta.getExe opentofu;
+  
+  # Use "sops run tofu" when sops is enabled, otherwise just "tofu"
+  tofuExec = if sopsCfg.enable then "sops run ${tofuCommand}" else tofuCommand;
+  tofuGoTask = if sopsCfg.enable then "sops run tofu" else "tofu";
 in
 {
   config = mkIf cfg.enable {
@@ -64,7 +72,7 @@ in
         description = "🎨 Format 🏗️OpenTofu files";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${tofuCommand} fmt --recursive
+          ${tofuExec} fmt --recursive
         '';
       };
 
@@ -72,7 +80,7 @@ in
         description = "🔍 Lint 🏗️OpenTofu files with tofu validate";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${tofuCommand} validate
+          ${tofuExec} validate
         '';
       };
 
@@ -97,7 +105,7 @@ in
         exec = ''
           cd "''${DEVENV_ROOT}"
           if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
-            ${tofuCommand} 'init' -upgrade
+            ${tofuExec} 'init' -upgrade
           fi
         '';
       };
@@ -113,13 +121,13 @@ in
       "ci:format:tf:tofu-fmt" = patchGoTask {
         aliases = [ "tf-fmt" ];
         desc = "🎨 Format 🏗️OpenTofu files";
-        cmds = [ ''tofu fmt --recursive'' ];
+        cmds = [ ''${tofuGoTask} fmt --recursive'' ];
       };
 
       "ci:lint:tf:tofu-validate" = patchGoTask {
         aliases = [ "tf-validate" ];
         desc = "🔍 Lint 🏗️OpenTofu files with tofu validate";
-        cmds = [ ''tofu validate'' ];
+        cmds = [ ''${tofuGoTask} validate'' ];
       };
 
       "reset:tf:tofu" = patchGoTask {
@@ -150,7 +158,7 @@ in
             msg = "Project's .terraform.lock.hcl does not exist, skipping.";
           }
         ];
-        cmds = [ ''tofu init -upgrade'' ];
+        cmds = [ ''${tofuGoTask} init -upgrade'' ];
       };
     };
   };
