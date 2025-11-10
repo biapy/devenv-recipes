@@ -3,6 +3,12 @@
 
   Nix language support.
 
+  ## 🧐 Features
+
+  ### 🔨 Tasks
+
+  - `update:nix:flake-update`: Update flake lock files with `devenv update`.
+
   ## 🛠️ Tech Stack
 
   - [Alejandra 💅 @ GitHub](https://github.com/kamadorueda/alejandra).
@@ -21,10 +27,13 @@
   config,
   lib,
   pkgs,
+  recipes-lib,
   ...
 }:
 let
   inherit (lib) mkIf mkDefault;
+  inherit (lib.attrsets) optionalAttrs;
+  inherit (recipes-lib.go-tasks) patchGoTask;
 
   cfg = config.biapy-recipes.nix;
 in
@@ -40,5 +49,26 @@ in
     languages.nix.enable = mkDefault true;
 
     devcontainer.settings.customizations.vscode.extensions = mkDefault [ "mkhl.direnv" ];
+
+    # https://devenv.sh/tasks/
+    tasks = optionalAttrs cfg.tasks {
+      "update:nix:flake-update" = mkDefault {
+        description = "⬆️ Update ❄️Nix flake lock files";
+        exec = ''
+          set -o 'errexit' -o 'pipefail'
+
+          cd "''${DEVENV_ROOT}"
+          devenv update
+        '';
+      };
+    };
+
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
+      "update:nix:flake-update" = patchGoTask {
+        aliases = [ "flake-update" ];
+        desc = "⬆️ Update ❄️Nix flake lock files";
+        cmds = [ "devenv update" ];
+      };
+    };
   };
 }
