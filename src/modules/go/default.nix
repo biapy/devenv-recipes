@@ -15,7 +15,7 @@ let
   goCommand = lib.meta.getExe config.languages.go.package;
 in
 {
-  imports = map (path: import path args) [ ];
+  imports = map (path: import path args) [ ./hugo.nix ];
 
   options.biapy-recipes.go = mkCompleteModuleOptions "Go";
 

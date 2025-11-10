@@ -76,6 +76,11 @@ in
         aliases = [ "build" ];
         desc = "🔨 Run all building and compiling tasks";
       };
+
+      "dev:serve" = {
+        aliases = [ "serve" ];
+        desc = "🚀 Run all development server tasks";
+      };
     };
 
     devcontainer.settings.customizations.vscode.extensions = [ "mkhl.direnv" ];

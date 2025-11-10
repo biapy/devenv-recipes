@@ -435,6 +435,25 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
+  dev:
+    cmds:
+      - for:
+          var: TASKS
+        task: '{{.ITEM}}'
+    ignore_error: true
+    requires:
+      vars:
+        - DEVENV_ROOT
+    silent: true
+    summary: "\U0001F5C2️ Run 'dev:*' tasks"
+    vars:
+      TASKS:
+        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  dev:serve:
+    aliases:
+      - serve
+    desc: "\U0001F680 Run all development server tasks"
+    requires: {}
   list:
     aliases:
       - default
