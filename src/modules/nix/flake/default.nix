@@ -34,9 +34,7 @@ let
   cfg = config.biapy-recipes.nix.flake;
 in
 {
-  imports = map (path: import path args) [
-    ./flake-checker.nix
-  ];
+  imports = map (path: import path args) [ ./flake-checker.nix ];
 
   options.biapy-recipes.nix.flake = recipes-lib.modules.mkModuleOptions "Nix Flakes";
 
@@ -49,7 +47,7 @@ in
           set -o 'errexit' -o 'pipefail'
 
           cd "''${DEVENV_ROOT}"
-          devenv update
+          nix flake update
         '';
       };
     };
@@ -58,7 +56,7 @@ in
       "update:nix:flake-update" = patchGoTask {
         aliases = [ "flake-update" ];
         desc = "⬆️ Update ❄️Nix flake lock files";
-        cmds = [ "devenv update" ];
+        cmds = [ "nix flake update" ];
       };
     };
   };
