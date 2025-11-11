@@ -248,18 +248,6 @@ tasks:
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
-  ci:lint:nix:flake-checker:
-    aliases:
-      - flake-checker
-    cmds:
-      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint ❄️Nix flakes with flake-checker ===\\033[0m\""
-        silent: true
-      - fd '^flake\.lock$' --exec flake-checker --no-telemetry --check-outdated --check-owner --check-supported --fail-mode | glow
-    desc: "\U0001F50D Lint ❄️Nix flakes with flake-checker"
-    dir: '{{.DEVENV_ROOT}}'
-    requires:
-      vars:
-        - DEVENV_ROOT
   ci:lint:nix:nil:
     aliases:
       - nil

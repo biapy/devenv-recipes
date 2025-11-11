@@ -13,10 +13,10 @@
   - `ci:format:tf:tofu-fmt`: Format OpenTofu files `tofu fmt`.
   - `ci:lint:tf:tofu-validate`: Lint OpenTofu files with `tofu validate`.
 
-  Tasks automatically use `sops exec-env <envfile> tofu` when SOPS recipe is
-  enabled, allowing secure access to encrypted secrets during Terraform
-  operations. The env file path defaults to `.terraform.env` and can be
-  configured via `biapy-recipes.secrets.sops.terraform-env-file`.
+  Tasks automatically use `sops exec-env "<envfile>" "<command>"` when SOPS
+  recipe is enabled, allowing secure access to encrypted secrets during
+  Terraform operations. The env file path defaults to `./terraform.env` and can
+  be configured via `biapy-recipes.terraform.sops-env-file`.
 
   ### 👷 Commit hooks
 
@@ -50,6 +50,7 @@ let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
   inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (recipes-lib.sops) wrapWithSopsExecEnv;
 
   cfg = config.biapy-recipes.terraform;
   sopsCfg = config.biapy-recipes.secrets.sops;
@@ -57,10 +58,14 @@ let
   opentofu = config.languages.opentofu.package;
   tofuCommand = lib.meta.getExe opentofu;
 
-  # Use "sops exec-env <envfile> tofu" when sops is enabled, otherwise just "tofu"
-  tofuExec =
-    if sopsCfg.enable then "sops exec-env ${cfg.sops-env-file} ${tofuCommand}" else tofuCommand;
-  tofuGoTask = if sopsCfg.enable then "sops exec-env ${cfg.sops-env-file} tofu" else "tofu";
+  # Helper to wrap tofu commands with sops exec-env when enabled
+  wrapTofu =
+    command:
+    wrapWithSopsExecEnv {
+      sopsEnabled = sopsCfg.enable;
+      envFile = cfg.sops-env-file;
+      inherit command;
+    };
 in
 {
   imports = map (path: import path args) [
@@ -93,7 +98,7 @@ in
         description = "🎨 Format 🏗️OpenTofu files";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${tofuExec} fmt --recursive
+          ${wrapTofu "${tofuCommand} fmt --recursive"}
         '';
       };
 
@@ -101,7 +106,7 @@ in
         description = "🔍 Lint 🏗️OpenTofu files with tofu validate";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${tofuExec} validate
+          ${wrapTofu "${tofuCommand} validate"}
         '';
       };
 
@@ -126,7 +131,7 @@ in
         exec = ''
           cd "''${DEVENV_ROOT}"
           if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
-            ${tofuExec} 'init' -upgrade
+            ${wrapTofu "${tofuCommand} init -upgrade"}
           fi
         '';
       };
@@ -142,13 +147,13 @@ in
       "ci:format:tf:tofu-fmt" = patchGoTask {
         aliases = [ "tf-fmt" ];
         desc = "🎨 Format 🏗️OpenTofu files";
-        cmds = [ ''${tofuGoTask} fmt --recursive'' ];
+        cmds = [ ''${wrapTofu "tofu fmt --recursive"}'' ];
       };
 
       "ci:lint:tf:tofu-validate" = patchGoTask {
         aliases = [ "tf-validate" ];
         desc = "🔍 Lint 🏗️OpenTofu files with tofu validate";
-        cmds = [ ''${tofuGoTask} validate'' ];
+        cmds = [ ''${wrapTofu "tofu validate"}'' ];
       };
 
       "reset:tf:tofu" = patchGoTask {
@@ -179,7 +184,7 @@ in
             msg = "Project's .terraform.lock.hcl does not exist, skipping.";
           }
         ];
-        cmds = [ ''${tofuGoTask} init -upgrade'' ];
+        cmds = [ ''${wrapTofu "tofu init -upgrade"}'' ];
       };
     };
   };
