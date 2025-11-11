@@ -52,7 +52,7 @@ in
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
       "ci:docs:nix:nixdoc" = mkDefault {
-        description = "📝 Generate documentation from ❄️Nix files with nixdoc";
+        description = "📚 Generate documentation from ❄️Nix files with nixdoc";
         exec = ''
           set -o 'errexit' -o 'pipefail'
 
@@ -66,7 +66,7 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:docs:nix:nixdoc" = patchGoTask {
         aliases = [ "nixdoc" ];
-        desc = "📝 Generate documentation from ❄️Nix files with nixdoc";
+        desc = "📚 Generate documentation from ❄️Nix files with nixdoc";
         cmds = [
           "mkdir -p ./docs/nix"
           "fd --type f --extension nix --exec nixdoc --file {} \\; > ./docs/nix/library.md"

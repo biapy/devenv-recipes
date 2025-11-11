@@ -32,6 +32,47 @@ tasks:
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:docs:
+    cmds:
+      - for:
+          var: TASKS
+        task: '{{.ITEM}}'
+    ignore_error: true
+    requires:
+      vars:
+        - DEVENV_ROOT
+    silent: true
+    summary: "\U0001F5C2️ Run 'ci:docs:*' tasks"
+    vars:
+      TASKS:
+        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:docs:nix:
+    cmds:
+      - for:
+          var: TASKS
+        task: '{{.ITEM}}'
+    ignore_error: true
+    requires:
+      vars:
+        - DEVENV_ROOT
+    silent: true
+    summary: "\U0001F5C2️ Run 'ci:docs:nix:*' tasks"
+    vars:
+      TASKS:
+        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:docs:nix:nixdoc:
+    aliases:
+      - nixdoc
+    cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F4DA Generate documentation from ❄️Nix files with nixdoc ===\\033[0m\""
+        silent: true
+      - mkdir -p ./docs/nix
+      - fd --type f --extension nix --exec nixdoc --file {} \; > ./docs/nix/library.md
+    desc: "\U0001F4DA Generate documentation from ❄️Nix files with nixdoc"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
   ci:fix:
     aliases:
       - fix
