@@ -9,7 +9,7 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:nix:nixdoc`: Generate documentation from Nix files with nixdoc.
+  - `docs:nix:nixdoc`: Generate documentation from Nix files with nixdoc.
 
   ## 🛠️ Tech Stack
 
@@ -35,34 +35,42 @@ let
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.nixdoc;
 
-  inherit (pkgs) nixdoc;
+  inherit (pkgs) nixdoc fd;
   nixdocCommand = lib.meta.getExe nixdoc;
+  fdCommand = lib.meta.getExe fd;
 in
 {
   options.biapy-recipes.nix.nixdoc = mkToolOptions nixCfg "nixdoc";
 
   config = mkIf cfg.enable {
     # https://devenv.sh/packages/
-    packages = [ nixdoc ];
+    packages = [
+      nixdoc
+      fd
+    ];
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:lint:nix:nixdoc" = mkDefault {
+      "docs:nix:nixdoc" = mkDefault {
         description = "📝 Generate documentation from ❄️Nix files with nixdoc";
         exec = ''
           set -o 'errexit' -o 'pipefail'
 
           cd "''${DEVENV_ROOT}"
-          find . -name "*.nix" -type f -not -path "*/.*" -exec ${nixdocCommand} --file {} \; | head -n 0
+          mkdir -p "''${DEVENV_ROOT}/docs/nix"
+          ${fdCommand} --type f --extension nix --exec ${nixdocCommand} --file {} \; > "''${DEVENV_ROOT}/docs/nix/library.md"
         '';
       };
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:nix:nixdoc" = patchGoTask {
+      "docs:nix:nixdoc" = patchGoTask {
         aliases = [ "nixdoc" ];
         desc = "📝 Generate documentation from ❄️Nix files with nixdoc";
-        cmds = [ ''find . -name "*.nix" -type f -not -path "*/.*" -exec nixdoc --file {} \; | head -n 0'' ];
+        cmds = [
+          "mkdir -p ./docs/nix"
+          "fd --type f --extension nix --exec nixdoc --file {} \\; > ./docs/nix/library.md"
+        ];
       };
     };
   };
