@@ -6,7 +6,6 @@
   ## 🛠️ Tech Stack
 
   - [Alejandra 💅 @ GitHub](https://github.com/kamadorueda/alejandra).
-  - [nixdoc @ GitHub](https://github.com/nix-community/nixdoc).
 
   ### 🧑‍💻 Visual Studio Code
 
@@ -31,10 +30,7 @@ in
 {
   config = mkIf cfg.enable {
     # https://devenv.sh/packages/
-    packages = with pkgs; [
-      alejandra
-      nixdoc
-    ];
+    packages = with pkgs; [ alejandra ];
 
     # https://devenv.sh/languages/
     languages.nix.enable = mkDefault true;

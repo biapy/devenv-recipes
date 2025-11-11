@@ -5,6 +5,7 @@ args@{ recipes-lib, ... }:
     ./deadnix.nix
     ./flake
     ./nil.nix
+    ./nixdoc.nix
     ./nixos.nix
     ./nix.nix
     ./nixfmt.nix
