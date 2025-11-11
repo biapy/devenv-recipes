@@ -9,7 +9,7 @@
 
   ### 🔨 Tasks
 
-  - `docs:nix:nixdoc`: Generate documentation from Nix files with nixdoc.
+  - `ci:docs:nix:nixdoc`: Generate documentation from Nix files with nixdoc.
 
   ## 🛠️ Tech Stack
 
@@ -51,7 +51,7 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "docs:nix:nixdoc" = mkDefault {
+      "ci:docs:nix:nixdoc" = mkDefault {
         description = "📝 Generate documentation from ❄️Nix files with nixdoc";
         exec = ''
           set -o 'errexit' -o 'pipefail'
@@ -64,7 +64,7 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "docs:nix:nixdoc" = patchGoTask {
+      "ci:docs:nix:nixdoc" = patchGoTask {
         aliases = [ "nixdoc" ];
         desc = "📝 Generate documentation from ❄️Nix files with nixdoc";
         cmds = [
