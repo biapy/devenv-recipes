@@ -53,7 +53,8 @@ let
   cfg = phpToolsCfg.phpmd;
 
   phpCommand = lib.meta.getExe config.languages.php.package;
-  toolCommand = "${root}/${phpToolsCfg.path}/phpmd/vendor/phpmd/phpmd/src/bin/phpmd";
+  phpmdCommand = "${root}/${phpToolsCfg.path}/phpmd/vendor/bin/phpmd";
+  pdependCommand = "${root}/${phpToolsCfg.path}/phpmd/vendor/bin/pdepend";
 
   parallel = config.biapy-recipes.gnu-parallel.package;
   parallelCommand = lib.meta.getExe parallel;
@@ -76,12 +77,24 @@ in
       phpmd = mkDefault {
         description = "PHP Mess Detector";
         exec = ''
-          if [[ ! -e '${toolCommand}' ]]; then
+          if [[ ! -e '${phpmdCommand}' ]]; then
             echo "PHP Mess Detector is not installed."
             exit 1
           fi
 
-          ${phpCommand} -d 'error_reporting=~E_DEPRECATED' '${toolCommand}' "''${@}"
+          ${phpCommand} -d 'error_reporting=~E_DEPRECATED' '${phpmdCommand}' "''${@}"
+        '';
+      };
+
+      pdepend = mkDefault {
+        description = "PHP Depend";
+        exec = ''
+          if [[ ! -e '${pdependCommand}' ]]; then
+            echo "PHP Depend is not installed."
+            exit 1
+          fi
+
+          ${phpCommand} -d 'error_reporting=~E_DEPRECATED' '${pdependCommand}' "''${@}"
         '';
       };
     };
