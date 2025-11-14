@@ -60,8 +60,11 @@ final class PhpStanObjectManager implements ObjectManager
         return $result;
     }
 
+    /**
+     * @return PhpStanMetadataFactory<ClassMetadata<object>>
+     */
     #[\Override]
-    public function getMetadataFactory(): ClassMetadataFactory
+    public function getMetadataFactory(): PhpStanMetadataFactory
     {
         return $this->metadataFactory;
     }
