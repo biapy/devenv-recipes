@@ -5,7 +5,7 @@ in
 {
   imports = map (path: import path args) [
     ./beautysh.nix
-    ./modern-cli-tools.nix
+    ./modern-cli.nix
     ./shell.nix
     ./shellcheck.nix
     ./shfmt.nix

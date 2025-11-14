@@ -48,10 +48,10 @@ let
   inherit (lib.modules) mkIf;
   inherit (lib.options) mkEnableOption;
 
-  cfg = config.biapy-recipes.shell.modern-cli-tools;
+  cfg = config.biapy-recipes.shell.modern-cli;
 in
 {
-  options.biapy-recipes.shell.modern-cli-tools = {
+  options.biapy-recipes.shell.modern-cli = {
     enable = mkEnableOption "Modern CLI Tools";
   };
 
