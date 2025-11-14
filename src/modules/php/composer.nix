@@ -9,7 +9,7 @@
   ### 🔨 Tasks
 
   - `reset:php:composer`: Delete Composer `vendor` folder.
-  - `cd:build:php:composer-dump-autoload`: Dump Composer autoload files.
+  - `cd:build:php:composer:dump-autoload`: Dump Composer autoload files.
 
   ### 👷 Commit hooks
 
@@ -128,7 +128,7 @@ in
           status = ''test ! -d "''${DEVENV_ROOT}/vendor/"'';
         };
 
-        "cd:build:php:composer-dump-autoload" = {
+        "cd:build:php:composer:dump-autoload" = {
           description = "🔨 Dump 🐘composer autoload files (optimized)";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -179,7 +179,7 @@ in
         ];
       };
 
-      "cd:build:php:composer-dump-autoload" = patchGoTask {
+      "cd:build:php:composer:dump-autoload" = patchGoTask {
         desc = "🔨 Dump 🐘composer autoload files (optimized)";
         preconditions = [
           {
