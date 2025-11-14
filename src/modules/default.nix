@@ -5,6 +5,7 @@ in
 {
   imports = map (path: import path args) [
     ./ansible
+    ./config
     ./container
     ./database
     ./go

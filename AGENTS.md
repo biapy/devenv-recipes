@@ -7,6 +7,8 @@ devenv-recipes project.
 
 <!-- CSpell:ignore shfmt secops direnv gitmoji Nixpkgs biapy symfony Symfony -->
 
+<!-- CSpell:ignore jsonlint taplo pkgs yamllint yamlfmt -->
+
 ## 🤖 Overview
 
 The devenv-recipes project uses several automated agents and tools to maintain
@@ -220,6 +222,57 @@ Follow these clean code best practices:
 - **Follow naming conventions**: `category:action:tool:name` for tasks
 - **Document options**: Add descriptions to all module options
 - **Test your changes**: Verify recipes work in a test project
+
+#### Package Options Naming Convention
+
+Follow this pattern for package customization options:
+
+**Use `package` (singular) when:**
+
+- Module name exactly matches the tool name
+- Example: `mdformat.package`, `shfmt.package`
+
+**Use `packages.<tool>` (plural) when:**
+
+- Module name differs from tool name (module represents a concept/language)
+- Module has multiple tools
+- Examples:
+  - `yaml.packages.yamllint` and `yaml.packages.yamlfmt` (module = YAML
+    language)
+  - `json.packages.jq`, `json.packages.jsonlint`, `json.packages.fx` (module =
+    JSON language)
+  - `toml.packages.taplo` (module = TOML language, tool = taplo)
+
+```nix
+# ✅ Correct: module name matches tool name
+options.biapy-recipes.markdown.mdformat = {
+  package = mkOption {
+    default = pkgs.mdformat;
+  };
+};
+
+# ✅ Correct: module represents a language/concept
+options.biapy-recipes.config.toml = {
+  packages.taplo = mkOption {
+    default = pkgs.taplo;
+  };
+};
+
+# ✅ Correct: multiple tools
+options.biapy-recipes.config.json = {
+  packages = {
+    jq = mkOption { default = pkgs.jq; };
+    jsonlint = mkOption { default = pkgs.jsonlint; };
+    fx = mkOption { default = pkgs.fx; };
+  };
+};
+```
+
+This convention allows:
+
+- Clear distinction between tool-specific and concept-based modules
+- Flexibility to add more tools to language/concept modules
+- Consistent user experience across the codebase
 
 ### Branch Naming Convention
 
