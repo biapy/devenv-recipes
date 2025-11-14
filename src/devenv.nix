@@ -78,7 +78,10 @@ in
       };
 
       "cache:clear" = {
-        aliases = [ "clear-cache" ];
+        aliases = [
+          "clear-cache"
+          "cc"
+        ];
         desc = "🗑️ Run all cache clearing tasks";
       };
 
