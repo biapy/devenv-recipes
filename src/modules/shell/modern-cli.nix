@@ -44,13 +44,18 @@
 }:
 let
   inherit (lib.modules) mkIf;
-  inherit (lib.options) mkEnableOption;
+  inherit (lib.options) mkOption;
+  inherit (lib.types) bool;
 
   cfg = config.biapy-recipes.shell.modern-cli;
 in
 {
   options.biapy-recipes.shell.modern-cli = {
-    enable = mkEnableOption "Modern CLI Tools";
+    enable = mkOption {
+      type = bool;
+      default = true;
+      description = "Whether to enable Modern CLI Tools.";
+    };
   };
 
   config = mkIf cfg.enable {
