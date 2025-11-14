@@ -9,6 +9,7 @@
   ### 🔨 Tasks
 
   - `reset:php:composer`: Delete Composer `vendor` folder.
+  - `cd:build:php:composer-dump-autoload`: Dump Composer autoload files.
 
   ### 👷 Commit hooks
 
@@ -127,6 +128,16 @@ in
           status = ''test ! -d "''${DEVENV_ROOT}/vendor/"'';
         };
 
+        "cd:build:php:composer-dump-autoload" = {
+          description = "🔨 Dump 🐘composer autoload files";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            if [[ -e "''${DEVENV_ROOT}/composer.json" ]]; then
+              ${composerCommand} dump-autoload
+            fi
+          '';
+        };
+
         "update:php:composer" = {
           description = "⬆️ Update 🐘composer packages";
           exec = ''
@@ -166,6 +177,17 @@ in
           ''echo "Deleting composer 'vendor' folder"''
           "[[ -e './vendor/' ]] && rm -r './vendor/'"
         ];
+      };
+
+      "cd:build:php:composer-dump-autoload" = patchGoTask {
+        desc = "🔨 Dump 🐘composer autoload files";
+        preconditions = [
+          {
+            sh = ''test -e "''${DEVENV_ROOT}/composer.json"'';
+            msg = "Project's composer.json does not exist, skipping.";
+          }
+        ];
+        cmds = [ "composer dump-autoload" ];
       };
 
       "update:php:composer" = patchGoTask {
