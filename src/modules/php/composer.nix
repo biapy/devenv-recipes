@@ -129,11 +129,11 @@ in
         };
 
         "cd:build:php:composer-dump-autoload" = {
-          description = "🔨 Dump 🐘composer autoload files";
+          description = "🔨 Dump 🐘composer autoload files (optimized)";
           exec = ''
             cd "''${DEVENV_ROOT}"
             if [[ -e "''${DEVENV_ROOT}/composer.json" ]]; then
-              ${composerCommand} dump-autoload
+              ${composerCommand} dump-autoload --optimize --strict-psr --classmap-authoritative
             fi
           '';
         };
@@ -180,14 +180,14 @@ in
       };
 
       "cd:build:php:composer-dump-autoload" = patchGoTask {
-        desc = "🔨 Dump 🐘composer autoload files";
+        desc = "🔨 Dump 🐘composer autoload files (optimized)";
         preconditions = [
           {
             sh = ''test -e "''${DEVENV_ROOT}/composer.json"'';
             msg = "Project's composer.json does not exist, skipping.";
           }
         ];
-        cmds = [ "composer dump-autoload" ];
+        cmds = [ "composer dump-autoload --optimize --strict-psr --classmap-authoritative" ];
       };
 
       "update:php:composer" = patchGoTask {
