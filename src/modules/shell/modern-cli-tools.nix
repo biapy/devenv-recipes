@@ -14,6 +14,7 @@
   - **eza**: Modern replacement for ls with Git integration
   - **zoxide**: Smarter cd command that learns your habits
   - **fzf**: Command-line fuzzy finder
+  - **skim** (`sk`): Fuzzy finder in Rust, alternative to fzf
   - **tealdeer** (`tldr`): Fast implementation of tldr in Rust
   - **tokei**: Fast code statistics tool
   - **procs**: Modern replacement for ps
@@ -29,6 +30,7 @@
   - [eza @ GitHub](https://github.com/eza-community/eza)
   - [zoxide @ GitHub](https://github.com/ajeetdsouza/zoxide)
   - [fzf @ GitHub](https://github.com/junegunn/fzf)
+  - [skim @ GitHub](https://github.com/lotabout/skim)
   - [tealdeer @ GitHub](https://github.com/dbrgn/tealdeer)
   - [tokei @ GitHub](https://github.com/XAMPPRocky/tokei)
   - [procs @ GitHub](https://github.com/dalance/procs)
@@ -62,6 +64,7 @@ in
       pkgs.eza # Modern ls replacement
       pkgs.zoxide # Smarter cd
       pkgs.fzf # Fuzzy finder
+      pkgs.skim # Fuzzy finder (Rust)
       pkgs.tealdeer # tldr client
       pkgs.tokei # Code statistics
       pkgs.procs # Modern ps
@@ -77,6 +80,7 @@ in
       eza --version
       zoxide --version
       fzf --version
+      sk --version
       tldr --version
       tokei --version
       procs --version
