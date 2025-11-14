@@ -6,6 +6,7 @@ in
   imports = map (path: import path args) [
     ./json.nix
     ./toml.nix
+    ./xml.nix
     ./yaml.nix
   ];
 

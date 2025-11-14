@@ -1,12 +1,12 @@
 # Config Module
 
-Configuration file formatting and linting tools for YAML, JSON, and TOML.
+Configuration file formatting and linting tools for YAML, JSON, TOML, and XML.
 
-<!-- cSpell:ignore yamllint yamlfmt jsonlint taplo biapy devenv pkgs -->
+<!-- cSpell:ignore yamllint yamlfmt jsonlint taplo biapy devenv pkgs xmllint -->
 
 ## 🧐 Features
 
-The config module provides three submodules for working with common
+The config module provides four submodules for working with common
 configuration file formats:
 
 ### YAML
@@ -24,11 +24,16 @@ configuration file formats:
 
 - **taplo** (Rust) - TOML toolkit for formatting and linting
 
+### XML
+
+- **xmllint** (C) - XML validator and formatter from libxml2
+
 ## 📦 Submodules
 
 - `biapy-recipes.config.yaml` - YAML tools
 - `biapy-recipes.config.json` - JSON tools
 - `biapy-recipes.config.toml` - TOML tools
+- `biapy-recipes.config.xml` - XML tools
 
 ## 🔨 Tasks
 
@@ -47,6 +52,11 @@ configuration file formats:
 - `ci:lint:toml:taplo` - Lint TOML files with taplo
 - `ci:format:toml:taplo` - Format TOML files with taplo
 
+### XML Tasks
+
+- `ci:lint:xml:xmllint` - Lint XML files with xmllint
+- `ci:format:xml:xmllint` - Format XML files with xmllint
+
 ## 👷 Commit Hooks
 
 ### YAML Hooks
@@ -62,6 +72,10 @@ configuration file formats:
 
 - `taplo` - Format TOML files
 
+### XML Hooks
+
+- `check-xml` - Check XML syntax
+
 ## 🚀 Usage
 
 Enable the submodules you need in your `devenv.nix`:
@@ -72,6 +86,7 @@ Enable the submodules you need in your `devenv.nix`:
     yaml.enable = true;
     json.enable = true;
     toml.enable = true;
+    xml.enable = true;
   };
 }
 ```
@@ -140,6 +155,7 @@ Use `package` (singular) only when the module name matches the tool name:
 - [jsonlint @ GitHub](https://github.com/prantlf/jsonlint)
 - [fx @ GitHub](https://github.com/antonmedv/fx)
 - [taplo @ GitHub](https://github.com/tamasfe/taplo)
+- [libxml2 @ GitLab](https://gitlab.gnome.org/GNOME/libxml2)
 
 ## 🙇 Acknowledgements
 
