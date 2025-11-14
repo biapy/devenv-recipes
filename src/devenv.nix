@@ -77,6 +77,11 @@ in
         desc = "🔨 Run all building and compiling tasks";
       };
 
+      "cache:clear" = {
+        aliases = [ "clear-cache" ];
+        desc = "🗑️ Run all cache clearing tasks";
+      };
+
       "dev:serve" = {
         aliases = [ "serve" ];
         desc = "🚀 Run all development server tasks";

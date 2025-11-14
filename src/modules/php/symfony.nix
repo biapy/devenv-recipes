@@ -14,6 +14,9 @@
   - `ci:lint:symfony:twig`: Lint 'twig' files with Symfony console.
   - `ci:lint:symfony:xliff`: Lint 'xlf' files with Symfony console.
   - `ci:lint:symfony:yaml`: Lint 'yml' files with Symfony console.
+  - `cache:clear:symfony`: Clear all Symfony caches.
+  - `cache:clear:symfony:var`: Clear Symfony var/cache directory.
+  - `cache:clear:symfony:pool`: Clear Symfony cache pools.
 
   ### 👷 Commit hooks
 
@@ -90,7 +93,7 @@ in
     tasks =
       optionalAttrs cfg.tasks {
         "ci:lint:symfony:container" = {
-          description = "🔍 Lint services container with Symfony console";
+          description = "🔍 Lint 🎶Symfony services container";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'lint:container'
@@ -98,7 +101,7 @@ in
         };
 
         "ci:lint:symfony:translations" = {
-          description = "🔍 Lint translations with Symfony console";
+          description = "🔍 Lint 🎶Symfony translations";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'lint:translations'
@@ -106,7 +109,7 @@ in
         };
 
         "ci:lint:symfony:twig" = {
-          description = "🔍 Lint 'twig' files with Symfony console";
+          description = "🔍 Lint 🎶Symfony 'twig' files";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${fdCommand} --extension='twig' --type='file' --exec-batch \
@@ -115,7 +118,7 @@ in
         };
 
         "ci:lint:symfony:xliff" = {
-          description = "🔍 Lint 'xlf' files with Symfony console";
+          description = "🔍 Lint 🎶Symfony 'xlf' files";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${fdCommand} --extension='xlf' --type='file' --exec-batch \
@@ -124,11 +127,28 @@ in
         };
 
         "ci:lint:symfony:yaml" = {
-          description = "🔍 Lint 'yml' files with Symfony console";
+          description = "🔍 Lint 🎶Symfony 'yml' files";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch \
                 ${symfonyCommand} console 'lint:yaml'
+          '';
+        };
+
+        "cache:clear:symfony:var" = {
+          description = "🗑️ Clear 🎶Symfony var/cache directory";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${symfonyCommand} console 'cache:clear'
+
+          '';
+        };
+
+        "cache:clear:symfony:pool" = {
+          description = "🗑️ Clear 🎶Symfony cache pools";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${symfonyCommand} console 'cache:pool:clear' --all
           '';
         };
       }
@@ -140,17 +160,17 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:symfony:container" = patchGoTask {
-        desc = "🔍 Lint services container with Symfony console";
+        desc = "🔍 Lint 🎶Symfony services container";
         cmds = [ "symfony console 'lint:container'" ];
       };
 
       "ci:lint:symfony:translations" = patchGoTask {
-        desc = "🔍 Lint translations with Symfony console";
+        desc = "🔍 Lint 🎶Symfony translations";
         cmds = [ "symfony console 'lint:translations'" ];
       };
 
       "ci:lint:symfony:twig" = patchGoTask {
-        desc = "🔍 Lint 'twig' files with Symfony console";
+        desc = "🔍 Lint 🎶Symfony 'twig' files";
         cmds = [
           "fd --extension='twig' --type='file' --exec-batch symfony console 'lint:twig' --show-deprecations"
         ];
@@ -158,15 +178,29 @@ in
       };
 
       "ci:lint:symfony:xliff" = patchGoTask {
-        desc = "🔍 Lint 'xlf' files with Symfony console";
+        desc = "🔍 Lint 🎶Symfony 'xlf' files";
         cmds = [ "fd --extension='xlf' --type='file' --exec-batch symfony console 'lint:xliff'" ];
       };
 
       "ci:lint:symfony:yaml" = patchGoTask {
-        desc = "🔍 Lint 'yml' files with Symfony console";
+        desc = "🔍 Lint 🎶Symfony 'yml' files";
         cmds = [
           "fd --extension='yml' --extension='yaml' --type='file' --exec-batch symfony console 'lint:yaml'"
         ];
+      };
+
+      "cache:clear:symfony" = {
+        desc = "🗑️ Run all 🎶Symfony cache clearing tasks";
+      };
+
+      "cache:clear:symfony:var" = patchGoTask {
+        desc = "🗑️ Clear 🎶Symfony var/cache directory";
+        cmds = [ "symfony console 'cache:clear'" ];
+      };
+
+      "cache:clear:symfony:pool" = patchGoTask {
+        desc = "🗑️ Clear 🎶Symfony cache pools";
+        cmds = [ "symfony console 'cache:pool:clear' --all" ];
       };
     };
 
