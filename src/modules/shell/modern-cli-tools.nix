@@ -14,7 +14,7 @@
   - **eza**: Modern replacement for ls with Git integration
   - **zoxide**: Smarter cd command that learns your habits
   - **fzf**: Command-line fuzzy finder
-  - **tldr**: Simplified and community-driven man pages
+  - **tealdeer** (`tldr`): Fast implementation of tldr in Rust
   - **tokei**: Fast code statistics tool
   - **procs**: Modern replacement for ps
   - **bottom** (`btm`): Yet another cross-platform graphical process/system monitor
@@ -28,7 +28,7 @@
   - [eza @ GitHub](https://github.com/eza-community/eza)
   - [zoxide @ GitHub](https://github.com/ajeetdsouza/zoxide)
   - [fzf @ GitHub](https://github.com/junegunn/fzf)
-  - [tldr @ GitHub](https://github.com/tldr-pages/tldr)
+  - [tealdeer @ GitHub](https://github.com/dbrgn/tealdeer)
   - [tokei @ GitHub](https://github.com/XAMPPRocky/tokei)
   - [procs @ GitHub](https://github.com/dalance/procs)
   - [bottom @ GitHub](https://github.com/ClementTsang/bottom)
