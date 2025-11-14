@@ -180,6 +180,10 @@ in
       };
 
       "cd:build:php:composer:dump-autoload" = patchGoTask {
+        aliases = [
+          "dump-autoload"
+          "composer-dump-autoload"
+        ];
         desc = "🔨 Dump 🐘composer autoload files (optimized)";
         preconditions = [
           {
