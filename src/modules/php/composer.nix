@@ -86,7 +86,7 @@ in
     # https://devenv.sh/tasks/
     tasks =
       optionalAttrs cfg.tasks {
-        "biapy-recipes:enterShell:install:php:composer" = {
+        "biapy-recipes:enterShell:install:php:composer" = mkDefault {
           description = "Install 🐘composer packages";
           before = [ "devenv:enterShell" ];
           status = ''test -e "''${DEVENV_ROOT}/vendor/autoload.php"'';
@@ -98,7 +98,7 @@ in
           '';
         };
 
-        "ci:lint:php:composer-validate" = {
+        "ci:lint:php:composer-validate" = mkDefault {
           description = "🔍 Lint 🐘composer.json files";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -107,7 +107,7 @@ in
 
         };
 
-        "ci:secops:php:composer-audit" = {
+        "ci:secops:php:composer-audit" = mkDefault {
           description = "🕵️‍♂️ Audit 🐘composer.json file";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -117,7 +117,7 @@ in
           '';
         };
 
-        "reset:php:composer" = {
+        "reset:php:composer" = mkDefault {
           description = "🔥 Delete 🐘composer 'vendor' folder";
           exec = ''
             echo "Deleting Composer 'vendor' folder"
@@ -128,7 +128,7 @@ in
           status = ''test ! -d "''${DEVENV_ROOT}/vendor/"'';
         };
 
-        "cd:build:php:composer:dump-autoload" = {
+        "cd:build:php:composer:dump-autoload" = mkDefault {
           description = "🔨 Dump 🐘composer autoload files (optimized)";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -138,7 +138,7 @@ in
           '';
         };
 
-        "update:php:composer" = {
+        "update:php:composer" = mkDefault {
           description = "⬆️ Update 🐘composer packages";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -155,17 +155,17 @@ in
       };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:php:composer-validate" = patchGoTask {
+      "ci:lint:php:composer-validate" = mkDefault (patchGoTask {
         desc = "🔍 Lint 🐘composer.json files";
         cmds = [ "fd '^composer\\.json$' --exec composer validate --no-check-publish {}" ];
-      };
+      });
 
-      "ci:secops:php:composer-audit" = patchGoTask {
+      "ci:secops:php:composer-audit" = mkDefault (patchGoTask {
         desc = "🕵️‍♂️ Audit 🐘composer.json file";
         cmds = [ "composer audit" ];
-      };
+      });
 
-      "reset:php:composer" = patchGoTask {
+      "reset:php:composer" = mkDefault (patchGoTask {
         desc = "🔥 Delete 🐘composer 'vendor' folder";
         preconditions = [
           {
@@ -177,9 +177,9 @@ in
           ''echo "Deleting composer 'vendor' folder"''
           "[[ -e './vendor/' ]] && rm -r './vendor/'"
         ];
-      };
+      });
 
-      "cd:build:php:composer:dump-autoload" = patchGoTask {
+      "cd:build:php:composer:dump-autoload" = mkDefault (patchGoTask {
         aliases = [
           "dump-autoload"
           "composer-dump-autoload"
@@ -192,9 +192,9 @@ in
           }
         ];
         cmds = [ "composer dump-autoload --optimize --strict-psr --classmap-authoritative" ];
-      };
+      });
 
-      "update:php:composer" = patchGoTask {
+      "update:php:composer" = mkDefault (patchGoTask {
         desc = "⬆️ Update 🐘composer packages";
         preconditions = [
           {
@@ -203,7 +203,7 @@ in
           }
         ];
         cmds = [ ''composer update'' ];
-      };
+      });
     };
 
     # https://devenv.sh/git-hooks/
