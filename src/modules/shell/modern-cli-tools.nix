@@ -17,6 +17,7 @@
   - **tealdeer** (`tldr`): Fast implementation of tldr in Rust
   - **tokei**: Fast code statistics tool
   - **procs**: Modern replacement for ps
+  - **btop**: Resource monitor with mouse support and game-like UI
   - **bottom** (`btm`): Yet another cross-platform graphical process/system monitor
   - **duf**: Disk Usage/Free Utility with better UX than df
 
@@ -31,6 +32,7 @@
   - [tealdeer @ GitHub](https://github.com/dbrgn/tealdeer)
   - [tokei @ GitHub](https://github.com/XAMPPRocky/tokei)
   - [procs @ GitHub](https://github.com/dalance/procs)
+  - [btop @ GitHub](https://github.com/aristocratos/btop)
   - [bottom @ GitHub](https://github.com/ClementTsang/bottom)
   - [duf @ GitHub](https://github.com/muesli/duf)
 */
@@ -63,6 +65,7 @@ in
       pkgs.tealdeer # tldr client
       pkgs.tokei # Code statistics
       pkgs.procs # Modern ps
+      pkgs.btop # Resource monitor
       pkgs.bottom # System monitor
       pkgs.duf # Better df
     ];
@@ -77,6 +80,7 @@ in
       tldr --version
       tokei --version
       procs --version
+      btop --version
       btm --version
       duf --version
     '';
