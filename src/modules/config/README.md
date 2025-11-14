@@ -2,7 +2,9 @@
 
 Configuration file formatting and linting tools for YAML, JSON, TOML, and XML.
 
-<!-- cSpell:ignore yamllint yamlfmt jsonlint taplo biapy devenv pkgs xmllint -->
+<!-- cSpell:ignore yamllint yamlfmt jsonlint taplo biapy devenv pkgs -->
+
+<!-- cSpell:ignore xmllint xmlstarlet -->
 
 ## 🧐 Features
 
@@ -27,6 +29,7 @@ configuration file formats:
 ### XML
 
 - **xmllint** (C) - XML validator and formatter from libxml2
+- **xmlstarlet** (C) - Command-line XML toolkit
 
 ## 📦 Submodules
 
@@ -156,6 +159,7 @@ Use `package` (singular) only when the module name matches the tool name:
 - [fx @ GitHub](https://github.com/antonmedv/fx)
 - [taplo @ GitHub](https://github.com/tamasfe/taplo)
 - [libxml2 @ GitLab](https://gitlab.gnome.org/GNOME/libxml2)
+- [xmlstarlet @ SourceForge](https://xmlstar.sourceforge.net/)
 
 ## 🙇 Acknowledgements
 

@@ -13,6 +13,7 @@
   ### 📦 Packages
 
   - `xmllint`: XML validator and formatter from libxml2.
+  - `xmlstarlet`: Command-line XML toolkit.
 
   ### 👷 Commit hooks
 
@@ -21,6 +22,7 @@
   ## 🛠️ Tech Stack
 
   - [libxml2 @ GitLab](https://gitlab.gnome.org/GNOME/libxml2) - XML C parser and toolkit (C).
+  - [xmlstarlet @ SourceForge](https://xmlstar.sourceforge.net/) - Command-line XML toolkit (C).
 
   ## 🙇 Acknowledgements
 
@@ -47,7 +49,7 @@ let
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 
-  inherit (cfg.packages) xmllint;
+  inherit (cfg.packages) xmllint xmlstarlet;
 
   xmllintCommand = lib.meta.getExe xmllint;
 in
@@ -60,12 +62,19 @@ in
         type = lib.types.package;
         default = pkgs.libxml2;
       };
+      xmlstarlet = mkOption {
+        description = "The xmlstarlet package to use.";
+        defaultText = "pkgs.xmlstarlet";
+        type = lib.types.package;
+        default = pkgs.xmlstarlet;
+      };
     };
   };
 
   config = mkIf cfg.enable {
     packages = [
       xmllint
+      xmlstarlet
       fd
     ];
 
