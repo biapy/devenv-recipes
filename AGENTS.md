@@ -5,7 +5,7 @@ devenv-recipes project.
 
 <!-- CSpell:ignore devenv nixpkgs gitleaks statix nixfmt markdownlint mdformat -->
 
-<!-- CSpell:ignore shfmt secops direnv gitmoji Nixpkgs -->
+<!-- CSpell:ignore shfmt secops direnv gitmoji Nixpkgs biapy symfony Symfony -->
 
 ## 🤖 Overview
 
@@ -81,7 +81,53 @@ are organized by category:
 - **ci:fix**: Run all fixing tasks (alias: `fix`)
 - **ci:secops**: Run all security operations (alias: `secops`)
 - **cd:build**: Run all build tasks (alias: `build`)
+- **cache:clear**: Run all cache clearing tasks (alias: `clear-cache`, `cc`)
 - **dev:serve**: Run development servers (alias: `serve`)
+
+### Task Naming Convention
+
+Tasks follow a hierarchical namespace structure using colons (`:`) as separators:
+
+```text
+category:action:tool:name
+```
+
+**Categories:**
+
+- `ci:` - Continuous Integration tasks (lint, format, fix, secops)
+- `cd:` - Continuous Deployment tasks (build, compile)
+- `dev:` - Development tasks (serve, watch)
+- `cache:` - Cache management tasks (clear)
+- `reset:` - Resource cleanup tasks (delete vendor, node_modules)
+- `update:` - Update dependencies tasks
+- `biapy-recipes:` - Internal framework tasks
+
+**Actions:**
+
+- `lint:` - Linting and validation
+- `format:` - Code formatting
+- `fix:` - Auto-fixing issues
+- `secops:` - Security operations
+- `build:` - Building and compiling
+- `serve:` - Running development servers
+- `clear:` - Clearing caches
+- `docs:` - Documentation generation
+
+**Examples:**
+
+- `ci:lint:php:psalm` - Lint PHP files with Psalm
+- `ci:format:nix:nixfmt` - Format Nix files with nixfmt
+- `cache:clear:php:psalm` - Clear Psalm cache
+- `cache:clear:symfony:var` - Clear Symfony var/cache
+- `cd:build:php:composer:dump-autoload` - Dump Composer autoload
+
+**Aliases:**
+
+Tasks can have short aliases for convenience:
+
+- Main category tasks: `lint`, `format`, `build`, `cc`
+- Tool-specific: `psalm`, `nixfmt`, `shfmt`
+- Tool with action: `psalm-cc`, `psalm:cc`
 
 ### List available tasks
 
@@ -95,6 +141,7 @@ task --list-all
 task lint      # Run all linting tasks
 task format    # Run all formatting tasks
 task serve     # Start development servers
+task cc        # Clear all caches
 ```
 
 ## 🔧 Configuration
