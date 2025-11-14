@@ -490,4 +490,21 @@ tasks:
       - task --list
     desc: List available tasks
     silent: true
+vars:
+  GIT_AUTHOR:
+    sh: git log -n 1 --format=%an 2>/dev/null || echo 'unknown'
+  GIT_AUTHOR_EMAIL:
+    sh: git log -n 1 --format=%ae 2>/dev/null || echo 'unknown'
+  GIT_BRANCH:
+    sh: git rev-parse --abbrev-ref HEAD 2>/dev/null || echo 'unknown'
+  GIT_COMMIT:
+    sh: git log -n 1 --format=%H 2>/dev/null || echo 'unknown'
+  GIT_COMMIT_DATE:
+    sh: git log -n 1 --format=%ci 2>/dev/null || echo 'unknown'
+  GIT_COMMIT_SHORT:
+    sh: git log -n 1 --format=%h 2>/dev/null || echo 'unknown'
+  GIT_STATE:
+    sh: git diff --quiet && git diff --cached --quiet && echo 'clean' || echo 'dirty'
+  GIT_TAG:
+    sh: git describe --tags --exact-match 2>/dev/null || echo ''
 version: "3"
