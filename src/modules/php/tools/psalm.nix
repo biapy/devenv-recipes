@@ -9,6 +9,7 @@
 
   - `ci:lint:php:psalm`: 🔍 Lint 🐘PHP files with Psalm.
   - `reset:php:tools:psalm`: Delete 'psalm/vendor' folder.
+  - `cache:clear:php:psalm`: Clear Psalm cache.
 
   ### 👷 Commit hooks
 
@@ -97,6 +98,14 @@ in
             psalm --no-progress --show-info --show-snippet
           '';
         };
+
+        "cache:clear:php:psalm" = {
+          description = "🗑️ Clear Psalm cache";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            psalm --clear-cache
+          '';
+        };
       };
 
     biapy.go-task.taskfile.tasks =
@@ -106,6 +115,15 @@ in
           aliases = [ "psalm" ];
           desc = "🔍 Lint 🐘PHP files with Psalm";
           cmds = [ "psalm --no-progress --show-info --show-snippet" ];
+        };
+
+        "cache:clear:php:psalm" = patchGoTask {
+          aliases = [
+            "psalm-cc"
+            "psalm:cc"
+          ];
+          desc = "🗑️ Clear Psalm cache";
+          cmds = [ "psalm --clear-cache" ];
         };
       };
 
