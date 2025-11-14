@@ -12,7 +12,6 @@
   - **fd**: Fast and user-friendly alternative to find
   - **bat**: Cat clone with syntax highlighting and Git integration
   - **eza**: Modern replacement for ls with Git integration
-  - **zoxide**: Smarter cd command that learns your habits
   - **fzf**: Command-line fuzzy finder
   - **skim** (`sk`): Fuzzy finder in Rust, alternative to fzf
   - **tealdeer** (`tldr`): Fast implementation of tldr in Rust
@@ -28,7 +27,6 @@
   - [fd @ GitHub](https://github.com/sharkdp/fd)
   - [bat @ GitHub](https://github.com/sharkdp/bat)
   - [eza @ GitHub](https://github.com/eza-community/eza)
-  - [zoxide @ GitHub](https://github.com/ajeetdsouza/zoxide)
   - [fzf @ GitHub](https://github.com/junegunn/fzf)
   - [skim @ GitHub](https://github.com/lotabout/skim)
   - [tealdeer @ GitHub](https://github.com/dbrgn/tealdeer)
@@ -62,7 +60,6 @@ in
       fd # Fast find alternative
       bat # Cat with syntax highlighting
       eza # Modern ls replacement
-      zoxide # Smarter cd
       fzf # Fuzzy finder
       skim # Fuzzy finder (Rust)
       tealdeer # tldr client
@@ -78,7 +75,6 @@ in
       fd --version
       bat --version
       eza --version
-      zoxide --version
       fzf --version
       sk --version
       tldr --version
