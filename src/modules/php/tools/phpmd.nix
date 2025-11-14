@@ -73,7 +73,7 @@ in
 
   config = mkIf cfg.enable {
     scripts = {
-      phpmd = {
+      phpmd = mkDefault {
         description = "PHP Mess Detector";
         exec = ''
           if [[ ! -e '${toolCommand}' ]]; then
@@ -95,7 +95,7 @@ in
     tasks =
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
-        "ci:lint:php:phpmd" = {
+        "ci:lint:php:phpmd" = mkDefault {
           description = "🔍 Lint 🐘PHP files with PHP Mess Detector";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -106,17 +106,17 @@ in
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:lint:php:phpmd" = patchGoTask {
+        "ci:lint:php:phpmd" = mkDefault (patchGoTask {
           aliases = [ "phpmd" ];
           desc = "🔍 Lint 🐘PHP files with PHP Mess Detector";
           cmds = [ "phpmd {src,tests} 'ansi' 'phpmd.xml'" ];
-        };
+        });
       }
       // mkPhpToolGoTasks toolConfiguration;
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
-      phpmd = {
+      phpmd = mkDefault {
         enable = mkDefault true;
         name = "PHP Mess Detector";
         inherit (config.languages.php) package;
