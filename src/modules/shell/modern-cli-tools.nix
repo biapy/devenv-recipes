@@ -14,9 +14,6 @@
   - **eza**: Modern replacement for ls with Git integration
   - **zoxide**: Smarter cd command that learns your habits
   - **fzf**: Command-line fuzzy finder
-  - **jq**: Lightweight and flexible command-line JSON processor
-  - **yq**: Process YAML, JSON, XML, CSV and properties
-  - **httpie**: User-friendly HTTP client
   - **tldr**: Simplified and community-driven man pages
   - **tokei**: Fast code statistics tool
   - **procs**: Modern replacement for ps
@@ -31,9 +28,6 @@
   - [eza @ GitHub](https://github.com/eza-community/eza)
   - [zoxide @ GitHub](https://github.com/ajeetdsouza/zoxide)
   - [fzf @ GitHub](https://github.com/junegunn/fzf)
-  - [jq homepage](https://jqlang.github.io/jq/)
-  - [yq @ GitHub](https://github.com/mikefarah/yq)
-  - [HTTPie homepage](https://httpie.io/)
   - [tldr @ GitHub](https://github.com/tldr-pages/tldr)
   - [tokei @ GitHub](https://github.com/XAMPPRocky/tokei)
   - [procs @ GitHub](https://github.com/dalance/procs)
@@ -66,9 +60,6 @@ in
       pkgs.eza # Modern ls replacement
       pkgs.zoxide # Smarter cd
       pkgs.fzf # Fuzzy finder
-      pkgs.jq # JSON processor
-      pkgs.yq-go # YAML/JSON/XML processor
-      pkgs.httpie # HTTP client
       pkgs.tealdeer # tldr client
       pkgs.tokei # Code statistics
       pkgs.procs # Modern ps
@@ -83,9 +74,6 @@ in
       eza --version
       zoxide --version
       fzf --version
-      jq --version
-      yq --version
-      http --version
       tldr --version
       tokei --version
       procs --version
