@@ -30,7 +30,7 @@ args@{
   ...
 }:
 let
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (lib.lists) map;
 
   pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
@@ -49,17 +49,17 @@ in
 
   config = {
     biapy.go-task.taskfile.tasks = mkIf taskCfg.prefixed-tasks.enable {
-      "ci:lint" = {
+      "ci:lint" = mkDefault {
         aliases = [ "lint" ];
         desc = "🔍 Run all linting tasks";
       };
 
-      "ci:fix" = {
+      "ci:fix" = mkDefault {
         aliases = [ "fix" ];
         desc = "🧹 Run all fixing tasks";
       };
 
-      "ci:format" = {
+      "ci:format" = mkDefault {
         aliases = [
           "format"
           "fmt"
@@ -67,17 +67,17 @@ in
         desc = "🎨 Run all formatting tasks";
       };
 
-      "ci:secops" = {
+      "ci:secops" = mkDefault {
         aliases = [ "secops" ];
         desc = "🕵️‍♂️ Run all SecOps tasks";
       };
 
-      "cd:build" = {
+      "cd:build" = mkDefault {
         aliases = [ "build" ];
         desc = "🔨 Run all building and compiling tasks";
       };
 
-      "cache:clear" = {
+      "cache:clear" = mkDefault {
         aliases = [
           "clear-cache"
           "cc"
@@ -85,7 +85,7 @@ in
         desc = "🗑️ Run all cache clearing tasks";
       };
 
-      "dev:serve" = {
+      "dev:serve" = mkDefault {
         aliases = [ "serve" ];
         desc = "🚀 Run all development server tasks";
       };
@@ -94,7 +94,7 @@ in
     devcontainer.settings.customizations.vscode.extensions = [ "mkhl.direnv" ];
 
     scripts = {
-      detr = {
+      detr = mkDefault {
         description = "Alias of devenv tasks run";
         exec = ''
           cd "''${DEVENV_ROOT}"
@@ -102,7 +102,7 @@ in
         '';
       };
 
-      detl = {
+      detl = mkDefault {
         description = "Alias of devenv tasks list";
         exec = ''
           cd "''${DEVENV_ROOT}"
