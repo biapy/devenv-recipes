@@ -57,20 +57,20 @@ in
 
   config = mkIf cfg.enable {
     # https://devenv.sh/packages/
-    packages = [
-      pkgs.ripgrep # Fast grep alternative
-      pkgs.fd # Fast find alternative
-      pkgs.bat # Cat with syntax highlighting
-      pkgs.eza # Modern ls replacement
-      pkgs.zoxide # Smarter cd
-      pkgs.fzf # Fuzzy finder
-      pkgs.skim # Fuzzy finder (Rust)
-      pkgs.tealdeer # tldr client
-      pkgs.tokei # Code statistics
-      pkgs.procs # Modern ps
-      pkgs.btop # Resource monitor
-      pkgs.bottom # System monitor
-      pkgs.duf # Better df
+    packages = with pkgs; [
+      ripgrep # Fast grep alternative
+      fd # Fast find alternative
+      bat # Cat with syntax highlighting
+      eza # Modern ls replacement
+      zoxide # Smarter cd
+      fzf # Fuzzy finder
+      skim # Fuzzy finder (Rust)
+      tealdeer # tldr client
+      tokei # Code statistics
+      procs # Modern ps
+      btop # Resource monitor
+      bottom # System monitor
+      duf # Better df
     ];
 
     enterShell = ''
