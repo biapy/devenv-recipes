@@ -208,7 +208,7 @@ in
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
-      composer-validate = {
+      composer-validate = mkDefault {
         enable = mkDefault true;
         name = "composer validate";
         package = composer;
@@ -221,7 +221,7 @@ in
         ];
       };
 
-      composer-audit = {
+      composer-audit = mkDefault {
         enable = mkDefault true;
         name = "composer audit";
         after = [ "composer-validate" ];
