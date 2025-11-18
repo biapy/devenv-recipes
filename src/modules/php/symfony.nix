@@ -18,6 +18,12 @@
   - `cache:clear:symfony:var`: Clear Symfony var/cache directory.
   - `cache:clear:symfony:pool`: Clear Symfony cache pools.
 
+  #### Doctrine ORM Tasks (when `doctrine.enable = true`)
+
+  - `cd:build:symfony:doctrine:migrate`: Run Doctrine migrations.
+  - `cd:build:symfony:doctrine:diff`: Generate Doctrine migration from diff.
+  - `ci:lint:symfony:doctrine:validate`: Validate Doctrine mapping.
+
   ### 👷 Commit hooks
 
   - `symfony-lint-container`: Lint services container with Symfony console.
@@ -69,6 +75,14 @@ in
 {
   options.biapy-recipes.php.symfony = mkToolOptions { enable = false; } "symfony" // {
     package = mkPackageOption pkgs "symfony-cli" { };
+
+    doctrine = mkIf cfg.enable {
+      enable = lib.mkOption {
+        type = lib.types.bool;
+        default = false;
+        description = "Enable Doctrine ORM tasks";
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -152,57 +166,102 @@ in
           '';
         };
       }
+      // optionalAttrs (cfg.tasks && cfg.doctrine.enable) {
+        "cd:build:symfony:doctrine:migrate" = {
+          description = "🔨 Run 🎶Symfony Doctrine migrations";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${symfonyCommand} console 'doctrine:migrations:migrate' --no-interaction
+          '';
+        };
+
+        "cd:build:symfony:doctrine:diff" = {
+          description = "🔨 Generate 🎶Symfony Doctrine migration from diff";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${symfonyCommand} console 'doctrine:migrations:diff'
+          '';
+        };
+
+        "ci:lint:symfony:doctrine:validate" = {
+          description = "🔍 Validate 🎶Symfony Doctrine mapping";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${symfonyCommand} console 'doctrine:schema:validate'
+          '';
+        };
+      }
       // mkGitIgnoreTask {
         name = "Symfony";
         namespace = "php:symfony";
         ignoredPaths = [ "composer-recipes-install-all" ];
       };
 
-    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:symfony:container" = patchGoTask {
-        desc = "🔍 Lint 🎶Symfony services container";
-        cmds = [ "symfony console 'lint:container'" ];
-      };
+    biapy.go-task.taskfile.tasks =
+      optionalAttrs cfg.go-task {
+        "ci:lint:symfony:container" = patchGoTask {
+          desc = "🔍 Lint 🎶Symfony services container";
+          cmds = [ "symfony console 'lint:container'" ];
+        };
 
-      "ci:lint:symfony:translations" = patchGoTask {
-        desc = "🔍 Lint 🎶Symfony translations";
-        cmds = [ "symfony console 'lint:translations'" ];
-      };
+        "ci:lint:symfony:translations" = patchGoTask {
+          desc = "🔍 Lint 🎶Symfony translations";
+          cmds = [ "symfony console 'lint:translations'" ];
+        };
 
-      "ci:lint:symfony:twig" = patchGoTask {
-        desc = "🔍 Lint 🎶Symfony 'twig' files";
-        cmds = [
-          "fd --extension='twig' --type='file' --exec-batch symfony console 'lint:twig' --show-deprecations"
-        ];
-        requires.vars = [ "DEVENV_ROOT" ];
-      };
+        "ci:lint:symfony:twig" = patchGoTask {
+          desc = "🔍 Lint 🎶Symfony 'twig' files";
+          cmds = [
+            "fd --extension='twig' --type='file' --exec-batch symfony console 'lint:twig' --show-deprecations"
+          ];
+          requires.vars = [ "DEVENV_ROOT" ];
+        };
 
-      "ci:lint:symfony:xliff" = patchGoTask {
-        desc = "🔍 Lint 🎶Symfony 'xlf' files";
-        cmds = [ "fd --extension='xlf' --type='file' --exec-batch symfony console 'lint:xliff'" ];
-      };
+        "ci:lint:symfony:xliff" = patchGoTask {
+          desc = "🔍 Lint 🎶Symfony 'xlf' files";
+          cmds = [ "fd --extension='xlf' --type='file' --exec-batch symfony console 'lint:xliff'" ];
+        };
 
-      "ci:lint:symfony:yaml" = patchGoTask {
-        desc = "🔍 Lint 🎶Symfony 'yml' files";
-        cmds = [
-          "fd --extension='yml' --extension='yaml' --type='file' --exec-batch symfony console 'lint:yaml'"
-        ];
-      };
+        "ci:lint:symfony:yaml" = patchGoTask {
+          desc = "🔍 Lint 🎶Symfony 'yml' files";
+          cmds = [
+            "fd --extension='yml' --extension='yaml' --type='file' --exec-batch symfony console 'lint:yaml'"
+          ];
+        };
 
-      "cache:clear:symfony" = {
-        desc = "🗑️ Run all 🎶Symfony cache clearing tasks";
-      };
+        "cache:clear:symfony" = {
+          desc = "🗑️ Run all 🎶Symfony cache clearing tasks";
+        };
 
-      "cache:clear:symfony:var" = patchGoTask {
-        desc = "🗑️ Clear 🎶Symfony var/cache directory";
-        cmds = [ "symfony console 'cache:clear'" ];
-      };
+        "cache:clear:symfony:var" = patchGoTask {
+          desc = "🗑️ Clear 🎶Symfony var/cache directory";
+          cmds = [ "symfony console 'cache:clear'" ];
+        };
 
-      "cache:clear:symfony:pool" = patchGoTask {
-        desc = "🗑️ Clear 🎶Symfony cache pools";
-        cmds = [ "symfony console 'cache:pool:clear' --all" ];
+        "cache:clear:symfony:pool" = patchGoTask {
+          desc = "🗑️ Clear 🎶Symfony cache pools";
+          cmds = [ "symfony console 'cache:pool:clear' --all" ];
+        };
+      }
+      // optionalAttrs (cfg.go-task && cfg.doctrine.enable) {
+        "cd:build:symfony:doctrine:migrate" = patchGoTask {
+          aliases = [ "doctrine-migrate" ];
+          desc = "🔨 Run 🎶Symfony Doctrine migrations";
+          cmds = [ "symfony console 'doctrine:migrations:migrate' --no-interaction" ];
+        };
+
+        "cd:build:symfony:doctrine:diff" = patchGoTask {
+          aliases = [ "doctrine-diff" ];
+          desc = "🔨 Generate 🎶Symfony Doctrine migration from diff";
+          cmds = [ "symfony console 'doctrine:migrations:diff'" ];
+        };
+
+        "ci:lint:symfony:doctrine:validate" = patchGoTask {
+          aliases = [ "doctrine-validate" ];
+          desc = "🔍 Validate 🎶Symfony Doctrine mapping";
+          cmds = [ "symfony console 'doctrine:schema:validate'" ];
+        };
       };
-    };
 
     files."bin/composer-recipes-install-all" = {
       executable = true;
