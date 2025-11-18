@@ -35,6 +35,7 @@ in
 {
   imports = map (path: import path imports-args) [
     ./composer-normalize.nix
+    ./deptrac.nix
     ./php-cs-fixer.nix
     ./phpcs.nix
     ./phpdoc.nix
