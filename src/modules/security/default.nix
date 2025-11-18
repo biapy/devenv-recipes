@@ -20,7 +20,10 @@ let
   cfg = config.biapy-recipes.security;
 in
 {
-  imports = map (path: import path args) [ ./trivy.nix ];
+  imports = map (path: import path args) [
+    ./semgrep.nix
+    ./trivy.nix
+  ];
 
   options.biapy-recipes.security = recipes-lib.modules.mkModuleOptions "Security and Supply Chain";
 

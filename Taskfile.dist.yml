@@ -333,6 +333,42 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
+  ci:lint:semgrep:
+    aliases:
+      - semgrep
+    cmds:
+      - for:
+          var: TASKS
+        task: '{{.ITEM}}'
+    ignore_error: true
+    requires:
+      vars:
+        - DEVENV_ROOT
+    silent: true
+    summary: "\U0001F5C2️ Run 'ci:lint:semgrep:*' tasks"
+    vars:
+      TASKS:
+        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:lint:semgrep:ci:
+    cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Run semgrep in CI mode ===\\033[0m\""
+        silent: true
+      - semgrep ci
+    desc: "\U0001F50D Run semgrep in CI mode"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
+  ci:lint:semgrep:scan:
+    cmds:
+      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Scan code with semgrep ===\\033[0m\""
+        silent: true
+      - semgrep scan --config=auto
+    desc: "\U0001F50D Scan code with semgrep"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
   ci:lint:sh:
     cmds:
       - for:
