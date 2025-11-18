@@ -73,7 +73,10 @@ in
       };
 
       "ci:tests" = mkDefault {
-        aliases = [ "tests" ];
+        aliases = [
+          "tests"
+          "test"
+        ];
         desc = "🧪 Run all testing tasks";
       };
 

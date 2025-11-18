@@ -52,11 +52,19 @@ tasks:
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:coverage:
+    aliases:
+      - coverage
+    desc: "\U0001F4CA Run all coverage report generation tasks"
+    requires: {}
   ci:docs:
+    aliases:
+      - docs
     cmds:
       - for:
           var: TASKS
         task: '{{.ITEM}}'
+    desc: "\U0001F4DA Run all documentation generation tasks"
     ignore_error: true
     requires:
       vars:
@@ -510,6 +518,12 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
+  ci:tests:
+    aliases:
+      - tests
+      - test
+    desc: "\U0001F9EA Run all testing tasks"
+    requires: {}
   dev:
     cmds:
       - for:
