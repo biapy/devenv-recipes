@@ -333,9 +333,7 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
-  ci:lint:semgrep:
-    aliases:
-      - semgrep
+  ci:lint:security:
     cmds:
       - for:
           var: TASKS
@@ -345,21 +343,13 @@ tasks:
       vars:
         - DEVENV_ROOT
     silent: true
-    summary: "\U0001F5C2️ Run 'ci:lint:semgrep:*' tasks"
+    summary: "\U0001F5C2️ Run 'ci:lint:security:*' tasks"
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
-  ci:lint:semgrep:ci:
-    cmds:
-      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Run semgrep in CI mode ===\\033[0m\""
-        silent: true
-      - semgrep ci
-    desc: "\U0001F50D Run semgrep in CI mode"
-    dir: '{{.DEVENV_ROOT}}'
-    requires:
-      vars:
-        - DEVENV_ROOT
-  ci:lint:semgrep:scan:
+  ci:lint:security:semgrep:
+    aliases:
+      - semgrep
     cmds:
       - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Scan code with semgrep ===\\033[0m\""
         silent: true

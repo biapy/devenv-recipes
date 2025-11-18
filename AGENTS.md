@@ -7,7 +7,7 @@ devenv-recipes project.
 
 <!-- CSpell:ignore shfmt secops direnv gitmoji Nixpkgs biapy symfony Symfony -->
 
-<!-- CSpell:ignore jsonlint taplo pkgs yamllint yamlfmt -->
+<!-- CSpell:ignore jsonlint taplo pkgs yamllint yamlfmt semgrep taskfile -->
 
 ## 🤖 Overview
 
@@ -163,10 +163,20 @@ git-hooks.hooks = {
 Create tasks in module files under `src/modules/`:
 
 ```nix
+# devenv tasks
 tasks = optionalAttrs cfg.tasks {
-  "category:action:tool:name" = mkDefault {
+  "category:action:tool:name" = {
     description = "Description with emoji";
     exec = "command to run";
+  };
+};
+
+# go-task
+biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
+  "category:action:tool:name" = patchGoTask {
+    aliases = [ "tool-name" ];
+    desc = "Description with emoji";
+    cmds = [ "command to run" ];
   };
 };
 ```
@@ -222,6 +232,9 @@ Follow these clean code best practices:
 - **Follow naming conventions**: `category:action:tool:name` for tasks
 - **Document options**: Add descriptions to all module options
 - **Test your changes**: Verify recipes work in a test project
+- **One tool per module**: Each tool gets its own `.nix` file for independence
+- **Group by category**: Related tools go in category directories (e.g.,
+  `security/`, `config/`)
 
 #### Package Options Naming Convention
 
@@ -273,6 +286,33 @@ This convention allows:
 - Clear distinction between tool-specific and concept-based modules
 - Flexibility to add more tools to language/concept modules
 - Consistent user experience across the codebase
+
+#### Task Naming for Grouped Modules
+
+When adding tools to category modules (security, secrets, etc.), use the
+category in the task path:
+
+**Pattern**: `ci:action:category:tool`
+
+**Examples:**
+
+- `ci:lint:security:semgrep` - Semgrep in security module
+- `ci:secops:security:trivy:fs` - Trivy filesystem scan in security module
+- `ci:secops:secrets:gitleaks:git` - Gitleaks git scan in secrets module
+
+**Go-task aliases:**
+
+Put aliases inside the task definition with `patchGoTask`:
+
+```nix
+biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
+  "ci:lint:security:semgrep" = patchGoTask {
+    aliases = [ "semgrep" ];
+    desc = "🔍 Scan code with semgrep";
+    cmds = [ "semgrep scan --config=auto" ];
+  };
+};
+```
 
 ### Branch Naming Convention
 
