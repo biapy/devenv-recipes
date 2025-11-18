@@ -18,12 +18,8 @@
 
   ## 🛠️ Tech Stack
 
-  - [Deptrac homepage](https://qossmic.github.io/deptrac/).
-  - [Deptrac @ GitHub](https://github.com/qossmic/deptrac).
-
-  ### 🧑‍💻 Visual Studio Code
-
-  - [Deptrac @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=qossmic.deptrac-vscode).
+  - [Deptrac homepage](https://deptrac.github.io/deptrac/).
+  - [Deptrac @ GitHub](https://github.com/deptrac/deptrac).
 
   ## 🙇 Acknowledgements
 
@@ -32,6 +28,7 @@
 {
   config,
   lib,
+  pkgs,
   php-recipe-lib,
   recipes-lib,
   ...
@@ -48,7 +45,7 @@ let
 
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
-  toolCommand = "${root}/${phpToolsCfg.path}/deptrac/vendor/qossmic/deptrac/deptrac";
+  toolCommand = "${root}/${phpToolsCfg.path}/deptrac/vendor/bin/deptrac";
   toolConfiguration = {
     name = "Deptrac";
     namespace = "deptrac";
@@ -56,13 +53,16 @@ let
     configFiles = {
       "deptrac.yaml" = ../../../files/php/deptrac.yaml;
     };
-    ignoredPaths = [ "deptrac.yaml" ];
+    ignoredPaths = [ ".deptrac.cache" ];
   };
 in
 {
-  options.biapy-recipes.php.tools.deptrac = mkToolOptions phpToolsCfg "deptrac";
+  options.biapy-recipes.php.tools.deptrac = mkToolOptions { enable = false; } "deptrac";
 
   config = mkIf cfg.enable {
+    # https://devenv.sh/packages/
+    packages = [ pkgs.graphviz ];
+
     scripts = {
       deptrac = {
         description = "Deptrac";
@@ -76,9 +76,6 @@ in
         '';
       };
     };
-
-    # https://devenv.sh/integrations/codespaces-devcontainer/
-    devcontainer.settings.customizations.vscode.extensions = [ "qossmic.deptrac-vscode" ];
 
     # https://devenv.sh/tasks/
     tasks =
@@ -96,7 +93,7 @@ in
           description = "🗑️ Clear Deptrac cache";
           exec = ''
             cd "''${DEVENV_ROOT}"
-            deptrac cache:clear
+            deptrac --clear-cache
           '';
         };
       };
@@ -116,7 +113,7 @@ in
             "deptrac:cc"
           ];
           desc = "🗑️ Clear Deptrac cache";
-          cmds = [ "deptrac cache:clear" ];
+          cmds = [ "deptrac --clear-cache" ];
         };
       };
 
