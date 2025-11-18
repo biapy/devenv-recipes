@@ -20,8 +20,8 @@
 
   #### Doctrine ORM Tasks (when `doctrine.enable = true`)
 
-  - `cd:build:symfony:doctrine:migrate`: Run Doctrine migrations.
-  - `dev:db:symfony:doctrine:diff`: Generate Doctrine migration from diff.
+  - `dev:db:migrate:symfony`: Run Doctrine migrations.
+  - `dev:db:diff:symfony`: Generate Doctrine migration from diff.
   - `ci:lint:symfony:doctrine:validate`: Validate Doctrine mapping.
 
   ### 👷 Commit hooks
@@ -167,15 +167,15 @@ in
         };
       }
       // optionalAttrs (cfg.tasks && cfg.doctrine.enable) {
-        "cd:build:symfony:doctrine:migrate" = {
-          description = "🔨 Run 🎶Symfony Doctrine migrations";
+        "dev:db:migrate:symfony" = {
+          description = "🔧 Run 🎶Symfony Doctrine migrations";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'doctrine:migrations:migrate' --no-interaction
           '';
         };
 
-        "dev:db:symfony:doctrine:diff" = {
+        "dev:db:diff:symfony" = {
           description = "🔧 Generate 🎶Symfony Doctrine migration from diff";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -244,19 +244,19 @@ in
         };
       }
       // optionalAttrs (cfg.go-task && cfg.doctrine.enable) {
-        "cd:build:symfony:doctrine:migrate" = patchGoTask {
+        "dev:db:migrate:symfony" = patchGoTask {
           aliases = [ "doctrine-migrate" ];
-          desc = "🔨 Run 🎶Symfony Doctrine migrations";
+          desc = "🔧 Run 🎶Symfony Doctrine migrations";
           cmds = [ "symfony console 'doctrine:migrations:migrate' --no-interaction" ];
         };
 
-        "dev:db:symfony:doctrine:diff" = patchGoTask {
+        "dev:db:diff:symfony" = patchGoTask {
           aliases = [ "doctrine-diff" ];
           desc = "🔧 Generate 🎶Symfony Doctrine migration from diff";
           cmds = [ "symfony console 'doctrine:migrations:diff'" ];
         };
 
-        "ci:lint:symfony:doctrine:validate" = patchGoTask {
+        "ci:lint:symfony:doctrine" = patchGoTask {
           aliases = [ "doctrine-validate" ];
           desc = "🔍 Validate 🎶Symfony Doctrine mapping";
           cmds = [ "symfony console 'doctrine:schema:validate'" ];

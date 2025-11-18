@@ -538,6 +538,11 @@ tasks:
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  dev:db:
+    aliases:
+      - db
+    desc: "\U0001F527 Run all database development tasks"
+    requires: {}
   dev:serve:
     aliases:
       - serve
