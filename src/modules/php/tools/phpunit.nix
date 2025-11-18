@@ -37,12 +37,7 @@ let
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.go-tasks) patchGoTask;
-  inherit (recipes-lib.modules)
-    mkToolEnableOption
-    mkToolTaskOptions
-    mkToolGoTaskOptions
-    mkToolGitHooksOptions
-    ;
+  inherit (recipes-lib.modules) mkToolOptions;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
   cfg = phpToolsCfg.phpunit;
@@ -51,12 +46,7 @@ let
   phpCommand = lib.meta.getExe config.languages.php.package;
 in
 {
-  options.biapy-recipes.php.tools.phpunit = {
-    enable = mkToolEnableOption phpToolsCfg "phpunit";
-    tasks = mkToolTaskOptions;
-    go-task = mkToolGoTaskOptions;
-    git-hooks = mkToolGitHooksOptions;
-  };
+  options.biapy-recipes.php.tools.phpunit = mkToolOptions phpToolsCfg "phpunit";
 
   config = mkIf cfg.enable {
     scripts = {
