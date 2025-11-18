@@ -34,7 +34,6 @@ let
 in
 {
   imports = map (path: import path imports-args) [
-    ./box.nix
     ./composer-normalize.nix
     ./deptrac.nix
     ./php-cs-fixer.nix

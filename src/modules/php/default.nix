@@ -23,6 +23,7 @@ in
 {
   imports = map (path: import path imports-args) [
     ./tools
+    ./box.nix
     ./composer.nix
     ./phpactor.nix
     ./symfony.nix
