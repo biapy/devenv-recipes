@@ -23,6 +23,7 @@
 {
   config,
   lib,
+  pkgs,
   php-recipe-lib,
   recipes-lib,
   ...
@@ -39,6 +40,7 @@ let
 
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
+  plantumlCommand = lib.meta.getExe pkgs.plantuml;
   toolCommand = "${root}/${phpToolsCfg.path}/phpdoc/vendor/bin/phpdoc";
   toolConfiguration = {
     name = "phpDocumentor";
@@ -54,6 +56,12 @@ in
   options.biapy-recipes.php.tools.phpdoc = mkToolOptions phpToolsCfg "phpdoc";
 
   config = mkIf cfg.enable {
+    # https://devenv.sh/packages/
+    packages = [ pkgs.plantuml ];
+
+    # https://devenv.sh/reference/options/#envname
+    env.PHPDOC_PLANTUML_BIN = plantumlCommand;
+
     scripts = {
       phpdoc = {
         description = "phpDocumentor";
