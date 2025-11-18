@@ -72,6 +72,21 @@ in
         desc = "🕵️‍♂️ Run all SecOps tasks";
       };
 
+      "ci:tests" = mkDefault {
+        aliases = [ "tests" ];
+        desc = "🧪 Run all testing tasks";
+      };
+
+      "ci:docs" = mkDefault {
+        aliases = [ "docs" ];
+        desc = "📚 Run all documentation generation tasks";
+      };
+
+      "ci:coverage" = mkDefault {
+        aliases = [ "coverage" ];
+        desc = "📊 Run all coverage report generation tasks";
+      };
+
       "cd:build" = mkDefault {
         aliases = [ "build" ];
         desc = "🔨 Run all building and compiling tasks";

@@ -43,6 +43,7 @@ in
     ./phplint.nix
     ./phpmd.nix
     ./phpstan.nix
+    ./phpunit.nix
     ./psalm.nix
     ./rector.nix
   ];
