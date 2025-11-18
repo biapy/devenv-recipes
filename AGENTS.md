@@ -9,6 +9,8 @@ devenv-recipes project.
 
 <!-- CSpell:ignore jsonlint taplo pkgs yamllint yamlfmt semgrep taskfile -->
 
+<!-- CSpell:ignore deptrac graphviz -->
+
 ## 🤖 Overview
 
 The devenv-recipes project uses several automated agents and tools to maintain
@@ -351,9 +353,33 @@ Follow [Conventional Commits](https://www.conventionalcommits.org/) with
 ```text
 type(scope): gitmoji short description
 
-Optional longer description explaining what and why.
+Concise bullet points describing changes:
+- What was changed and why
+- Key technical details
+- Breaking changes or important notes
+```
 
-Optional footer with breaking changes or issue references.
+**Guidelines:**
+
+- **Title line**: Keep under 72 characters
+- **Description**: Use bullet points for clarity
+- **Be specific**: Technical details help reviewers
+- **Explain why**: Not just what changed
+
+**Examples:**
+
+```bash
+# Simple change
+git commit -m "feat(go): ✨ add Hugo module"
+
+# Complex change with details
+git commit -m "fix(php): 🐛 improve deptrac configuration and add graphviz
+
+- Fix cache clear command: cache:clear -> --clear-cache
+- Fix ignored paths: deptrac.yaml -> .deptrac.cache
+- Remove non-existent VSCode extension
+- Add graphviz package for graph generation
+- Disable tool by default (requires project config)"
 ```
 
 Example workflow:
