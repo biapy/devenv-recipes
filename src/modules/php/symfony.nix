@@ -21,7 +21,7 @@
   #### Doctrine ORM Tasks (when `doctrine.enable = true`)
 
   - `cd:build:symfony:doctrine:migrate`: Run Doctrine migrations.
-  - `cd:build:symfony:doctrine:diff`: Generate Doctrine migration from diff.
+  - `dev:db:symfony:doctrine:diff`: Generate Doctrine migration from diff.
   - `ci:lint:symfony:doctrine:validate`: Validate Doctrine mapping.
 
   ### 👷 Commit hooks
@@ -175,8 +175,8 @@ in
           '';
         };
 
-        "cd:build:symfony:doctrine:diff" = {
-          description = "🔨 Generate 🎶Symfony Doctrine migration from diff";
+        "dev:db:symfony:doctrine:diff" = {
+          description = "🔧 Generate 🎶Symfony Doctrine migration from diff";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'doctrine:migrations:diff'
@@ -250,9 +250,9 @@ in
           cmds = [ "symfony console 'doctrine:migrations:migrate' --no-interaction" ];
         };
 
-        "cd:build:symfony:doctrine:diff" = patchGoTask {
+        "dev:db:symfony:doctrine:diff" = patchGoTask {
           aliases = [ "doctrine-diff" ];
-          desc = "🔨 Generate 🎶Symfony Doctrine migration from diff";
+          desc = "🔧 Generate 🎶Symfony Doctrine migration from diff";
           cmds = [ "symfony console 'doctrine:migrations:diff'" ];
         };
 

@@ -107,6 +107,11 @@ in
         aliases = [ "serve" ];
         desc = "🚀 Run all development server tasks";
       };
+
+      "dev:db" = mkDefault {
+        aliases = [ "db" ];
+        desc = "🔧 Run all database development tasks";
+      };
     };
 
     devcontainer.settings.customizations.vscode.extensions = [ "mkhl.direnv" ];
