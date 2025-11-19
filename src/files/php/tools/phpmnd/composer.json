@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require": {
+    "povils/phpmnd": "^3.0"
+  }
+}
