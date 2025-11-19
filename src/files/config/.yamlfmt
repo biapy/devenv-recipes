@@ -1,0 +1,13 @@
+# .yamlfmt
+formatter:
+  type: basic
+  indent: 2
+  include_document_start: false
+  line_ending: "\n"
+  retain_line_breaks: true
+  sequence_style: block_style
+  mapping_style: block_style
+  max_line_length: 80
+  indent_sequences: true
+  preserve_quotes: false
+  width: 80

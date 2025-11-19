@@ -7,8 +7,8 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:yaml:yamllint`: Lint YAML files with `yamllint`.
-  - `ci:format:yaml:yamlfmt`: Format YAML files with `yamlfmt`.
+  - `ci:lint:config:yaml`: Lint YAML files with `yamllint`.
+  - `ci:format:config:yaml`: Format YAML files with `yamlfmt`.
 
   ### 👷 Commit hooks
 
@@ -37,6 +37,7 @@ let
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (recipes-lib.tasks) mkInitializeFilesTask;
 
   configCfg = config.biapy-recipes.config;
   cfg = configCfg.yaml;
@@ -48,6 +49,14 @@ let
 
   yamllintCommand = lib.meta.getExe yamllint;
   yamlfmtCommand = lib.meta.getExe yamlfmt;
+
+  yamlfmtInitializeFilesTask = mkInitializeFilesTask {
+    name = "yamlfmt";
+    namespace = "yamlfmt";
+    configFiles = {
+      ".yamlfmt" = ../../files/config/.yamlfmt;
+    };
+  };
 in
 {
   options.biapy-recipes.config.yaml = mkToolOptions configCfg "yaml" // {
@@ -79,6 +88,7 @@ in
       yamllint = {
         enable = mkDefault true;
         package = yamllint;
+        args = [ "--strict" ];
       };
       yamlfmt = {
         enable = mkDefault true;
@@ -87,34 +97,36 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = optionalAttrs cfg.tasks {
-      "ci:lint:yaml:yamllint" = {
-        description = "🔍 Lint 📄YAML files with yamllint";
-        exec = ''
-          cd "''${DEVENV_ROOT}"
-          ${fdCommand} '\.(yaml|yml)$' "''${DEVENV_ROOT}" --exec ${yamllintCommand} {}
-        '';
+    tasks =
+      yamlfmtInitializeFilesTask
+      // optionalAttrs cfg.tasks {
+        "ci:lint:config:yaml" = {
+          description = "🔍 Lint 🔧YAML files with yamllint";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${fdCommand} '\.(yaml|yml)$' "''${DEVENV_ROOT}" --exec ${yamllintCommand} --strict {}
+          '';
+        };
+        "ci:format:config:yaml" = {
+          description = "🎨 Format 🔧YAML files with yamlfmt";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${fdCommand} '\.(yaml|yml)$' "''${DEVENV_ROOT}" --exec-batch ${yamlfmtCommand} {}
+          '';
+        };
       };
-      "ci:format:yaml:yamlfmt" = {
-        description = "🎨 Format 📄YAML files with yamlfmt";
-        exec = ''
-          cd "''${DEVENV_ROOT}"
-          ${fdCommand} '\.(yaml|yml)$' "''${DEVENV_ROOT}" --exec ${yamlfmtCommand} -w {}
-        '';
-      };
-    };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:yaml:yamllint" = patchGoTask {
+      "ci:lint:config:yaml" = patchGoTask {
         aliases = [ "yamllint" ];
-        desc = "🔍 Lint 📄YAML files with yamllint";
-        cmds = [ "fd '\.(yaml|yml)$' --exec yamllint {}" ];
+        desc = "🔍 Lint 🔧YAML files with yamllint";
+        cmds = [ "fd '\.(yaml|yml)$' --exec yamllint --strict {}" ];
       };
 
-      "ci:format:yaml:yamlfmt" = patchGoTask {
+      "ci:format:config:yaml" = patchGoTask {
         aliases = [ "yamlfmt" ];
-        desc = "🎨 Format 📄YAML files with yamlfmt";
-        cmds = [ "fd '\.(yaml|yml)$' --exec yamlfmt -w {}" ];
+        desc = "🎨 Format 🔧YAML files with yamlfmt";
+        cmds = [ "fd '\.(yaml|yml)$' --exec-batch yamlfmt {}" ];
       };
     };
   };
