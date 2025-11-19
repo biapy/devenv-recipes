@@ -35,6 +35,7 @@ in
 {
   imports = map (path: import path imports-args) [
     ./churn.nix
+    ./composer-dependency-analyser.nix
     ./composer-normalize.nix
     ./deptrac.nix
     ./grumphp.nix

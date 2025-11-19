@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require": {
+    "shipmonk-rnd/composer-dependency-analyser": "^1.0"
+  }
+}
