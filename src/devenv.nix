@@ -121,7 +121,7 @@ in
 
       "dev:db" = mkDefault {
         aliases = [ "db" ];
-        desc = "🔧 Run all database development tasks";
+        desc = "🗃️ Run all database development tasks";
       };
     };
 

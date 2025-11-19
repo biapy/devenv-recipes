@@ -168,7 +168,7 @@ in
       }
       // optionalAttrs (cfg.tasks && cfg.doctrine.enable) {
         "dev:db:migrate:symfony" = {
-          description = "🔧 Run 🎶Symfony Doctrine migrations";
+          description = "🗃️ Run 🎶Symfony Doctrine migrations";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'doctrine:migrations:migrate' --no-interaction
@@ -176,7 +176,7 @@ in
         };
 
         "dev:db:diff:symfony" = {
-          description = "🔧 Generate 🎶Symfony Doctrine migration from diff";
+          description = "🗃️ Generate 🎶Symfony Doctrine migration from diff";
           exec = ''
             cd "''${DEVENV_ROOT}"
             ${symfonyCommand} console 'doctrine:migrations:diff'
@@ -246,13 +246,13 @@ in
       // optionalAttrs (cfg.go-task && cfg.doctrine.enable) {
         "dev:db:migrate:symfony" = patchGoTask {
           aliases = [ "doctrine-migrate" ];
-          desc = "🔧 Run 🎶Symfony Doctrine migrations";
+          desc = "🗃️ Run 🎶Symfony Doctrine migrations";
           cmds = [ "symfony console 'doctrine:migrations:migrate' --no-interaction" ];
         };
 
         "dev:db:diff:symfony" = patchGoTask {
           aliases = [ "doctrine-diff" ];
-          desc = "🔧 Generate 🎶Symfony Doctrine migration from diff";
+          desc = "🗃️ Generate 🎶Symfony Doctrine migration from diff";
           cmds = [ "symfony console 'doctrine:migrations:diff'" ];
         };
 
