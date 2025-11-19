@@ -34,6 +34,7 @@ let
 in
 {
   imports = map (path: import path imports-args) [
+    ./churn.nix
     ./composer-normalize.nix
     ./deptrac.nix
     ./grumphp.nix

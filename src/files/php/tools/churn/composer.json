@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require": {
+    "bmitch/churn-php": "^1.0"
+  }
+}
