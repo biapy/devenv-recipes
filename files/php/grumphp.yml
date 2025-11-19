@@ -1,0 +1,4 @@
+grumphp:
+  process_timeout: 60
+  stop_on_failure: false
+  tasks: []
