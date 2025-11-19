@@ -50,7 +50,7 @@ in
 
   config = mkIf cfg.enable {
     scripts = {
-      phpunit = {
+      phpunit = mkDefault {
         description = "PHPUnit - PHP testing framework";
         exec = ''
           PHPUNIT_BIN=""
@@ -72,7 +72,7 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:tests:php:phpunit" = {
+      "ci:tests:php:phpunit" = mkDefault {
         description = "🧪 Run 🐘PHP tests with PHPUnit";
         exec = ''
           cd "''${DEVENV_ROOT}"
@@ -80,7 +80,7 @@ in
         '';
       };
 
-      "ci:coverage:php:phpunit" = {
+      "ci:coverage:php:phpunit" = mkDefault {
         description = "📊 Generate 🐘PHP test coverage report with PHPUnit";
         exec = ''
           cd "''${DEVENV_ROOT}"
@@ -90,13 +90,13 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:tests:php:phpunit" = patchGoTask {
+      "ci:tests:php:phpunit" = mkDefault (patchGoTask {
         aliases = [ "phpunit" ];
         desc = "🧪 Run 🐘PHP tests with PHPUnit";
         cmds = [ "phpunit --no-coverage" ];
-      };
+      });
 
-      "ci:coverage:php:phpunit" = patchGoTask {
+      "ci:coverage:php:phpunit" = mkDefault (patchGoTask {
         aliases = [ "phpunit-coverage" ];
         desc = "📊 Generate 🐘PHP test coverage report with PHPUnit";
         cmds = [ "phpunit" ];
@@ -104,17 +104,19 @@ in
           # Disable code coverage collection in git hooks to speed up tests
           XDEBUG_MODE = "coverage";
         };
-      };
+      });
     };
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
-      phpunit = {
-        enable = mkDefault true;
+      phpunit = mkDefault {
+        enable = true;
         name = "PHPUnit";
         inherit (config.languages.php) package;
+        pass_filenames = false;
         entry = "phpunit";
         args = [ "--no-coverage" ];
+        stages = [ "pre-push" ];
       };
     };
 
