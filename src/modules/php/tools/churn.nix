@@ -26,7 +26,7 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.modules) mkIf;
+  inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
@@ -48,7 +48,7 @@ in
 
   config = mkIf cfg.enable {
     scripts = {
-      churn = {
+      churn = mkDefault {
         description = "churn-php - discover files with most commits";
         exec = ''
           if [[ ! -e '${toolCommand}' ]]; then
@@ -65,7 +65,7 @@ in
     tasks =
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
-        "ci:lint:php:churn" = {
+        "ci:lint:php:churn" = mkDefault {
           description = "📊 Analyze code churn with churn-php";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -76,11 +76,11 @@ in
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:lint:php:churn" = patchGoTask {
+        "ci:lint:php:churn" = mkDefault (patchGoTask {
           aliases = [ "churn" ];
           desc = "📊 Analyze code churn with churn-php";
           cmds = [ "churn run" ];
-        };
+        });
       }
       // mkPhpToolGoTasks toolConfiguration;
 
