@@ -32,6 +32,8 @@ args@{
 let
   inherit (lib.modules) mkIf mkDefault;
   inherit (lib.lists) map;
+  inherit (lib.types) bool;
+  inherit (lib.options) mkOption;
 
   pkgs-unstable = import nixpkgs-unstable { inherit (pkgs.stdenv) system; };
   recipes-lib = import ./lib args;
@@ -41,13 +43,22 @@ let
     inherit pkgs-unstable;
   };
 
+  cfg = config.biapy-recipes;
   taskCfg = config.biapy.go-task;
 in
 {
 
   imports = map (path: import path imports-args) [ ./modules ];
 
-  config = {
+  options.biapy-recipes = {
+    enable = mkOption {
+      type = bool;
+      default = true;
+      description = "Enable Biapy devenv recipes integration";
+    };
+  };
+
+  config = mkIf cfg.enable {
     biapy.go-task.taskfile.tasks = mkIf taskCfg.prefixed-tasks.enable {
       "ci:lint" = mkDefault {
         aliases = [ "lint" ];
