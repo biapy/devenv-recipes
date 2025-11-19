@@ -48,6 +48,7 @@ in
     ./phpdoc.nix
     ./phplint.nix
     ./phpmd.nix
+    ./phpmetrics.nix
     ./phpmnd.nix
     ./phpstan.nix
     ./phpunit.nix
