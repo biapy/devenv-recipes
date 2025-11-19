@@ -71,7 +71,7 @@ in
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
         "ci:lint:php:phpat" = mkDefault {
-          description = "🔍 Test PHP architecture with phpat";
+          description = "🔍 Test 🐘PHP architecture with phpat";
           exec = ''
             cd "''${DEVENV_ROOT}"
             phpat
@@ -83,7 +83,7 @@ in
       optionalAttrs cfg.go-task {
         "ci:lint:php:phpat" = mkDefault (patchGoTask {
           aliases = [ "phpat" ];
-          desc = "🔍 Test PHP architecture with phpat";
+          desc = "🔍 Test 🐘PHP architecture with phpat";
           cmds = [ "phpat" ];
         });
       }
