@@ -42,6 +42,7 @@ in
     ./grumphp.nix
     ./php-cs-fixer.nix
     ./php-semver-checker.nix
+    ./phparkitect.nix
     ./phpat.nix
     ./phpcs.nix
     ./phpdoc.nix

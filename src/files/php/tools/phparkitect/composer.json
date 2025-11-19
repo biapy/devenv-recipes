@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require": {
+    "phparkitect/phparkitect": "^0.3"
+  }
+}
