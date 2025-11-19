@@ -37,6 +37,7 @@ in
     ./churn.nix
     ./composer-dependency-analyser.nix
     ./composer-normalize.nix
+    ./dephpend.nix
     ./deptrac.nix
     ./grumphp.nix
     ./php-cs-fixer.nix

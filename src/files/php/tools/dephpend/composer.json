@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require": {
+    "mihaeu/dephpend": "^0.9"
+  }
+}
