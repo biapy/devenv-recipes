@@ -29,7 +29,7 @@
 let
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.modules) mkIf;
-  inherit (lib.types) package bool;
+  inherit (lib.types) package;
   inherit (lib.options) mkOption;
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
@@ -40,13 +40,7 @@ let
   boxCommand = lib.meta.getExe cfg.package;
 in
 {
-  options.biapy-recipes.php.box = (mkToolOptions phpCfg "box") // {
-    enable = mkOption {
-      type = bool;
-      default = false;
-      description = "Enable box integration";
-    };
-
+  options.biapy-recipes.php.box = (mkToolOptions { enable = false; } "box") // {
     package = mkOption {
       type = package;
       default = config.languages.php.package.packages.box;
