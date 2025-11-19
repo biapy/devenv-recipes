@@ -7,13 +7,12 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:json:jsonlint`: Lint JSON files with `jsonlint`.
+  - `ci:lint:json:jq`: Lint JSON files with `jq`.
   - `ci:format:json:jq`: Format JSON files with `jq`.
 
   ### 📦 Packages
 
   - `jq`: Command-line JSON processor.
-  - `jsonlint`: JSON parser and validator.
   - `fx`: Interactive terminal JSON viewer.
 
   ### 👷 Commit hooks
@@ -23,7 +22,6 @@
   ## 🛠️ Tech Stack
 
   - [jq @ GitHub](https://github.com/jqlang/jq) - Command-line JSON processor (C).
-  - [jsonlint @ GitHub](https://github.com/prantlf/jsonlint) - JSON parser and validator (Go).
   - [fx @ GitHub](https://github.com/antonmedv/fx) - Terminal JSON viewer (Go).
 
   ## 🙇 Acknowledgements
@@ -51,10 +49,9 @@ let
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
 
-  inherit (cfg.packages) jq jsonlint fx;
+  inherit (cfg.packages) jq fx;
 
   jqCommand = lib.meta.getExe jq;
-  jsonlintCommand = lib.meta.getExe jsonlint;
 in
 {
   options.biapy-recipes.config.json = mkToolOptions configCfg "json" // {
@@ -64,12 +61,6 @@ in
         defaultText = "pkgs.jq";
         type = lib.types.package;
         default = pkgs.jq;
-      };
-      jsonlint = mkOption {
-        description = "The jsonlint package to use.";
-        defaultText = "pkgs.jsonlint";
-        type = lib.types.package;
-        default = pkgs.jsonlint;
       };
       fx = mkOption {
         description = "The fx package to use.";
@@ -83,7 +74,6 @@ in
   config = mkIf cfg.enable {
     packages = [
       jq
-      jsonlint
       fx
       fd
     ];
@@ -97,11 +87,11 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:lint:json:jsonlint" = {
-        description = "🔍 Lint 📋JSON files with jsonlint";
+      "ci:lint:json:jq" = {
+        description = "🔍 Lint 📋JSON files with jq";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${fdCommand} '\.json$' "''${DEVENV_ROOT}" --exec ${jsonlintCommand} {}
+          ${fdCommand} '\.json$' "''${DEVENV_ROOT}" --exec ${jqCommand} empty {}
         '';
       };
       "ci:format:json:jq" = {
@@ -114,10 +104,10 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:json:jsonlint" = patchGoTask {
-        aliases = [ "jsonlint" ];
-        desc = "🔍 Lint 📋JSON files with jsonlint";
-        cmds = [ "fd '\\.json$' --exec jsonlint {}" ];
+      "ci:lint:json:jq" = patchGoTask {
+        aliases = [ "jq-lint" ];
+        desc = "🔍 Lint 📋JSON files with jq";
+        cmds = [ "fd '\\.json$' --exec jq empty {}" ];
       };
 
       "ci:format:json:jq" = patchGoTask {
