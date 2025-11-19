@@ -541,7 +541,7 @@ tasks:
   dev:db:
     aliases:
       - db
-    desc: "\U0001F527 Run all database development tasks"
+    desc: "\U0001F5C3️ Run all database development tasks"
     requires: {}
   dev:serve:
     aliases:
