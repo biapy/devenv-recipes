@@ -7,8 +7,8 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:toml:taplo`: Lint TOML files with `taplo`.
-  - `ci:format:toml:taplo`: Format TOML files with `taplo`.
+  - `ci:lint:config:toml`: Lint TOML files with `taplo`.
+  - `ci:format:config:toml`: Format TOML files with `taplo`.
 
   ### 👷 Commit hooks
 
@@ -74,15 +74,15 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:lint:toml:taplo" = {
-        description = "🔍 Lint 📝TOML files with taplo";
+      "ci:lint:config:toml" = {
+        description = "🔍 Lint 🔧TOML files with taplo";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.toml$' "''${DEVENV_ROOT}" --exec ${taploCommand} check {}
         '';
       };
-      "ci:format:toml:taplo" = {
-        description = "🎨 Format 📝TOML files with taplo";
+      "ci:format:config:toml" = {
+        description = "🎨 Format 🔧TOML files with taplo";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.toml$' "''${DEVENV_ROOT}" --exec ${taploCommand} format {}
@@ -91,14 +91,14 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:toml:taplo" = patchGoTask {
-        desc = "🔍 Lint 📝TOML files with taplo";
+      "ci:lint:config:toml" = patchGoTask {
+        desc = "🔍 Lint 🔧TOML files with taplo";
         cmds = [ "fd '\\.toml$' --exec taplo check {}" ];
       };
 
-      "ci:format:toml:taplo" = patchGoTask {
+      "ci:format:config:toml" = patchGoTask {
         aliases = [ "taplo" ];
-        desc = "🎨 Format 📝TOML files with taplo";
+        desc = "🎨 Format 🔧TOML files with taplo";
         cmds = [ "fd '\\.toml$' --exec taplo format {}" ];
       };
     };

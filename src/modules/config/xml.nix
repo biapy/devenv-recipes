@@ -7,8 +7,8 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:xml:xmllint`: Lint XML files with `xmllint`.
-  - `ci:format:xml:xmllint`: Format XML files with `xmllint`.
+  - `ci:lint:config:xml`: Lint XML files with `xmllint`.
+  - `ci:format:config:xml`: Format XML files with `xmllint`.
 
   ### 📦 Packages
 
@@ -87,15 +87,15 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:lint:xml:xmllint" = {
-        description = "🔍 Lint 📄XML files with xmllint";
+      "ci:lint:config:xml" = {
+        description = "🔍 Lint 🔧XML files with xmllint";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.(xml|xsd|xsl|xslt)$' "''${DEVENV_ROOT}" --exec ${xmllintCommand} --noout {}
         '';
       };
-      "ci:format:xml:xmllint" = {
-        description = "🎨 Format 📄XML files with xmllint";
+      "ci:format:config:xml" = {
+        description = "🎨 Format 🔧XML files with xmllint";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.(xml|xsd|xsl|xslt)$' "''${DEVENV_ROOT}" --exec-batch sh -c 'for file; do ${xmllintCommand} --format "$file" --output "$file"; done' sh {}
@@ -104,15 +104,15 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:xml:xmllint" = patchGoTask {
+      "ci:lint:config:xml" = patchGoTask {
         aliases = [ "xmllint" ];
-        desc = "🔍 Lint 📄XML files with xmllint";
+        desc = "🔍 Lint 🔧XML files with xmllint";
         cmds = [ "fd '\\.(xml|xsd|xsl|xslt)$' --exec xmllint --noout {}" ];
       };
 
-      "ci:format:xml:xmllint" = patchGoTask {
+      "ci:format:config:xml" = patchGoTask {
         aliases = [ "xmllint-fmt" ];
-        desc = "🎨 Format 📄XML files with xmllint";
+        desc = "🎨 Format 🔧XML files with xmllint";
         cmds = [
           "fd '\\.(xml|xsd|xsl|xslt)$' --exec-batch sh -c 'for file; do xmllint --format \"$file\" --output \"$file\"; done' sh {}"
         ];

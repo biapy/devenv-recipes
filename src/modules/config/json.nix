@@ -87,15 +87,15 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:lint:json:jq" = {
-        description = "🔍 Lint 📋JSON files with jq";
+      "ci:lint:config:json" = {
+        description = "🔍 Lint 🔧JSON files with jq";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.json$' "''${DEVENV_ROOT}" --exec ${jqCommand} empty {}
         '';
       };
       "ci:format:json:jq" = {
-        description = "🎨 Format 📋JSON files with jq";
+        description = "🎨 Format 🔧JSON files with jq";
         exec = ''
           cd "''${DEVENV_ROOT}"
           ${fdCommand} '\.json$' "''${DEVENV_ROOT}" --exec-batch sh -c 'for file; do ${jqCommand} --sort-keys . "$file" > "$file.tmp" && mv "$file.tmp" "$file"; done' sh {}
@@ -104,15 +104,15 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:json:jq" = patchGoTask {
+      "ci:lint:config:json" = patchGoTask {
         aliases = [ "jq-lint" ];
-        desc = "🔍 Lint 📋JSON files with jq";
+        desc = "🔍 Lint 🔧JSON files with jq";
         cmds = [ "fd '\\.json$' --exec jq empty {}" ];
       };
 
-      "ci:format:json:jq" = patchGoTask {
+      "ci:format:config:json" = patchGoTask {
         aliases = [ "jq" ];
-        desc = "🎨 Format 📋JSON files with jq";
+        desc = "🎨 Format 🔧JSON files with jq";
         cmds = [
           "fd '\\.json$' --exec-batch sh -c 'for file; do jq --sort-keys . \"$file\" > \"$file.tmp\" && mv \"$file.tmp\" \"$file\"; done' sh {}"
         ];
