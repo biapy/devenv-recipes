@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require": {
+    "tomzx/php-semver-checker": "^0.9"
+  }
+}

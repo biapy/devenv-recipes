@@ -41,6 +41,7 @@ in
     ./deptrac.nix
     ./grumphp.nix
     ./php-cs-fixer.nix
+    ./php-semver-checker.nix
     ./phpat.nix
     ./phpcs.nix
     ./phpdoc.nix
