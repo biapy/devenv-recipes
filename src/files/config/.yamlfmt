@@ -1,13 +1,73 @@
 # .yamlfmt
+# see https://github.com/google/yamlfmt/blob/main/docs/config-file.md#basic-formatter
+
+# Continue formatting and don't exit with code 1 when there is an invalid yaml file found.
+continue_on_error: true
+
+# Controls how include and exclude are interpreted.
+# see https://github.com/google/yamlfmt/blob/main/docs/paths.md
+# match_type: doublestar
+
+# The paths for the command to include for formatting.
+# include_paths: []
+
+# The paths for the command to exclude from formatting.
+# exclude_paths: []
+
+# Use gitignore files for exclude paths.
+# This is in addition to the patterns from the exclude option.
+gitignore_excludes: true
+
+# The path to the gitignore file to use.
+# gitignore_path: .gitignore
+
+# Regex patterns to match file contents for,
+# if the file content matches the regex the file will be excluded.
+# regex_exclude: []
+
+# The extensions to use for standard mode path collection.
+# extensions: [ "yml", "yaml" ]
+
 formatter:
   type: basic
+
+  # The indentation level in spaces to use for the formatted yaml.
   indent: 2
+
+  # Include --- at document start.
   include_document_start: false
-  line_ending: "\n"
-  retain_line_breaks: true
-  sequence_style: block_style
-  mapping_style: block_style
-  max_line_length: 80
-  indent_sequences: true
-  preserve_quotes: false
-  width: 80
+
+  # Set the maximum line length.
+  # if not set, defaults to 0 which means no limit.
+  max_line_length: 120
+
+  # Parse and write the file with "lf" or "crlf" line endings.
+  line_ending: lf
+
+  # Retain line breaks in formatted yaml,
+  # but only keep a single line in groups of many blank lines.
+  retain_line_breaks_single: true
+
+  # preserve newlines in folded block scalars (blocks that start with >).
+  scan_folded_as_literal: true
+
+  # Always add a newline at end of file.
+  eof_newline: true
+
+  # Trim trailing whitespace from lines.
+  trim_trailing_whitespace: true
+
+  # If true, reject any YAML anchors or aliases found in the document.
+  disallow_anchors: false
+
+  # If set, forces arrays to be output in a particular style,
+  # either flow ([]) or block (- x).
+  # If unset, the style from the original document is used.
+  # force_array_style: block
+
+  # Tells the formatter to indent an array that is at the lowest indentation
+  # level of the document.
+  # indent_root_array: false
+
+  # Disables functionality to fix alias nodes being used as keys.
+  disable_alias_key_correction: true
