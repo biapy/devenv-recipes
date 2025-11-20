@@ -57,6 +57,14 @@ let
       ".yamlfmt" = ../../files/config/.yamlfmt;
     };
   };
+
+  yamllintInitializeFilesTask = mkInitializeFilesTask {
+    name = "yamllint";
+    namespace = "yamllint";
+    configFiles = {
+      ".yamllint" = ../../files/config/.yamllint;
+    };
+  };
 in
 {
   options.biapy-recipes.config.yaml = mkToolOptions configCfg "yaml" // {
@@ -99,6 +107,7 @@ in
     # https://devenv.sh/tasks/
     tasks =
       yamlfmtInitializeFilesTask
+      // yamllintInitializeFilesTask
       // optionalAttrs cfg.tasks {
         "ci:lint:config:yaml" = {
           description = "🔍 Lint 🔧YAML files with yamllint";

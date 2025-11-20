@@ -1,0 +1,74 @@
+# Yamllint configuration file
+# see https://yamllint.readthedocs.io/en/stable/rules.html
+
+extends: default
+
+ignore-from-file: .gitignore
+
+rules:
+  # Indentation
+  indentation:
+    spaces: 2 # Use 2 spaces for indentation
+    indent-sequences: true # Indent sequences (lists) consistently
+    check-multi-line-strings: false # Disable for multi-line strings
+
+  # Line length
+  line-length:
+    max: 120 # Max line length (adjust as needed)
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+    ignore:
+      - Taskfile.dist.yml
+
+  # Trailing spaces
+  trailing-spaces: enable # Disallow trailing spaces
+
+  # Empty lines
+  empty-lines:
+    max: 1 # Max empty lines between sections
+    max-start: 0 # No empty lines at file start
+    max-end: 1 # Max empty lines at file end
+
+  # Document start/end markers
+  document-start: disable # Disable requirement for '---' at start
+  document-end: disable # Disable requirement for '...' at end
+
+  # Truthy values
+  truthy:
+    allowed-values: ["true", "false", "on", "off", "yes", "no"]
+    check-keys: false # Don't enforce truthy values for keys
+
+  # Brackets
+  brackets:
+    min-spaces-inside: 0 # No spaces inside brackets
+    max-spaces-inside: 0
+    min-spaces-inside-empty: -1
+    max-spaces-inside-empty: -1
+
+  # Colons
+  colons:
+    max-spaces-before: 0 # No spaces before colons
+    max-spaces-after: 1 # One space after colons
+
+  # Commas
+  commas:
+    max-spaces-before: 0 # No spaces before commas
+    min-spaces-after: 1 # One space after commas
+    max-spaces-after: 1
+
+  # Comments
+  comments:
+    require-starting-space: true # Require space after '#'
+    min-spaces-from-content: 2 # 2 spaces between content and comment
+
+  # Key duplicates
+  key-duplicates: enable # Disallow duplicate keys
+
+  # Empty values
+  empty-values:
+    forbid-in-block-mappings: false # Allow empty values in block mappings
+    forbid-in-flow-mappings: false # Allow empty values in flow mappings
+
+  # Hyphens
+  hyphens:
+    max-spaces-after: 1 # One space after hyphens in lists
