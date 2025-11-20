@@ -59,7 +59,7 @@ rules:
   # Comments
   comments:
     require-starting-space: true # Require space after '#'
-    min-spaces-from-content: 2 # 2 spaces between content and comment
+    min-spaces-from-content: 1 # 1 spaces between content and comment
 
   # Key duplicates
   key-duplicates: enable # Disallow duplicate keys
