@@ -35,16 +35,22 @@ let
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (recipes-lib.tasks) mkInitializeFilesTask;
 
   configCfg = config.biapy-recipes.config;
   cfg = configCfg.toml;
 
-  inherit (pkgs) fd;
-  fdCommand = lib.meta.getExe fd;
-
   inherit (cfg.packages) taplo;
 
   taploCommand = lib.meta.getExe taplo;
+
+  taploInitializeFilesTask = mkInitializeFilesTask {
+    name = "taplo";
+    namespace = "taplo";
+    configFiles = {
+      ".taplo.toml" = ../../files/config/.taplo.toml;
+    };
+  };
 in
 {
   options.biapy-recipes.config.toml = mkToolOptions configCfg "toml" // {
@@ -59,10 +65,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    packages = [
-      taplo
-      fd
-    ];
+    packages = [ taplo ];
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
@@ -73,34 +76,36 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = optionalAttrs cfg.tasks {
-      "ci:lint:config:toml" = {
-        description = "🔍 Lint 🔧TOML files with taplo";
-        exec = ''
-          cd "''${DEVENV_ROOT}"
-          ${fdCommand} '\.toml$' "''${DEVENV_ROOT}" --exec ${taploCommand} check {}
-        '';
+    tasks =
+      taploInitializeFilesTask
+      // optionalAttrs cfg.tasks {
+        "ci:lint:config:toml" = mkDefault {
+          description = "🔍 Lint 🔧TOML files with taplo";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${taploCommand} 'lint'
+          '';
+        };
+        "ci:format:config:toml" = mkDefault {
+          description = "🎨 Format 🔧TOML files with taplo";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${taploCommand} 'format'
+          '';
+        };
       };
-      "ci:format:config:toml" = {
-        description = "🎨 Format 🔧TOML files with taplo";
-        exec = ''
-          cd "''${DEVENV_ROOT}"
-          ${fdCommand} '\.toml$' "''${DEVENV_ROOT}" --exec ${taploCommand} format {}
-        '';
-      };
-    };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:config:toml" = patchGoTask {
+      "ci:lint:config:toml" = mkDefault (patchGoTask {
         desc = "🔍 Lint 🔧TOML files with taplo";
-        cmds = [ "fd '\\.toml$' --exec taplo check {}" ];
-      };
+        cmds = [ "taplo 'lint'" ];
+      });
 
-      "ci:format:config:toml" = patchGoTask {
+      "ci:format:config:toml" = mkDefault (patchGoTask {
         aliases = [ "taplo" ];
         desc = "🎨 Format 🔧TOML files with taplo";
-        cmds = [ "fd '\\.toml$' --exec taplo format {}" ];
-      };
+        cmds = [ "taplo 'format'" ];
+      });
     };
   };
 }
