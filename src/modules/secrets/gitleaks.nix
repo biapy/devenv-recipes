@@ -22,12 +22,21 @@ let
   inherit (lib.options) mkPackageOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (recipes-lib.tasks) mkInitializeFilesTask;
 
   secretsCfg = config.biapy-recipes.secrets;
   cfg = secretsCfg.gitleaks;
 
   gitleaks = cfg.package;
   gitleaksCommand = lib.meta.getExe gitleaks;
+
+  gitleaksInitializeFilesTask = mkInitializeFilesTask {
+    name = "gitleaks";
+    namespace = "gitleaks";
+    configFiles = {
+      ".gitleaks.toml" = ../../files/secrets/.gitleaks.toml;
+    };
+  };
 in
 {
   options.biapy-recipes.secrets.gitleaks = mkToolOptions secretsCfg "gitleaks" // {
@@ -46,23 +55,25 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = optionalAttrs cfg.tasks {
-      "ci:secops:secrets:gitleaks:git" = {
-        description = "🕵️‍♂️ Check for 🔐secrets leaks in Git repository with gitleaks";
-        exec = ''
-          set -o 'errexit'
-          ${gitleaksCommand} --report-format='json' --report-path="$DEVENV_TASK_OUTPUT_FILE" 'git'
-        '';
-      };
+    tasks =
+      gitleaksInitializeFilesTask
+      // optionalAttrs cfg.tasks {
+        "ci:secops:secrets:gitleaks:git" = {
+          description = "🕵️‍♂️ Check for 🔐secrets leaks in Git repository with gitleaks";
+          exec = ''
+            set -o 'errexit'
+            ${gitleaksCommand} --report-format='json' --report-path="$DEVENV_TASK_OUTPUT_FILE" 'git'
+          '';
+        };
 
-      "ci:secops:secrets:gitleaks:dir" = {
-        description = "🕵️‍♂️ Check for 🔐secrets leaks in project files with gitleaks";
-        exec = ''
-          set -o 'errexit'
-          ${gitleaksCommand} --report-format='json' --report-path="$DEVENV_TASK_OUTPUT_FILE" 'dir'
-        '';
+        "ci:secops:secrets:gitleaks:dir" = {
+          description = "🕵️‍♂️ Check for 🔐secrets leaks in project files with gitleaks";
+          exec = ''
+            set -o 'errexit'
+            ${gitleaksCommand} --report-format='json' --report-path="$DEVENV_TASK_OUTPUT_FILE" 'dir'
+          '';
+        };
       };
-    };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:secops:secrets:gitleaks".aliases = [ "gitleaks" ];
