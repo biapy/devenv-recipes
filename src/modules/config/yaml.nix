@@ -138,7 +138,6 @@ in
       });
 
       "ci:lint:config:yaml:yamlfmt" = mkDefault (patchGoTask {
-        aliases = [ "yamllint" ];
         desc = "🔍 Lint 🔧YAML files with yamlfmt";
         cmds = [ "yamlfmt --quiet --lint './'" ];
       });
