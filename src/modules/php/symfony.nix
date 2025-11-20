@@ -76,7 +76,7 @@ in
   options.biapy-recipes.php.symfony = mkToolOptions { enable = false; } "symfony" // {
     package = mkPackageOption pkgs "symfony-cli" { };
 
-    doctrine = mkIf cfg.enable {
+    doctrine = {
       enable = lib.mkOption {
         type = lib.types.bool;
         default = false;
