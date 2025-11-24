@@ -79,12 +79,12 @@ in
       "ci:secops:secrets:gitleaks".aliases = [ "gitleaks" ];
       "ci:secops:secrets:gitleaks:git" = patchGoTask {
         desc = "🕵️‍♂️ Check for 🔐secrets leaks in Git repository with gitleaks";
-        cmds = [ "gitleaks 'git'" ];
+        cmds = [ "gitleaks --verbose 'git'" ];
       };
 
       "ci:secops:secrets:gitleaks:dir" = patchGoTask {
         desc = "🕵️‍♂️ Check for 🔐secrets leaks in project files with gitleaks";
-        cmds = [ "gitleaks 'dir'" ];
+        cmds = [ "gitleaks --verbose 'dir'" ];
       };
     };
   };
