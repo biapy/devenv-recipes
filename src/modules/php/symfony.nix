@@ -9,20 +9,20 @@
 
   ### 🔨 Tasks
 
-  - `ci:lint:symfony:container`: Lint services container with Symfony console.
-  - `ci:lint:symfony:translations`: Lint translations with Symfony console.
-  - `ci:lint:symfony:twig`: Lint 'twig' files with Symfony console.
-  - `ci:lint:symfony:xliff`: Lint 'xlf' files with Symfony console.
-  - `ci:lint:symfony:yaml`: Lint 'yml' files with Symfony console.
-  - `cache:clear:symfony`: Clear all Symfony caches.
-  - `cache:clear:symfony:var`: Clear Symfony var/cache directory.
-  - `cache:clear:symfony:pool`: Clear Symfony cache pools.
+  - `ci:lint:php:symfony:container`: Lint services container with Symfony console.
+  - `ci:lint:php:symfony:translations`: Lint translations with Symfony console.
+  - `ci:lint:php:symfony:twig`: Lint 'twig' files with Symfony console.
+  - `ci:lint:php:symfony:xliff`: Lint 'xlf' files with Symfony console.
+  - `ci:lint:php:symfony:yaml`: Lint 'yml' files with Symfony console.
+  - `cache:clear:php:symfony`: Clear all Symfony caches.
+  - `cache:clear:php:symfony:var`: Clear Symfony var/cache directory.
+  - `cache:clear:php:symfony:pool`: Clear Symfony cache pools.
 
   #### Doctrine ORM Tasks (when `doctrine.enable = true`)
 
   - `dev:db:migrate:symfony`: Run Doctrine migrations.
   - `dev:db:diff:symfony`: Generate Doctrine migration from diff.
-  - `ci:lint:symfony:doctrine:validate`: Validate Doctrine mapping.
+  - `ci:lint:php:symfony:doctrine:validate`: Validate Doctrine mapping.
 
   ### 👷 Commit hooks
 
@@ -66,6 +66,8 @@ let
   phpCfg = config.biapy-recipes.php;
   cfg = phpCfg.symfony;
 
+  php = config.languages.php.package;
+
   inherit (config.devenv) root;
   symfony-cli = cfg.package;
   symfonyCommand = lib.meta.getExe symfony-cli;
@@ -79,7 +81,7 @@ in
     doctrine = {
       enable = lib.mkOption {
         type = lib.types.bool;
-        default = false;
+        default = true;
         description = "Enable Doctrine ORM tasks";
       };
     };
@@ -87,6 +89,8 @@ in
 
   config = mkIf cfg.enable {
     packages = [ fd ];
+
+    biapy-recipes.php.ini.short_open_tag = "off";
 
     languages.php = {
       enable = true;
@@ -103,113 +107,141 @@ in
       export PATH="${root}/bin:$PATH"
     '';
 
+    enterTest = ''
+      symfony 'version' | command grep --color='auto' "${symfony-cli.version}"
+      ${symfonyCommand} 'local:php:list' | command grep --color='auto' "${php}"
+      ${symfonyCommand} 'local:check:requirements'
+    '';
+
     # https://devenv.sh/tasks/
-    tasks =
-      optionalAttrs cfg.tasks {
-        "ci:lint:symfony:container" = {
-          description = "🔍 Lint 🎶Symfony services container";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${symfonyCommand} console 'lint:container'
-          '';
-        };
-
-        "ci:lint:symfony:translations" = {
-          description = "🔍 Lint 🎶Symfony translations";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${symfonyCommand} console 'lint:translations'
-          '';
-        };
-
-        "ci:lint:symfony:twig" = {
-          description = "🔍 Lint 🎶Symfony 'twig' files";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${fdCommand} --extension='twig' --type='file' --exec-batch \
-                ${symfonyCommand} console 'lint:twig' '--show-deprecations'
-          '';
-        };
-
-        "ci:lint:symfony:xliff" = {
-          description = "🔍 Lint 🎶Symfony 'xlf' files";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${fdCommand} --extension='xlf' --type='file' --exec-batch \
-              ${symfonyCommand} console 'lint:xliff'
-          '';
-        };
-
-        "ci:lint:symfony:yaml" = {
-          description = "🔍 Lint 🎶Symfony 'yml' files";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch \
-                ${symfonyCommand} console 'lint:yaml'
-          '';
-        };
-
-        "cache:clear:symfony:var" = {
-          description = "🗑️ Clear 🎶Symfony var/cache directory";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${symfonyCommand} console 'cache:clear'
-
-          '';
-        };
-
-        "cache:clear:symfony:pool" = {
-          description = "🗑️ Clear 🎶Symfony cache pools";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${symfonyCommand} console 'cache:pool:clear' --all
-          '';
-        };
-      }
-      // optionalAttrs (cfg.tasks && cfg.doctrine.enable) {
-        "dev:db:migrate:symfony" = {
-          description = "🗃️ Run 🎶Symfony Doctrine migrations";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${symfonyCommand} console 'doctrine:migrations:migrate' --no-interaction
-          '';
-        };
-
-        "dev:db:diff:symfony" = {
-          description = "🗃️ Generate 🎶Symfony Doctrine migration from diff";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${symfonyCommand} console 'doctrine:migrations:diff'
-          '';
-        };
-
-        "ci:lint:symfony:doctrine:validate" = {
-          description = "🔍 Validate 🎶Symfony Doctrine mapping";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            ${symfonyCommand} console 'doctrine:schema:validate'
-          '';
-        };
-      }
-      // mkGitIgnoreTask {
-        name = "Symfony";
-        namespace = "php:symfony";
-        ignoredPaths = [ "composer-recipes-install-all" ];
+    tasks = {
+      "biapy-recipes:enterShell:initialize:php:symfony" = {
+        description = ''Detect devenv PHP version for 🎶Symfony CLI'';
+        before = [ "devenv:enterShell" ];
+        status = ''${symfonyCommand} 'local:php:list' | command grep --quiet "${php}"'';
+        exec = ''
+          ${symfonyCommand} 'local:php:refresh'
+        '';
       };
+    }
+    // optionalAttrs cfg.tasks {
+      "ci:secops:php:symfony" = {
+        description = "🕵️‍♂️ Audit 🎶Symfony project packages";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'local:check:security'
+        '';
+      };
+
+      "ci:lint:php:symfony:container" = {
+        description = "🔍 Lint 🎶Symfony services container";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'lint:container'
+        '';
+      };
+
+      "ci:lint:php:symfony:translations" = {
+        description = "🔍 Lint 🎶Symfony translations";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'lint:translations'
+        '';
+      };
+
+      "ci:lint:php:symfony:twig" = {
+        description = "🔍 Lint 🎶Symfony 'twig' files";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${fdCommand} --extension='twig' --type='file' --exec-batch \
+              ${symfonyCommand} console 'lint:twig' '--show-deprecations'
+        '';
+      };
+
+      "ci:lint:php:symfony:xliff" = {
+        description = "🔍 Lint 🎶Symfony 'xlf' files";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${fdCommand} --extension='xlf' --type='file' --exec-batch \
+            ${symfonyCommand} console 'lint:xliff'
+        '';
+      };
+
+      "ci:lint:php:symfony:yaml" = {
+        description = "🔍 Lint 🎶Symfony 'yml' files";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${fdCommand} --extension='yml' --extension='yaml' --type='file' --exec-batch \
+              ${symfonyCommand} console 'lint:yaml'
+        '';
+      };
+
+      "cache:clear:php:symfony:var" = {
+        description = "🗑️ Clear 🎶Symfony var/cache directory";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'cache:clear'
+
+        '';
+      };
+
+      "cache:clear:php:symfony:pool" = {
+        description = "🗑️ Clear 🎶Symfony cache pools";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'cache:pool:clear' --all
+        '';
+      };
+    }
+    // optionalAttrs (cfg.tasks && cfg.doctrine.enable) {
+      "dev:db:migrate:symfony" = {
+        description = "🗃️ Run 🎶Symfony Doctrine migrations";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'doctrine:migrations:migrate' --no-interaction
+        '';
+      };
+
+      "dev:db:diff:symfony" = {
+        description = "🗃️ Generate 🎶Symfony Doctrine migration from diff";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'doctrine:migrations:diff'
+        '';
+      };
+
+      "ci:lint:php:symfony:doctrine:validate" = {
+        description = "🔍 Validate 🎶Symfony Doctrine mapping";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          ${symfonyCommand} console 'doctrine:schema:validate'
+        '';
+      };
+    }
+    // mkGitIgnoreTask {
+      name = "Symfony";
+      namespace = "php:symfony";
+      ignoredPaths = [ "composer-recipes-install-all" ];
+    };
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:lint:symfony:container" = patchGoTask {
+        "ci:secops:php:symfony" = patchGoTask {
+          desc = "🕵️‍♂️ Audit 🎶Symfony project packages";
+          cmds = [ "symfony 'local:check:security'" ];
+        };
+
+        "ci:lint:php:symfony:container" = patchGoTask {
           desc = "🔍 Lint 🎶Symfony services container";
           cmds = [ "symfony console 'lint:container'" ];
         };
 
-        "ci:lint:symfony:translations" = patchGoTask {
+        "ci:lint:php:symfony:translations" = patchGoTask {
           desc = "🔍 Lint 🎶Symfony translations";
           cmds = [ "symfony console 'lint:translations'" ];
         };
 
-        "ci:lint:symfony:twig" = patchGoTask {
+        "ci:lint:php:symfony:twig" = patchGoTask {
           desc = "🔍 Lint 🎶Symfony 'twig' files";
           cmds = [
             "fd --extension='twig' --type='file' --exec-batch symfony console 'lint:twig' --show-deprecations"
@@ -217,28 +249,28 @@ in
           requires.vars = [ "DEVENV_ROOT" ];
         };
 
-        "ci:lint:symfony:xliff" = patchGoTask {
+        "ci:lint:php:symfony:xliff" = patchGoTask {
           desc = "🔍 Lint 🎶Symfony 'xlf' files";
           cmds = [ "fd --extension='xlf' --type='file' --exec-batch symfony console 'lint:xliff'" ];
         };
 
-        "ci:lint:symfony:yaml" = patchGoTask {
+        "ci:lint:php:symfony:yaml" = patchGoTask {
           desc = "🔍 Lint 🎶Symfony 'yml' files";
           cmds = [
             "fd --extension='yml' --extension='yaml' --type='file' --exec-batch symfony console 'lint:yaml'"
           ];
         };
 
-        "cache:clear:symfony" = {
+        "cache:clear:php:symfony" = {
           desc = "🗑️ Run all 🎶Symfony cache clearing tasks";
         };
 
-        "cache:clear:symfony:var" = patchGoTask {
+        "cache:clear:php:symfony:var" = patchGoTask {
           desc = "🗑️ Clear 🎶Symfony var/cache directory";
           cmds = [ "symfony console 'cache:clear'" ];
         };
 
-        "cache:clear:symfony:pool" = patchGoTask {
+        "cache:clear:php:symfony:pool" = patchGoTask {
           desc = "🗑️ Clear 🎶Symfony cache pools";
           cmds = [ "symfony console 'cache:pool:clear' --all" ];
         };
@@ -256,7 +288,7 @@ in
           cmds = [ "symfony console 'doctrine:migrations:diff'" ];
         };
 
-        "ci:lint:symfony:doctrine" = patchGoTask {
+        "ci:lint:php:symfony:doctrine" = patchGoTask {
           aliases = [ "doctrine-validate" ];
           desc = "🔍 Validate 🎶Symfony Doctrine mapping";
           cmds = [ "symfony console 'doctrine:schema:validate'" ];
@@ -270,6 +302,15 @@ in
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
+      symfony-check-security = {
+        enable = mkDefault true;
+        name = "symfony check:security";
+        package = symfony-cli;
+        pass_filenames = false;
+        entry = ''${symfonyCommand} console local:check:security'';
+        stages = [ "pre-push" ];
+      };
+
       symfony-lint-container = {
         enable = mkDefault true;
         name = "symfony lint container";
