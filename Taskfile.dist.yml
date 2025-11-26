@@ -452,7 +452,7 @@ tasks:
     cmds:
       - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check for \U0001F510secrets leaks in project files with gitleaks ===\\033[0m\""
         silent: true
-      - gitleaks 'dir'
+      - gitleaks --verbose 'dir'
     desc: "\U0001F575️‍♂️ Check for \U0001F510secrets leaks in project files with gitleaks"
     dir: '{{.DEVENV_ROOT}}'
     requires:
@@ -462,7 +462,7 @@ tasks:
     cmds:
       - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check for \U0001F510secrets leaks in Git repository with gitleaks ===\\033[0m\""
         silent: true
-      - gitleaks 'git'
+      - gitleaks --verbose 'git'
     desc: "\U0001F575️‍♂️ Check for \U0001F510secrets leaks in Git repository with gitleaks"
     dir: '{{.DEVENV_ROOT}}'
     requires:

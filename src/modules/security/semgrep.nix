@@ -45,7 +45,7 @@ let
   cfg = securityCfg.semgrep;
 
   semgrep = cfg.package;
-  semgrepCommand = lib.meta.getExe semgrep;
+  semgrepCommand = lib.meta.getExe' semgrep "semgrep";
 in
 {
   options.biapy-recipes.security.semgrep = mkToolOptions securityCfg "Semgrep" // {
