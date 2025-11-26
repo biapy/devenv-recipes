@@ -1,6 +1,6 @@
 {
   "license": "MIT",
   "require-dev": {
-    "qossmic/deptrac": "^2.0"
+    "deptrac/deptrac": "^4.2"
   }
 }
