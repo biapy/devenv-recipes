@@ -33,7 +33,7 @@ in
     ini = mkOption {
       type = types.attrsOf types.str;
       default = {
-        #       "xdebug.mode" = "develop";
+        "xdebug.mode" = "develop,coverage,debug,gcstats,profile,trace";
         "memory_limit" = "256m";
       };
       apply =
