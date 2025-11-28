@@ -34,6 +34,8 @@ in
       type = types.attrsOf types.str;
       default = {
         "xdebug.mode" = "develop,coverage,debug,gcstats,profile,trace";
+        "xdebug.start_with_request" = "trigger";
+        "xdebug.remote_enable" = "1";
         "memory_limit" = "256m";
       };
       apply =
