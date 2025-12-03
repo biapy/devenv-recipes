@@ -40,7 +40,7 @@ let
   fdCommand = lib.meta.getExe fd;
 in
 {
-  options.biapy-recipes.nix.nixdoc = mkToolOptions nixCfg "nixdoc";
+  options.biapy-recipes.nix.nixdoc = mkToolOptions { enable = false; } "nixdoc";
 
   config = mkIf cfg.enable {
     # https://devenv.sh/packages/
