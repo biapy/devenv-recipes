@@ -57,7 +57,10 @@ in
 
   config = mkIf cfg.enable {
     # https://devenv.sh/packages/
-    packages = [ pkgs.plantuml ];
+    packages = with pkgs; [
+      graphviz
+      plantuml
+    ];
 
     # https://devenv.sh/reference/options/#envname
     env.PHPDOC_PLANTUML_BIN = plantumlCommand;

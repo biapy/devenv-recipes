@@ -5,6 +5,7 @@
         xmlns="https://www.phpdoc.org"
         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/phpDocumentor/phpDocumentor/master/data/xsd/phpdoc.xsd"
 >
+    <title>My App</title>
     <paths>
         <output>build/api</output>
         <cache>.phpdoc/cache</cache>
@@ -14,6 +15,16 @@
             <source dsn=".">
                 <path>src</path>
             </source>
+            <ignore hidden="true" symlinks="true">
+                <path>tools/**/*</path>
+            </ignore>
+            <include-source>false</include-source>
+            <markers>
+                <marker>TODO</marker>
+            </markers>
         </api>
     </version>
+    <setting name="guides.enabled" value="false" />
+    <setting name="graphs.enabled" value="true" />
+    <template name="default" />
 </phpdocumentor>
