@@ -92,7 +92,10 @@ in
       };
 
       "ci:docs" = mkDefault {
-        aliases = [ "docs" ];
+        aliases = [
+          "docs"
+          "doc"
+        ];
         desc = "📚 Run all documentation generation tasks";
       };
 
