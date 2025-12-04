@@ -78,6 +78,7 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:sh:shellcheck" = patchGoTask {
+        aliases = [ "shellcheck" ];
         desc = "🔍 Lint 🐚shell files with ShellCheck";
         cmds = [ ''fd '\.(sh|bash|dash|ksh)$' --exec shellcheck'' ];
       };
