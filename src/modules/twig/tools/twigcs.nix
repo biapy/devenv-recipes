@@ -10,6 +10,10 @@
 
   - `ci:lint:twig:twigcs`: 🔍 Lint 🍃Twig with twigcs.
 
+  ### 👷 Commit hooks
+
+  - `twigcs`: Lint '.twig' files with twigcs.
+
   ## 🛠️ Tech Stack
 
   - [twigcs @ GitHub](https://github.com/friendsoftwig/twigcs).
@@ -87,6 +91,17 @@ in
       }
       // mkPhpToolGoTasks toolConfiguration;
 
+    # https://devenv.sh/git-hooks/
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
+      twigcs = mkDefault {
+        enable = true;
+        name = "Twig CodeSniffer";
+        inherit (config.languages.php) package;
+        files = "\\.twig$";
+        entry = "twigcs";
+        args = [ "--quiet" ];
+      };
+    };
     # See full reference at https://devenv.sh/reference/options/
   };
 }
