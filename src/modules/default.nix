@@ -16,6 +16,7 @@ in
     ./secrets
     ./shell
     ./terraform
+    ./twig
     ./devcontainer.nix
     ./git.nix
     ./gnu-parallel.nix

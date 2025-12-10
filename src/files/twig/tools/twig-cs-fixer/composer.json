@@ -1,0 +1,6 @@
+{
+  "license": "MIT",
+  "require": {
+    "vincentlanglet/twig-cs-fixer": "^3"
+  }
+}
