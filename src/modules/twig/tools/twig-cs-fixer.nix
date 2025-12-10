@@ -8,6 +8,11 @@
   ### 🔨 Tasks
 
   - `ci:lint:twig:twig-cs-fixer`: 🔍 Lint 🍃Twig with twig-cs-fixer.
+  - `ci:format:twig:twig-cs-fixer`: 🎨 Format 🍃Twig files with twig-cs-fixer.
+
+  ### 👷 Commit hooks
+
+  - `twig-cs-fixer`: Lint '.twig' files with Twig CS Fixer.
 
   ## 🛠️ Tech Stack
 
@@ -73,7 +78,14 @@ in
           description = "🔍 Lint 🍃Twig with twig-cs-fixer";
           exec = ''
             cd "''${DEVENV_ROOT}"
-            twig-cs-fixer lint
+            twig-cs-fixer 'lint' --no-interaction
+          '';
+        };
+        "ci:format:twig:twig-cs-fixer" = mkDefault {
+          description = "🎨 Format 🍃Twig files with twig-cs-fixer";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            twig-cs-fixer 'fix' --no-interaction
           '';
         };
       };
@@ -81,12 +93,32 @@ in
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
         "ci:lint:twig:twig-cs-fixer" = mkDefault (patchGoTask {
-          aliases = [ "twig-cs-fixer" ];
           desc = "🔍 Lint 🍃Twig with twig-cs-fixer";
-          cmds = [ "twig-cs-fixer lint" ];
+          cmds = [ "twig-cs-fixer 'lint' --no-interaction" ];
         });
+
+        "ci:format:twig:twig-cs-fixer" = patchGoTask {
+          aliases = [ "twig-cs-fixer" ];
+          desc = "🎨 Format 🍃Twig files with twig-cs-fixer";
+          cmds = [ "twig-cs-fixer 'fix' --no-interaction" ];
+        };
       }
       // mkPhpToolGoTasks toolConfiguration;
+
+    # https://devenv.sh/git-hooks/
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
+      twig-cs-fixer = mkDefault {
+        enable = true;
+        name = "Twig CS Fixer";
+        inherit (config.languages.php) package;
+        files = "\\.twig$";
+        entry = "twig-cs-fixer 'lint'";
+        args = [
+          "--quiet"
+          "--no-interaction"
+        ];
+      };
+    };
 
     # See full reference at https://devenv.sh/reference/options/
   };
