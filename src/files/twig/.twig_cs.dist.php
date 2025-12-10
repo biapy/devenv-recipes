@@ -2,12 +2,13 @@
 
 declare(strict_types=1);
 
-use FriendsOfTwig\Twigcs;
+use FriendsOfTwig\Twigcs\Finder\TemplateFinder;
+use FriendsOfTwig\Twigcs\Config\Config;
 
-$symfonyTemplates = Twigcs\Finder\TemplateFinder::create()->in(__DIR__.'/templates');
+$symfonyTemplates = TemplateFinder::create()->in(__DIR__.'/templates');
 // $finderB = Twigcs\Finder\TemplateFinder::create()->in(__DIR__.'/dirB');
 
-return Twigcs\Config\Config::create()
+return Config::create()
     // ...
     ->addFinder($symfonyTemplates)
     // ->addFinder($finderB)

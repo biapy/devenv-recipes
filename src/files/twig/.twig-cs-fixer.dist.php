@@ -1,14 +1,19 @@
 <?php
 
-$finder = new TwigCsFixer\File\Finder();
-$finder->in('templates');
-$finder->in('src');
-// $finder->exclude('myCustomDirectory');
+use TwigCsFixer\File\Finder;
+use TwigCsFixer\Ruleset\Ruleset;
+use TwigCsFixer\Standard\TwigCsFixer;
+use TwigCsFixer\Config\Config;
 
-$ruleset = new TwigCsFixer\Ruleset\Ruleset();
+$finder = new Finder();
+// $finder->in('src');
+$finder->in('templates');
+// $finder->exclude('bundles');
+
+$ruleset = new Ruleset();
 
 // You can start from a default standard
-$ruleset->addStandard(new TwigCsFixer\Standard\TwigCsFixer());
+$ruleset->addStandard(new TwigCsFixer());
 
 // And then add/remove/override some rules
 // $ruleset->addRule(new TwigCsFixer\Rules\File\FileExtensionRule());
@@ -18,7 +23,7 @@ $ruleset->addStandard(new TwigCsFixer\Standard\TwigCsFixer());
 //     ['{' => 1],
 // ));
 
-$config = new TwigCsFixer\Config\Config();
+$config = new Config();
 $config->setRuleset($ruleset);
 $config->setFinder($finder);
 $config->allowNonFixableRules();
