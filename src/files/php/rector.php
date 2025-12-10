@@ -8,6 +8,7 @@ use Rector\Symfony\Bridge\Symfony\Routing\SymfonyRoutesProvider;
 use Rector\Symfony\Contract\Bridge\Symfony\Routing\SymfonyRoutesProviderInterface;
 
 return RectorConfig::configure()
+    ->withRootFiles()
     ->withPaths([
         __DIR__.'/assets',
         // __DIR__.'/config',
