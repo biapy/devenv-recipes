@@ -4,7 +4,7 @@ let
   inherit (lib.strings) hasSuffix;
   inherit (lib.filesystem) listFilesRecursive;
 
-  php-recipe-lib = import ./lib.nix args;
+  php-recipe-lib = import ../php/lib.nix args;
 
   imports-args = args // {
     inherit php-recipe-lib;
