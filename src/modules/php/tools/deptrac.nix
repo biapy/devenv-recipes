@@ -123,11 +123,9 @@ in
         enable = mkDefault true;
         name = "Deptrac";
         inherit (config.languages.php) package;
-        entry = "deptrac";
-        args = [
-          "analyse"
-          "--no-progress"
-        ];
+        entry = "deptrac 'analyse'";
+        pass_filenames = false;
+        args = [ "--no-progress" ];
       };
     };
   };
