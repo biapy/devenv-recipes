@@ -1,6 +1,6 @@
 {
   "license": "MIT",
   "require": {
-    "phpmetrics/phpmetrics": "^2.8"
+    "phpmetrics/phpmetrics": "^2"
   }
 }
