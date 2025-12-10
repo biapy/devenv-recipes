@@ -12,6 +12,7 @@
 
   ## 🛠️ Tech Stack
 
+  - [PhpMetrics homepage](https://phpmetrics.github.io/website/).
   - [PhpMetrics @ GitHub](https://github.com/phpmetrics/PhpMetrics).
 
   ## 🙇 Acknowledgements
@@ -42,12 +43,18 @@ let
     name = "PhpMetrics";
     namespace = "phpmetrics";
     composerJsonPath = ../../../files/php/tools/phpmetrics/composer.json;
+    configFiles = {
+      ".phpmetrics.yml" = ../../../files/php/.phpmetrics.yml;
+    };
   };
 in
 {
   options.biapy-recipes.php.tools.phpmetrics = mkToolOptions { enable = false; } "phpmetrics";
 
   config = mkIf cfg.enable {
+
+    languages.php.extensions = [ "yaml" ];
+
     scripts = {
       phpmetrics = mkDefault {
         description = "PhpMetrics - PHP static analysis tool";
@@ -57,7 +64,7 @@ in
             exit 1
           fi
 
-          ${phpCommand} '${toolCommand}' "''${@}"
+          ${phpCommand} -d 'error_reporting=~E_DEPRECATED' '${toolCommand}' "''${@}"
         '';
       };
     };
@@ -70,7 +77,7 @@ in
           description = "📊 Generate 🐘PHP metrics report with PhpMetrics";
           exec = ''
             cd "''${DEVENV_ROOT}"
-            phpmetrics --report-html=build/phpmetrics src
+            phpmetrics --config='.phpmetrics.yml'
           '';
         };
       };
@@ -80,7 +87,7 @@ in
         "ci:lint:php:phpmetrics" = mkDefault (patchGoTask {
           aliases = [ "phpmetrics" ];
           desc = "📊 Generate 🐘PHP metrics report with PhpMetrics";
-          cmds = [ "phpmetrics --report-html=build/phpmetrics src" ];
+          cmds = [ "phpmetrics --config='.phpmetrics.yml'" ];
         });
       }
       // mkPhpToolGoTasks toolConfiguration;
