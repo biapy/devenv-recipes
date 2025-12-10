@@ -50,7 +50,11 @@ in
         enable = mkDefault true;
         package = mkDefault gitleaks;
         pass_filenames = false;
-        entry = "${gitleaksCommand} dir";
+        entry = "${gitleaksCommand} 'git'";
+        args = [
+          "--staged"
+          "--redact"
+        ];
       };
     };
 
