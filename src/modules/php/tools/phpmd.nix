@@ -24,10 +24,6 @@
 
   - [PHP Mess Detector @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=ecodes.vscode-phpmd).
 
-  ### 📦 Third party tools
-
-  - [GNU Parallel homepage](https://www.gnu.org/software/parallel/).
-
   ## 🙇 Acknowledgements
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
@@ -55,9 +51,6 @@ let
   phpCommand = lib.meta.getExe config.languages.php.package;
   phpmdCommand = "${root}/${phpToolsCfg.path}/phpmd/vendor/bin/phpmd";
   pdependCommand = "${root}/${phpToolsCfg.path}/phpmd/vendor/bin/pdepend";
-
-  parallel = config.biapy-recipes.gnu-parallel.package;
-  parallelCommand = lib.meta.getExe parallel;
 
   toolConfiguration = {
     name = "PHP Mess Detector";
@@ -99,8 +92,6 @@ in
       };
     };
 
-    biapy-recipes.gnu-parallel.enable = mkDefault true;
-
     # https://devenv.sh/integrations/codespaces-devcontainer/
     devcontainer.settings.customizations.vscode.extensions = [ "ecodes.vscode-phpmd" ];
 
@@ -134,9 +125,10 @@ in
         name = "PHP Mess Detector";
         inherit (config.languages.php) package;
         files = "\\.php$";
-        extraPackages = [ parallel ];
-        # Using parallel allows to run phpmd on staged files only
-        entry = ''${parallelCommand} phpmd {} 'ansi' '${root}/phpmd.xml' ::: '';
+        # Using bash to pipeline the filenames to phpmd stdin
+        entry = ''
+          bash -c 'printf "%s\n" "''${@}" | phpmd - "ansi" "${root}/phpmd.xml"'
+        '';
       };
     };
 
