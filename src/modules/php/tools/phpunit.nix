@@ -11,7 +11,7 @@
   ### 🔨 Tasks
 
   - `ci:tests:php:phpunit`: 🧪 Run 🐘PHP tests with PHPUnit.
-  - `ci:coverage:php:phpunit`: 📊 Generate 🐘PHP test coverage report with PHPUnit.
+  - `ci:reports:php:phpunit`: 📊 Generate 🐘PHP test coverage report with PHPUnit.
 
   ### 👷 Commit hooks
 
@@ -80,7 +80,7 @@ in
         '';
       };
 
-      "ci:coverage:php:phpunit" = mkDefault {
+      "ci:reports:php:phpunit" = mkDefault {
         description = "📊 Generate 🐘PHP test coverage report with PHPUnit";
         exec = ''
           cd "''${DEVENV_ROOT}"
@@ -96,7 +96,7 @@ in
         cmds = [ "phpunit --no-coverage" ];
       });
 
-      "ci:coverage:php:phpunit" = mkDefault (patchGoTask {
+      "ci:reports:php:phpunit" = mkDefault (patchGoTask {
         aliases = [ "phpunit-coverage" ];
         desc = "📊 Generate 🐘PHP test coverage report with PHPUnit";
         cmds = [ "phpunit" ];

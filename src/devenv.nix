@@ -99,9 +99,12 @@ in
         desc = "📚 Run all documentation generation tasks";
       };
 
-      "ci:coverage" = mkDefault {
-        aliases = [ "coverage" ];
-        desc = "📊 Run all coverage report generation tasks";
+      "ci:reports" = mkDefault {
+        aliases = [
+          "reports"
+          "report"
+        ];
+        desc = "📊 Run all reports generation tasks";
       };
 
       "cd:build" = mkDefault {

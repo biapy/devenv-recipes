@@ -52,11 +52,6 @@ tasks:
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
-  ci:coverage:
-    aliases:
-      - coverage
-    desc: "\U0001F4CA Run all coverage report generation tasks"
-    requires: {}
   ci:docs:
     aliases:
       - docs
@@ -365,6 +360,12 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
+  ci:reports:
+    aliases:
+      - reports
+      - report
+    desc: "\U0001F4CA Run all reports generation tasks"
+    requires: {}
   ci:secops:
     aliases:
       - secops

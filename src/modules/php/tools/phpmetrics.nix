@@ -73,7 +73,7 @@ in
     tasks =
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
-        "ci:lint:php:phpmetrics" = mkDefault {
+        "ci:reports:php:phpmetrics" = mkDefault {
           description = "📊 Generate 🐘PHP metrics report with PhpMetrics";
           exec = ''
             cd "''${DEVENV_ROOT}"
@@ -84,7 +84,7 @@ in
 
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
-        "ci:lint:php:phpmetrics" = mkDefault (patchGoTask {
+        "ci:reports:php:phpmetrics" = mkDefault (patchGoTask {
           aliases = [ "phpmetrics" ];
           desc = "📊 Generate 🐘PHP metrics report with PhpMetrics";
           cmds = [ "phpmetrics --config='.phpmetrics.yml'" ];
