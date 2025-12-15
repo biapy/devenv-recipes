@@ -127,7 +127,7 @@ in
         files = "\\.php$";
         # Using bash to pipeline the filenames to phpmd stdin
         entry = ''
-          bash -c 'printf "%s\n" "''${@}" | phpmd - "ansi" "${root}/phpmd.xml"'
+          bash -c 'printf -v files "%s," "''${0}" "''${@}" && phpmd "''${files%,}" "ansi" "${root}/phpmd.xml"'
         '';
       };
     };
