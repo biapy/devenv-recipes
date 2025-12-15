@@ -114,6 +114,7 @@ in
         inherit (config.languages.php) package;
         files = "\\.php$";
         pass_filenames = true;
+        require_serial = true;
         entry = ''${phpCommand} '${toolCommand}' "process"'';
         args = [
           "--no-progress-bar"
