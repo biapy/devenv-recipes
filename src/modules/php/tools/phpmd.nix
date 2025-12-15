@@ -125,6 +125,7 @@ in
         name = "PHP Mess Detector";
         inherit (config.languages.php) package;
         files = "\\.php$";
+        require_serial = true;
         # Using bash to pipeline the filenames to phpmd stdin
         entry = ''
           bash -c 'printf -v files "%s," "''${0}" "''${@}" && phpmd "''${files%,}" "ansi" "${root}/phpmd.xml"'
