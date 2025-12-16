@@ -8,9 +8,9 @@ extensions: # default: ["php", "inc"]
   # - inc
   # - php8
 report: # list of reports to generate
-  html: "build/phpmetrics/"
-  csv: "build/phpmetrics/report.csv"
-  json: "build/phpmetrics/report.json"
+  html: "build/reports/phpmetrics/"
+  csv: "build/reports/phpmetrics/report.csv"
+  json: "build/reports/phpmetrics/report.json"
   violations: "build/ci/phpmetrics-violations.xml"
 
 # "layers" of code. You can group your classes and packages by regex,
