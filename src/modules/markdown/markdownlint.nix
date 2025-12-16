@@ -40,6 +40,7 @@ let
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (recipes-lib.tasks) mkInitializeFilesTask;
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.markdownlint;
@@ -49,6 +50,14 @@ let
 
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
+
+  initializeFilesTask = mkInitializeFilesTask {
+    name = "markdownlint";
+    namespace = "markdownlint";
+    configFiles = {
+      ".markdownlint.json" = ../../files/markdown/.markdownlint.json;
+    };
+  };
 in
 {
   options.biapy-recipes.markdown.markdownlint = mkToolOptions mdCfg "markdownlint" // {
@@ -72,15 +81,17 @@ in
     git-hooks.hooks = optionalAttrs cfg.git-hooks { markdownlint.enable = mkDefault true; };
 
     # https://devenv.sh/tasks/
-    tasks = optionalAttrs cfg.tasks {
-      "ci:lint:md:markdownlint" = mkDefault {
-        description = "🔍 Lint 📝Markdown files with markdownlint";
-        exec = ''
-          cd "''${DEVENV_ROOT}"
-          ${fdCommand} '\.md$' "''${DEVENV_ROOT}" --exec-batch ${markdownlintCommand} {}
-        '';
+    tasks =
+      initializeFilesTask
+      // optionalAttrs cfg.tasks {
+        "ci:lint:md:markdownlint" = mkDefault {
+          description = "🔍 Lint 📝Markdown files with markdownlint";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${fdCommand} '\.md$' "''${DEVENV_ROOT}" --exec-batch ${markdownlintCommand} {}
+          '';
+        };
       };
-    };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:markdownlint" = patchGoTask {
