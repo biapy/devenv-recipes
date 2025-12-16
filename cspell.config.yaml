@@ -1,0 +1,36 @@
+# CSpell Settings
+# language - current active spelling language
+language: "en"
+# words - list of words to be always considered correct
+words:
+  - "devenv"
+  - "cachix"
+# flagWords - list of words to be always considered incorrect
+# This is useful for offensive words and common spelling errors.
+# For example "hte" should be "the"
+flagWords: []
+# Dictionaries to import from external sources
+# see https://github.com/streetsidesoftware/cspell-dicts
+# Must be in sync with languageSettings below
+import:
+  - 'https://unpkg.com/@cspell/dict-en_us@latest/cspell-ext.json'
+  - 'https://unpkg.com/@cspell/dict-en-common-misspellings@latest/cspell-ext.json'
+  - 'https://unpkg.com/@cspell/dict-companies@latest/cspell-ext.json'
+  - 'https://unpkg.com/@cspell/dict-software-terms@latest/cspell-ext.json'
+  - 'https://unpkg.com/@cspell/dict-markdown@latest/cspell-ext.json'
+  - 'https://unpkg.com/@cspell/dict-public-licenses@latest/cspell-ext.json'
+  - 'https://unpkg.com/@cspell/dict-git@latest/cspell-ext.json'
+languageSettings:
+  - languageId: md
+    dictionaries:
+      - en_us
+      - companies
+      - softwareTerms
+      - networking-terms
+      - web-services
+      - computing-acronyms
+      - markdown
+      - public-licenses
+      - git
+      - en-us-common-misspellings
+      - en-common-misspellings

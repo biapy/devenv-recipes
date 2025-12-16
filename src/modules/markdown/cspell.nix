@@ -39,6 +39,7 @@ let
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (recipes-lib.tasks) mkInitializeFilesTask;
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.cspell;
@@ -48,6 +49,14 @@ let
 
   inherit (pkgs) fd;
   fdCommand = lib.meta.getExe fd;
+
+  initializeFilesTask = mkInitializeFilesTask {
+    name = "CSpell";
+    namespace = "cspell";
+    configFiles = {
+      "cspell.config.yaml" = ../../files/markdown/cspell.config.yaml;
+    };
+  };
 in
 {
   options.biapy-recipes.markdown.cspell = mkToolOptions mdCfg "CSpell" // {
@@ -73,15 +82,17 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = optionalAttrs cfg.tasks {
-      "ci:lint:md:cspell" = {
-        description = "🔍 Lint 📝Markdown files with cspell";
-        exec = ''
-          cd "''${DEVENV_ROOT}"
-          ${fdCommand} '\.md$' "''${DEVENV_ROOT}" --exec-batch ${cspellCommand} --root "''${DEVENV_ROOT}" {}
-        '';
+    tasks =
+      initializeFilesTask
+      // optionalAttrs cfg.tasks {
+        "ci:lint:md:cspell" = {
+          description = "🔍 Lint 📝Markdown files with cspell";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${fdCommand} '\.md$' "''${DEVENV_ROOT}" --exec-batch ${cspellCommand} --root "''${DEVENV_ROOT}" {}
+          '';
+        };
       };
-    };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:cspell" = patchGoTask {
