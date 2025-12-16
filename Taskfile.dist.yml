@@ -163,7 +163,7 @@ tasks:
     cmds:
       - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F3A8 Format ❄️Nix files with nixfmt ===\\033[0m\""
         silent: true
-      - /nix/store/yvccw7navba7rcfvxz97ibsb1m5jxdk0-nixfmt-tree/bin/treefmt --tree-root "${DEVENV_ROOT}"
+      - /nix/store/80vwk493qrhhvidrbvj2yv9sbk6ygzv1-nixfmt-tree/bin/treefmt --tree-root "${DEVENV_ROOT}"
     desc: "\U0001F3A8 Format ❄️Nix files with nixfmt"
     dir: '{{.DEVENV_ROOT}}'
     requires:
@@ -298,32 +298,6 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
-  ci:lint:security:
-    cmds:
-      - for:
-          var: TASKS
-        task: '{{.ITEM}}'
-    ignore_error: true
-    requires:
-      vars:
-        - DEVENV_ROOT
-    silent: true
-    summary: "\U0001F5C2️ Run 'ci:lint:security:*' tasks"
-    vars:
-      TASKS:
-        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
-  ci:lint:security:semgrep:
-    aliases:
-      - semgrep
-    cmds:
-      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Scan code with semgrep ===\\033[0m\""
-        silent: true
-      - semgrep scan --config=auto
-    desc: "\U0001F50D Scan code with semgrep"
-    dir: '{{.DEVENV_ROOT}}'
-    requires:
-      vars:
-        - DEVENV_ROOT
   ci:lint:sh:
     cmds:
       - for:
@@ -429,56 +403,6 @@ tasks:
         silent: true
       - gitleaks --verbose 'git'
     desc: "\U0001F575️‍♂️ Check for \U0001F510secrets leaks in Git repository with gitleaks"
-    dir: '{{.DEVENV_ROOT}}'
-    requires:
-      vars:
-        - DEVENV_ROOT
-  ci:secops:security:
-    cmds:
-      - for:
-          var: TASKS
-        task: '{{.ITEM}}'
-    ignore_error: true
-    requires:
-      vars:
-        - DEVENV_ROOT
-    silent: true
-    summary: "\U0001F5C2️ Run 'ci:secops:security:*' tasks"
-    vars:
-      TASKS:
-        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
-  ci:secops:security:trivy:
-    aliases:
-      - trivy
-    cmds:
-      - for:
-          var: TASKS
-        task: '{{.ITEM}}'
-    ignore_error: true
-    requires:
-      vars:
-        - DEVENV_ROOT
-    silent: true
-    summary: "\U0001F5C2️ Run 'ci:secops:security:trivy:*' tasks"
-    vars:
-      TASKS:
-        sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
-  ci:secops:security:trivy:config:
-    cmds:
-      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check local configuration files with trivy ===\\033[0m\""
-        silent: true
-      - trivy 'config' './'
-    desc: "\U0001F575️‍♂️ Check local configuration files with trivy"
-    dir: '{{.DEVENV_ROOT}}'
-    requires:
-      vars:
-        - DEVENV_ROOT
-  ci:secops:security:trivy:fs:
-    cmds:
-      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F575️‍♂️ Check local filesystem with trivy ===\\033[0m\""
-        silent: true
-      - trivy 'fs' './'
-    desc: "\U0001F575️‍♂️ Check local filesystem with trivy"
     dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
