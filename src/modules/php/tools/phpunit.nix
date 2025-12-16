@@ -30,7 +30,6 @@
 {
   config,
   lib,
-  php-recipe-lib,
   recipes-lib,
   ...
 }:
@@ -39,21 +38,12 @@ let
   inherit (lib.modules) mkIf mkDefault;
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
-  inherit (php-recipe-lib) mkInitializeConfigFilesTask;
 
   phpToolsCfg = config.biapy-recipes.php.tools;
   cfg = phpToolsCfg.phpunit;
 
   inherit (config.devenv) root;
   phpCommand = lib.meta.getExe config.languages.php.package;
-
-  initializeConfigFilesTask = mkInitializeConfigFilesTask {
-    name = "PHPUnit";
-    namespace = "phpunit";
-    configFiles = {
-      "phpunit.dist.xml" = ../../../files/php/phpunit.dist.xml;
-    };
-  };
 in
 {
   options.biapy-recipes.php.tools.phpunit = mkToolOptions phpToolsCfg "phpunit";
@@ -81,54 +71,52 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks =
-      initializeConfigFilesTask
-      // optionalAttrs cfg.tasks {
-        "ci:tests:php:phpunit" = mkDefault {
-          description = "🧪 Run 🐘PHP tests with PHPUnit";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            phpunit --no-coverage
-          '';
-        };
-
-        "ci:reports:php:phpunit" = mkDefault {
-          description = "📊 Generate 🐘PHP test coverage report with PHPUnit";
-          exec = ''
-            cd "''${DEVENV_ROOT}"
-            XDEBUG_MODE=coverage phpunit
-          '';
-        };
+    tasks = optionalAttrs cfg.tasks {
+      "ci:tests:php:phpunit" = mkDefault {
+        description = "🧪 Run 🐘PHP tests with PHPUnit";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          phpunit --no-coverage
+        '';
       };
 
-    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:tests:php:phpunit" = mkDefault (patchGoTask {
-        aliases = [ "phpunit" ];
-        desc = "🧪 Run 🐘PHP tests with PHPUnit";
-        cmds = [ "phpunit --no-coverage" ];
-      });
+      "ci:reports:php:phpunit" = mkDefault {
+        description = "📊 Generate 🐘PHP test coverage report with PHPUnit";
+        exec = ''
+          cd "''${DEVENV_ROOT}"
+          XDEBUG_MODE=coverage phpunit
+        '';
+      };
+    };
 
-      "ci:reports:php:phpunit" = mkDefault (patchGoTask {
-        aliases = [ "phpunit-coverage" ];
-        desc = "📊 Generate 🐘PHP test coverage report with PHPUnit";
-        cmds = [ "phpunit" ];
+    biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
+      "ci:tests:php:phpunit" = patchGoTask {
+        aliases = mkDefault [ "phpunit" ];
+        desc = mkDefault "🧪 Run 🐘PHP tests with PHPUnit";
+        cmds = mkDefault [ "phpunit --no-coverage" ];
+      };
+
+      "ci:reports:php:phpunit" = patchGoTask {
+        aliases = mkDefault [ "phpunit-coverage" ];
+        desc = mkDefault "📊 Generate 🐘PHP test coverage report with PHPUnit";
+        cmds = mkDefault [ "phpunit" ];
         env = {
           # Disable code coverage collection in git hooks to speed up tests
-          XDEBUG_MODE = "coverage";
+          XDEBUG_MODE = mkDefault "coverage";
         };
-      });
+      };
     };
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
-      phpunit = mkDefault {
-        enable = true;
+      phpunit = {
+        enable = mkDefault true;
         name = "PHPUnit";
         inherit (config.languages.php) package;
         pass_filenames = false;
         entry = "phpunit";
-        args = [ "--no-coverage" ];
-        stages = [ "pre-push" ];
+        args = mkDefault [ "--no-coverage" ];
+        stages = mkDefault [ "pre-push" ];
       };
     };
 
