@@ -129,7 +129,7 @@ in
         description = "🕵️‍♂️ Audit 🎶Symfony project packages";
         exec = ''
           cd "''${DEVENV_ROOT}"
-          ${symfonyCommand} console 'local:check:security'
+          ${symfonyCommand} 'local:check:security'
         '';
       };
 
@@ -307,7 +307,7 @@ in
         name = "symfony check:security";
         package = symfony-cli;
         pass_filenames = false;
-        entry = ''${symfonyCommand} console local:check:security'';
+        entry = "${symfonyCommand} 'local:check:security'";
         stages = [ "pre-push" ];
       };
 
@@ -317,7 +317,7 @@ in
         package = symfony-cli;
         files = "\.(php|yml|yaml|xml|json|lock)$";
         pass_filenames = false;
-        entry = ''"${symfonyCommand}" console lint:container'';
+        entry = "${symfonyCommand} console 'lint:container'";
         stages = [
           "pre-commit"
           "pre-push"
@@ -329,7 +329,7 @@ in
         name = "symfony lint:twig";
         package = symfony-cli;
         files = "\.twig$";
-        entry = ''${symfonyCommand} console lint:twig'';
+        entry = "${symfonyCommand} console 'lint:twig'";
         args = [ "--show-deprecations" ];
       };
 
@@ -339,7 +339,7 @@ in
         package = symfony-cli;
         files = "/translations/.*\.(php|xlf|yml|yaml|po|pot|csv|json|ini|dat|res|mo|qt)$";
         pass_filenames = false;
-        entry = ''${symfonyCommand} console lint:translations'';
+        entry = "${symfonyCommand} console 'lint:translations'";
       };
 
       symfony-lint-xliff = {
@@ -347,7 +347,7 @@ in
         name = "symfony lint:xliff";
         package = symfony-cli;
         files = "\.xlf$";
-        entry = ''${symfonyCommand} console lint:xliff'';
+        entry = "${symfonyCommand} console 'lint:xliff'";
       };
 
       symfony-lint-yaml = {
@@ -355,7 +355,7 @@ in
         name = "symfony lint:yaml";
         package = symfony-cli;
         files = "\.(yml|yaml)$";
-        entry = ''${symfonyCommand} console lint:yaml'';
+        entry = "${symfonyCommand} console 'lint:yaml'";
       };
     };
 
