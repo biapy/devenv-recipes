@@ -22,7 +22,7 @@ plugins:
   git:
     binary: git # if defined, runs git analyze
   # junit:
-  #     file: "build/ci/junit.xml" # if defined, analyze junit report
+  #     file: "build/ci/phpunit-junit.xml" # if defined, analyze junit report
 # You can define patterns of code to search
 # That's useful for Continuous Integration
 # searches:

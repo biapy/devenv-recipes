@@ -63,4 +63,8 @@
             <html outputDirectory="build/reports/phpunit" lowUpperBound="50" highLowerBound="90" />
         </report>
     </coverage>
+
+    <logging>
+        <junit outputFile="build/ci/phpunit-junit.xml" />
+    </logging>
 </phpunit>
