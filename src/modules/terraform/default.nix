@@ -139,8 +139,14 @@ in
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = {
-      terraform-format.enable = mkDefault true;
-      terraform-validate.enable = mkDefault true;
+      terraform-format = {
+        enable = mkDefault true;
+        inherit (config.languages.opentofu) package;
+      };
+      terraform-validate = {
+        enable = mkDefault true;
+        inherit (config.languages.opentofu) package;
+      };
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
