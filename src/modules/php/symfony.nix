@@ -262,6 +262,11 @@ in
         };
 
         "cache:clear:php:symfony" = {
+          aliases = [
+            "symfony:cc"
+            "sfcc"
+            "sf:cc"
+          ];
           desc = "🗑️ Run all 🎶Symfony cache clearing tasks";
         };
 
