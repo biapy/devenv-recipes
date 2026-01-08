@@ -159,7 +159,8 @@ rec {
         {
           description = "⬆️ Update 🐘${name}";
           exec = ''
-            '${composerCommand}' --working-dir="''${DEVENV_ROOT}/${toolPath}" 'update'
+            '${composerCommand}' --working-dir="''${DEVENV_ROOT}/${toolPath}" 'update' \
+              --with-all-dependencies --prefer-stable
           '';
         };
     };
@@ -179,7 +180,7 @@ rec {
               msg = "${name}' '${toolPath}/composer.json' does not exist, skipping.";
             }
           ];
-          cmds = [ "composer --working-dir='./${toolPath}' update" ];
+          cmds = [ "composer --working-dir='./${toolPath}' update --with-all-dependencies --prefer-stable" ];
         };
     };
 
