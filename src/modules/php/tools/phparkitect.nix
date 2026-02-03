@@ -98,6 +98,8 @@ in
 
         "cache:clear:php:phparkitect" = mkDefault (patchGoTask {
           aliases = [
+            "cc:phparkitect"
+            "cc-phparkitect"
             "phparkitect-cc"
             "phparkitect:cc"
           ];

@@ -119,6 +119,8 @@ in
 
         "cache:clear:php:psalm" = patchGoTask {
           aliases = [
+            "cc:psalm"
+            "cc-psalm"
             "psalm-cc"
             "psalm:cc"
           ];

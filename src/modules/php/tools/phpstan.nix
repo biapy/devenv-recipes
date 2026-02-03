@@ -8,6 +8,7 @@
   ### 🔨 Tasks
 
   - `ci:lint:php:phpstan`: 🔍 Lint 🐘PHP files with PHPStan.
+  - `cache:clear:php:phpstan`: 🧹 Clear PHPStan result cache.
   - `reset:php:tools:phpstan`: Delete 'rector/phpstan' folder.
 
   ### 👷 Commit hooks
@@ -120,6 +121,14 @@ in
             ${phpCommand} '${toolCommand}' 'analyse' --no-progress
           '';
         };
+
+        "cache:clear:php:phpstan" = {
+          description = "🧹 Clear PHPStan result cache";
+          exec = ''
+            cd "''${DEVENV_ROOT}"
+            ${phpCommand} '${toolCommand}' clear-result-cache
+          '';
+        };
       };
 
     biapy.go-task.taskfile.tasks =
@@ -128,6 +137,17 @@ in
           aliases = [ "phpstan" ];
           desc = "🔍 Lint 🐘PHP files with PHPStan";
           cmds = [ "phpstan 'analyse' --no-progress" ];
+        };
+
+        "cache:clear:php:phpstan" = patchGoTask {
+          aliases = [
+            "cc:phpstan"
+            "cc-phpstan"
+            "phpstan-cc"
+            "phpstan:cc"
+          ];
+          desc = "🧹 Clear PHPStan result cache";
+          cmds = [ "phpstan clear-result-cache" ];
         };
       }
       // mkPhpToolGoTasks toolConfiguration;

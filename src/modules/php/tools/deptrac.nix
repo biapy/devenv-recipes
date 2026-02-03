@@ -109,6 +109,8 @@ in
 
         "cache:clear:php:deptrac" = patchGoTask {
           aliases = [
+            "cc:deptrac"
+            "cc-deptrac"
             "deptrac-cc"
             "deptrac:cc"
           ];

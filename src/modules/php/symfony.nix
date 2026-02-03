@@ -271,11 +271,19 @@ in
         };
 
         "cache:clear:php:symfony:var" = patchGoTask {
+          aliases = [
+            "cc:symfony:var"
+            "cc-symfony-var"
+          ];
           desc = "🗑️ Clear 🎶Symfony var/cache directory";
           cmds = [ "symfony console 'cache:clear'" ];
         };
 
         "cache:clear:php:symfony:pool" = patchGoTask {
+          aliases = [
+            "cc:symfony:pool"
+            "cc-symfony-pool"
+          ];
           desc = "🗑️ Clear 🎶Symfony cache pools";
           cmds = [ "symfony console 'cache:pool:clear' --all" ];
         };
