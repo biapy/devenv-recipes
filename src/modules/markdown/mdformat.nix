@@ -33,7 +33,6 @@
   - [mdformat-myst @ GitHub](https://github.com/executablebooks/mdformat-myst).
   - [mdformat-nix-alejandra @ GitHub](https://github.com/aldoborrero/mdformat-nix-alejandra).
   - [mdformat-simple-breaks @ GitHub](https://github.com/csala/mdformat-simple-breaks).
-  - [mdformat-tables @ GitHub](https://github.com/hukkin/mdformat-tables).
   - [mdformat-toc @ GitHub](https://github.com/hukkin/mdformat-toc).
   - [mdformat-wikilink @ GitHub](https://github.com/tmr232/mdformat-wikilink).
 
@@ -46,6 +45,7 @@
 
   - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
   - [git-hooks.hooks.mdformat @ Devenv Reference Manual](https://devenv.sh/reference/options/#git-hookshooksmdformat).
+  - [mdformat-tables @ GitHub](https://github.com/hukkin/mdformat-tables).
 */
 {
   pkgs,
@@ -87,7 +87,7 @@ let
     mdformat-myst
     mdformat-nix-alejandra
     mdformat-simple-breaks
-    mdformat-tables
+    # mdformat-tables # replaced by mdformat-gfm
     # mdformat-toc # marked as broken on 2025-08-19
     mdformat-wikilink
   ];
