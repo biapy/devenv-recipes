@@ -153,13 +153,13 @@ in
       "ci:format:tf:tofu-fmt" = patchGoTask {
         aliases = [ "tf-fmt" ];
         desc = "🎨 Format 🏗️OpenTofu files";
-        cmds = [ ''${wrapTofu "tofu fmt --recursive"}'' ];
+        cmds = [ "${wrapTofu "tofu fmt --recursive"}" ];
       };
 
       "ci:lint:tf:tofu-validate" = patchGoTask {
         aliases = [ "tf-validate" ];
         desc = "🔍 Lint 🏗️OpenTofu files with tofu validate";
-        cmds = [ ''${wrapTofu "tofu validate"}'' ];
+        cmds = [ "${wrapTofu "tofu validate"}" ];
       };
 
       "reset:tf:tofu" = patchGoTask {
@@ -190,7 +190,7 @@ in
             msg = "Project's .terraform.lock.hcl does not exist, skipping.";
           }
         ];
-        cmds = [ ''${wrapTofu "tofu init -upgrade"}'' ];
+        cmds = [ "${wrapTofu "tofu init -upgrade"}" ];
       };
     };
   };

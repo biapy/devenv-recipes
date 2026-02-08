@@ -81,7 +81,7 @@ in
       "ci:lint:tf:checkov" = patchGoTask {
         aliases = [ "checkov" ];
         desc = "🔍 Lint 🏗️Infrastructure as Code with checkov";
-        cmds = [ ''checkov'' ];
+        cmds = [ "checkov" ];
       };
     };
   };

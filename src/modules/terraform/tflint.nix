@@ -68,7 +68,7 @@ in
       "ci:lint:tf:tflint" = patchGoTask {
         aliases = [ "tflint" ];
         desc = "🔍 Lint 🏗️Terraform files with tflint";
-        cmds = [ ''tflint'' ];
+        cmds = [ "tflint" ];
       };
     };
   };
