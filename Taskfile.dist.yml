@@ -143,6 +143,17 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
+  ci:format:md:rumdl:
+    aliases:
+      - format:md:rumdl
+      - format:rumdl
+    cmds:
+      - rumdl fmt
+    desc: "\U0001F3A8 Format \U0001F4DDMarkdown files with rumdl"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
   ci:format:nix:
     cmds:
       - for:
@@ -160,10 +171,10 @@ tasks:
   ci:format:nix:nixfmt:
     aliases:
       - nixfmt
+      - format:nix:nixfmt
+      - format:nixfmt
     cmds:
-      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F3A8 Format ❄️Nix files with nixfmt ===\\033[0m\""
-        silent: true
-      - /nix/store/80vwk493qrhhvidrbvj2yv9sbk6ygzv1-nixfmt-tree/bin/treefmt --tree-root "${DEVENV_ROOT}"
+      - treefmt --formatters='nixfmt'
     desc: "\U0001F3A8 Format ❄️Nix files with nixfmt"
     dir: '{{.DEVENV_ROOT}}'
     requires:
@@ -238,24 +249,24 @@ tasks:
     requires:
       vars:
         - DEVENV_ROOT
-  ci:lint:md:markdownlint:
-    aliases:
-      - markdownlint
-    cmds:
-      - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint \U0001F4DDMarkdown files with markdownlint ===\\033[0m\""
-        silent: true
-      - fd '\.md$' --exec-batch markdownlint {}
-    desc: "\U0001F50D Lint \U0001F4DDMarkdown files with markdownlint"
-    dir: '{{.DEVENV_ROOT}}'
-    requires:
-      vars:
-        - DEVENV_ROOT
   ci:lint:md:mdformat:
     cmds:
       - cmd: "echo -e \"\\n\\033[1;34m=== [{{.TASK}}]: \U0001F50D Lint \U0001F4DDMarkdown files with mdformat ===\\033[0m\""
         silent: true
       - mdformat --check './'
     desc: "\U0001F50D Lint \U0001F4DDMarkdown files with mdformat"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
+  ci:lint:md:rumdl:
+    aliases:
+      - rumdl
+      - lint:md:rumdl
+      - lint:rumdl
+    cmds:
+      - rumdl check
+    desc: "\U0001F50D Lint \U0001F4DDMarkdown files with rumdl"
     dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:
