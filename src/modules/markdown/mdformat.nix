@@ -62,6 +62,9 @@ let
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.tasks) mkInitializeFilesTask;
 
+  treefmtWrapper = config.git-hooks.hooks.treefmt.package;
+  treefmtCommand = "${treefmtWrapper}/bin/treefmt";
+
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.mdformat;
 
@@ -93,7 +96,7 @@ let
   ];
 in
 {
-  options.biapy-recipes.markdown.mdformat = mkToolOptions mdCfg "mdformat" // {
+  options.biapy-recipes.markdown.mdformat = mkToolOptions { enable = false; } "mdformat" // {
     package = mkOption {
       description = "The mdformat package to use.";
       defaultText = "pkgs.mdformat";
@@ -109,10 +112,20 @@ in
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.go-task {
       mdformat = {
+        enable = mkDefault (!config.git-hooks.hooks.treefmt.enable);
+        args = mkDefault [ "--check" ];
+        package = mkDefault pythonPackages.mdformat;
+        extraPackages = mkDefault mdformatExtensions;
+      };
+    };
+
+    treefmt = {
+      enable = mkDefault true;
+
+      config.programs.mdformat = {
         enable = mkDefault true;
-        args = [ "--check" ];
-        package = pythonPackages.mdformat;
-        extraPackages = mdformatExtensions;
+        package = mkDefault pythonPackages.mdformat;
+        plugins = mkDefault (_: mdformatExtensions);
       };
     };
 
@@ -121,32 +134,32 @@ in
       mdformatInilializeFilesTask
       // optionalAttrs cfg.tasks {
         "ci:lint:md:mdformat" = {
-          description = "🔍 Lint 📝Markdown files with mdformat";
-          exec = ''
+          description = mkDefault "🔍 Lint 📝Markdown files with mdformat";
+          exec = mkDefault ''
             cd "''${DEVENV_ROOT}"
             ${mdformatCommand} --check "''${DEVENV_ROOT}"
           '';
         };
 
         "ci:format:md:mdformat" = {
-          description = "🎨 Format 📝Markdown files with mdformat";
-          exec = ''
+          description = mkDefault "🎨 Format 📝Markdown files with mdformat";
+          exec = mkDefault ''
             cd "''${DEVENV_ROOT}"
-            ${mdformatCommand} "''${DEVENV_ROOT}"
+            ${treefmtCommand} --formatters='mdformat'
           '';
         };
       };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:mdformat" = patchGoTask {
-        desc = "🔍 Lint 📝Markdown files with mdformat";
-        cmds = [ "mdformat --check './'" ];
+        desc = mkDefault "🔍 Lint 📝Markdown files with mdformat";
+        cmds = mkDefault [ "mdformat --check './'" ];
       };
 
       "ci:format:md:mdformat" = patchGoTask {
-        aliases = [ "mdformat" ];
-        desc = "🎨 Format 📝Markdown files with mdformat";
-        cmds = [ "mdformat './'" ];
+        aliases = mkDefault [ "mdformat" ];
+        desc = mkDefault "🎨 Format 📝Markdown files with mdformat";
+        cmds = mkDefault [ "treefmt --formatters='mdformat'" ];
       };
     };
   };

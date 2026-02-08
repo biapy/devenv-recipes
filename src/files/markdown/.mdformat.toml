@@ -14,7 +14,7 @@ extensions = [      # options: a list of enabled extensions (default: all instal
   # "mkdocs",
   # "myst",
   # "simple-breaks",
-  "tables",
+  # "tables",
   # "toc",
   "wikilink",
 ]
