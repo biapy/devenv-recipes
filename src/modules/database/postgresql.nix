@@ -56,7 +56,7 @@ in
     enterShellMessages = mkOption {
       type = types.bool;
       default = true;
-      description = ''Display PostgreSQL information when entering the shell.'';
+      description = "Display PostgreSQL information when entering the shell.";
     };
   };
 
