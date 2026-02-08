@@ -60,7 +60,7 @@ let
   };
 in
 {
-  options.biapy-recipes.markdown.markdownlint = mkToolOptions mdCfg "markdownlint" // {
+  options.biapy-recipes.markdown.markdownlint = mkToolOptions { enable = false; } "markdownlint" // {
     package = mkOption {
       description = "The markdownlint package to use.";
       defaultText = "pkgs.markdownlint";
