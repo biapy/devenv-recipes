@@ -65,7 +65,7 @@ in
         name = "Semgrep scan";
         package = semgrep;
         pass_filenames = false;
-        entry = ''${semgrepCommand} scan --config=auto'';
+        entry = "${semgrepCommand} scan --config=auto";
       };
     };
 
