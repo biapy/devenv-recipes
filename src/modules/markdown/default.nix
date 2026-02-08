@@ -10,6 +10,7 @@ in
     ./markdownlint.nix
     ./marksman.nix
     ./mdformat.nix
+    ./rumdl.nix
     ./vale.nix
   ];
 
