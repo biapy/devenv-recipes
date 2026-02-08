@@ -97,11 +97,11 @@ rec {
     }:
     {
       "biapy-recipes:enterShell:initialize:php:tools:${namespace}:configuration" = {
-        description = ''Initialize ${name} configuration file(s)'';
+        description = "Initialize ${name} configuration file(s)";
         before = [ "devenv:enterShell" ];
-        status = ''test ${
+        status = "test ${
           concatStringsSep " -a " (map (file: ''-e "''${DEVENV_ROOT}/${file}"'') (attrNames configFiles))
-        }'';
+        }";
         exec = initializeFiles configFiles;
       };
     };

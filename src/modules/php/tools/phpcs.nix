@@ -128,7 +128,7 @@ in
         "ci:lint:php:phpcs" = patchGoTask {
           aliases = [ "phpcs" ];
           desc = "🔍 Lint 🐘PHP files with PHP CodeSniffer";
-          cmds = [ ''phpcs --colors'' ];
+          cmds = [ "phpcs --colors" ];
         };
       }
       // mkPhpToolGoTasks toolConfiguration;

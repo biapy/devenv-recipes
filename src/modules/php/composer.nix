@@ -202,7 +202,7 @@ in
             msg = "Project's composer.json does not exist, skipping.";
           }
         ];
-        cmds = [ ''composer update'' ];
+        cmds = [ "composer update" ];
       });
     };
 

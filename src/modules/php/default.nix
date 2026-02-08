@@ -48,7 +48,7 @@ in
     enterShellMessages = mkOption {
       type = types.bool;
       default = true;
-      description = ''Display PHP information when entering the shell.'';
+      description = "Display PHP information when entering the shell.";
     };
   };
 

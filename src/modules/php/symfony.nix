@@ -116,7 +116,7 @@ in
     # https://devenv.sh/tasks/
     tasks = {
       "biapy-recipes:enterShell:initialize:php:symfony" = {
-        description = ''Detect devenv PHP version for 🎶Symfony CLI'';
+        description = "Detect devenv PHP version for 🎶Symfony CLI";
         before = [ "devenv:enterShell" ];
         status = ''${symfonyCommand} 'local:php:list' | command grep --quiet "${php}"'';
         exec = ''

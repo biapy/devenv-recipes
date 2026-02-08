@@ -127,7 +127,7 @@ in
       name = "PHP Coding Standards Fixer";
       inherit (config.languages.php) package;
       files = "^(\.php-cs-fixer(\.dist)?\.php|composer\.lock)$";
-      entry = ''${phpCommand} '${toolCommand}' fix'';
+      entry = "${phpCommand} '${toolCommand}' fix";
       args = [
         "--no-interaction"
         "--diff"
