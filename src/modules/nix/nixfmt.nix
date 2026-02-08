@@ -48,7 +48,7 @@ in
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
       nixfmt = {
-        enable = mkDefault true;
+        enable = mkDefault (!config.git-hooks.hooks.treefmt.enable);
         args = mkDefault [ "--strict" ];
       };
     };
