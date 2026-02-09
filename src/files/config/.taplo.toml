@@ -7,7 +7,7 @@
 # include = ["**/*.toml"]
 
 # Exclude pattern to match files to ignore
-exclude = [ "**/.devenv/**", "**/node_modules/**", "**/vendor/**" ]
+exclude = ["**/.devenv/**", "**/node_modules/**", "**/vendor/**"]
 
 [formatting]
 # Align entries vertically.

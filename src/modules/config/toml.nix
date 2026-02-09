@@ -31,17 +31,19 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.modules) mkBefore mkDefault mkIf;
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.tasks) mkInitializeFilesTask;
 
+  treefmtWrapper = config.git-hooks.hooks.treefmt.package;
+  treefmtCommand = "${treefmtWrapper}/bin/treefmt";
+
   configCfg = config.biapy-recipes.config;
   cfg = configCfg.toml;
 
   inherit (cfg.packages) taplo;
-
   taploCommand = lib.meta.getExe taplo;
 
   taploInitializeFilesTask = mkInitializeFilesTask {
@@ -70,42 +72,47 @@ in
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
       taplo = {
-        enable = mkDefault true;
-        package = taplo;
+        enable = mkDefault (!config.git-hooks.hooks.treefmt.enable);
+        package = mkBefore taplo;
       };
+    };
+
+    treefmt.config.programs.taplo = {
+      enable = mkDefault true;
+      package = mkBefore taplo;
     };
 
     # https://devenv.sh/tasks/
     tasks =
       taploInitializeFilesTask
       // optionalAttrs cfg.tasks {
-        "ci:lint:config:toml" = mkDefault {
-          description = "🔍 Lint 🔧TOML files with taplo";
-          exec = ''
+        "ci:lint:config:toml" = {
+          description = mkDefault "🔍 Lint 🔧TOML files with taplo";
+          exec = mkDefault ''
             cd "''${DEVENV_ROOT}"
             ${taploCommand} 'lint'
           '';
         };
-        "ci:format:config:toml" = mkDefault {
-          description = "🎨 Format 🔧TOML files with taplo";
-          exec = ''
+        "ci:format:config:toml" = {
+          description = mkDefault "🎨 Format 🔧TOML files with taplo";
+          exec = mkDefault ''
             cd "''${DEVENV_ROOT}"
-            ${taploCommand} 'format'
+            ${treefmtCommand} --formatters='taplo'
           '';
         };
       };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:lint:config:toml" = mkDefault (patchGoTask {
-        desc = "🔍 Lint 🔧TOML files with taplo";
-        cmds = [ "taplo 'lint'" ];
-      });
+      "ci:lint:config:toml" = patchGoTask {
+        desc = mkDefault "🔍 Lint 🔧TOML files with taplo";
+        cmds = mkDefault [ "taplo 'lint'" ];
+      };
 
-      "ci:format:config:toml" = mkDefault (patchGoTask {
-        aliases = [ "taplo" ];
-        desc = "🎨 Format 🔧TOML files with taplo";
-        cmds = [ "taplo 'format'" ];
-      });
+      "ci:format:config:toml" = patchGoTask {
+        aliases = mkDefault [ "taplo" ];
+        desc = mkDefault "🎨 Format 🔧TOML files with taplo";
+        cmds = mkDefault [ "treefmt --formatters='taplo'" ];
+      };
     };
   };
 }
