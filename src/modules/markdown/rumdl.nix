@@ -19,6 +19,10 @@
 
   - [rumdl](https://rumdl.dev/)
     ([rumdl @ GitHub](https://github.com/rvben/rumdl)).
+
+  ### 🧑‍💻 Visual Studio Code
+
+  - [rumdl - Markdown Linter @ Visual Studio Code Marketplace](https://marketplace.visualstudio.com/items?itemName=rvben.rumdl).
 */
 {
   pkgs,
@@ -33,6 +37,9 @@ let
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
+
+  treefmtWrapper = config.git-hooks.hooks.treefmt.package;
+  treefmtCommand = "${treefmtWrapper}/bin/treefmt";
 
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.rumdl;
@@ -51,13 +58,14 @@ in
   };
 
   config = mkIf cfg.enable {
+    devcontainer.settings.customizations.vscode.extensions = [ "rvben.rumdl" ];
 
     packages = [ rumdl ];
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
       rumdl = {
-        enable = mkDefault true;
+        enable = mkDefault (!config.git-hooks.hooks.treefmt.enable);
         package = mkBefore cfg.package;
       };
     };
@@ -81,7 +89,7 @@ in
         description = mkDefault "🎨 Format 📝Markdown files with rumdl";
         exec = mkDefault ''
           cd "''${DEVENV_ROOT}"
-          ${rumdlCommand} fmt
+            ${treefmtCommand} --formatters='rumdl-format'
         '';
       };
     };
@@ -89,7 +97,6 @@ in
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:rumdl" = patchGoTask {
         aliases = mkDefault [
-          "rumdl"
           "lint:md:rumdl"
           "lint:rumdl"
         ];
@@ -99,11 +106,12 @@ in
 
       "ci:format:md:rumdl" = patchGoTask {
         aliases = mkDefault [
+          "rumdl"
           "format:md:rumdl"
           "format:rumdl"
         ];
         desc = mkDefault "🎨 Format 📝Markdown files with rumdl";
-        cmds = mkDefault [ "rumdl fmt" ];
+        cmds = mkDefault [ "treefmt --formatters='rumdl-format'" ];
       };
     };
   };
