@@ -33,11 +33,10 @@ let
   inherit (lib.attrsets) optionalAttrs;
 
   treefmtWrapper = config.git-hooks.hooks.treefmt.package;
+  treefmtCommand = "${treefmtWrapper}/bin/treefmt";
 
   nixCfg = config.biapy-recipes.nix;
   cfg = nixCfg.nixfmt;
-
-  treefmtCommand = "${treefmtWrapper}/bin/treefmt";
 in
 {
   options.biapy-recipes.nix.nixfmt = mkToolOptions nixCfg "nixfmt";
