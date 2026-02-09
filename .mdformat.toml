@@ -1,11 +1,11 @@
 # .mdformat.toml
 #
-wrap = "keep"       # possible values: {"keep", "no", INTEGER}
-number = true       # possible values: {false, true}
-end_of_line = "lf"  # possible values: {"lf", "crlf", "keep"}
-validate = true     # options: {false, true}
+wrap = "keep"      # possible values: {"keep", "no", INTEGER}
+number = true      # possible values: {false, true}
+end_of_line = "lf" # possible values: {"lf", "crlf", "keep"}
+validate = true    # options: {false, true}
 
-extensions = [      # options: a list of enabled extensions (default: all installed are enabled)
+extensions = [ # options: a list of enabled extensions (default: all installed are enabled)
   # "admon",
   # "footnote",
   "frontmatter",
@@ -24,4 +24,4 @@ extensions = [      # options: a list of enabled extensions (default: all instal
 #     "python",
 # ]
 
-exclude = []          # options: a list of file path pattern strings
+exclude = [] # options: a list of file path pattern strings
