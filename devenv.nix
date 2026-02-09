@@ -5,6 +5,7 @@ _:
 
   biapy.go-task.enable = true;
   biapy-recipes = {
+    config.toml.enable = true;
     git.enable = true;
     nix.enable = true;
     markdown.enable = true;
