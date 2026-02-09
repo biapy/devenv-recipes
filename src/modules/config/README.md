@@ -163,4 +163,5 @@ Use `package` (singular) only when the module name matches the tool name:
 
 ## 🙇 Acknowledgements
 
-All tools are written in compiled languages (C, Go, Rust) or Python for maximum performance.
+All tools are written in compiled languages (C, Go, Rust) or Python
+for maximum performance.

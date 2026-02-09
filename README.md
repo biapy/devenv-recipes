@@ -15,6 +15,11 @@ inputs:
   …
   nixpkgs-unstable:
     url: github:nixos/nixpkgs/nixpkgs-unstable
+  treefmt-nix:
+    url: github:numtide/treefmt-nix
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
   go-task:
     url: github:biapy/devenv-go-task?dir=modules/go-task
     flake: false
@@ -27,7 +32,7 @@ imports:
   - biapy-recipes
 ```
 
-<!-- CSpell:ignore biapy nixpkgs nixos landure -->
+<!-- CSpell:ignore biapy nixpkgs nixos landure treefmt numtide -->
 
 Update `devenv.lock`:
 
@@ -67,4 +72,4 @@ Enable the wished recipes in `devenv.nix`, here for a Nix project:
 
 ## ➤ License
 
-Distributed under the MIT License. See [LICENSE](LICENSE) for more information.
+Distributed under the MIT License. See [LICENSE](./LICENSE) for more information.

@@ -90,7 +90,8 @@ are organized by category:
 
 ### Task Naming Convention
 
-Tasks follow a hierarchical namespace structure using colons (`:`) as separators:
+Tasks follow a hierarchical namespace structure using colons (`:`)
+as separators:
 
 ```text
 category:action:tool:name
