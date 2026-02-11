@@ -155,6 +155,16 @@ tasks:
     vars:
       TASKS:
         sh: task --json --list-all | yq '.tasks[].name' | grep --only-matching --extended-regexp '{{.TASK}}:[^:]+$'
+  ci:format:md:mdformat:
+    aliases:
+      - mdformat
+    cmds:
+      - treefmt --formatters='mdformat'
+    desc: "\U0001F3A8 Format \U0001F4DDMarkdown files with mdformat"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
   ci:format:md:rumdl:
     aliases:
       - rumdl
@@ -280,6 +290,14 @@ tasks:
         silent: true
       - fd '\.md$' --exec-batch cspell {}
     desc: "\U0001F50D Lint \U0001F4DDMarkdown files with cspell"
+    dir: '{{.DEVENV_ROOT}}'
+    requires:
+      vars:
+        - DEVENV_ROOT
+  ci:lint:md:mdformat:
+    cmds:
+      - mdformat --check './'
+    desc: "\U0001F50D Lint \U0001F4DDMarkdown files with mdformat"
     dir: '{{.DEVENV_ROOT}}'
     requires:
       vars:

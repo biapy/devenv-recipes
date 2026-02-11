@@ -56,7 +56,8 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.meta) getExe;
+  inherit (lib.modules) mkBefore mkDefault mkIf;
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.go-tasks) patchGoTask;
@@ -68,10 +69,27 @@ let
   mdCfg = config.biapy-recipes.markdown;
   cfg = mdCfg.mdformat;
 
-  pythonPackages = pkgs.python3Packages;
+  mdformatPlugins =
+    plugins: with plugins; [
+      mdformat-admon
+      mdformat-beautysh
+      mdformat-footnote
+      mdformat-frontmatter
+      mdformat-gfm
+      mdformat-gfm-alerts
+      mdformat-mkdocs
+      mdformat-myst
+      mdformat-nix-alejandra
+      mdformat-simple-breaks
+      # mdformat-tables # replaced by mdformat-gfm
+      # mdformat-toc # marked as broken on 2025-08-19
+      mdformat-wikilink
+    ];
+
   mdformat = cfg.package;
-  mdformatCommand = lib.meta.getExe mdformat;
-  mdformatInilializeFilesTask = mkInitializeFilesTask {
+
+  mdformatCommand = getExe mdformat;
+  mdformatInitializeFilesTask = mkInitializeFilesTask {
     name = "Mdformat";
     namespace = "mdformat";
     configFiles = {
@@ -79,43 +97,27 @@ let
     };
   };
 
-  mdformatExtensions = with pythonPackages; [
-    mdformat-admon
-    mdformat-beautysh
-    mdformat-footnote
-    mdformat-frontmatter
-    mdformat-gfm
-    mdformat-gfm-alerts
-    mdformat-mkdocs
-    mdformat-myst
-    mdformat-nix-alejandra
-    mdformat-simple-breaks
-    # mdformat-tables # replaced by mdformat-gfm
-    # mdformat-toc # marked as broken on 2025-08-19
-    mdformat-wikilink
-  ];
 in
 {
-  options.biapy-recipes.markdown.mdformat = mkToolOptions { enable = false; } "mdformat" // {
+  options.biapy-recipes.markdown.mdformat = mkToolOptions mdCfg "mdformat" // {
     package = mkOption {
       description = "The mdformat package to use.";
       defaultText = "pkgs.mdformat";
       type = lib.types.package;
-      default = config.git-hooks.hooks.mdformat.package;
+      default = pkgs.mdformat.withPlugins mdformatPlugins;
     };
   };
 
   config = mkIf cfg.enable {
 
-    packages = [ mdformat ] ++ mdformatExtensions;
+    packages = [ mdformat ];
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.go-task {
       mdformat = {
         enable = mkDefault (!config.git-hooks.hooks.treefmt.enable);
         args = mkDefault [ "--check" ];
-        package = mkDefault pythonPackages.mdformat;
-        extraPackages = mkDefault mdformatExtensions;
+        package = mkBefore mdformat;
       };
     };
 
@@ -124,14 +126,14 @@ in
 
       config.programs.mdformat = {
         enable = mkDefault true;
-        package = mkDefault pythonPackages.mdformat;
-        plugins = mkDefault (_: mdformatExtensions);
+        package = mkDefault mdformat;
+        plugins = mkDefault mdformatPlugins;
       };
     };
 
     # https://devenv.sh/tasks/
     tasks =
-      mdformatInilializeFilesTask
+      mdformatInitializeFilesTask
       // optionalAttrs cfg.tasks {
         "ci:lint:md:mdformat" = {
           description = mkDefault "🔍 Lint 📝Markdown files with mdformat";
