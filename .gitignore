@@ -14,3 +14,7 @@ devenv.local.nix
 
 # pre-commit
 .pre-commit-config.yaml
+
+###> biapy/devenv-recipes:md:rumdl ###
+.rumdl_cache
+###< biapy/devenv-recipes:md:rumdl ###

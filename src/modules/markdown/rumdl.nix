@@ -36,6 +36,7 @@ let
   inherit (lib.modules) mkBefore mkDefault mkIf;
   inherit (lib.options) mkOption;
   inherit (recipes-lib.modules) mkToolOptions;
+  inherit (recipes-lib.tasks) mkGitIgnoreTask;
   inherit (recipes-lib.go-tasks) patchGoTask;
 
   treefmtWrapper = config.git-hooks.hooks.treefmt.package;
@@ -76,23 +77,29 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = optionalAttrs cfg.tasks {
-      "ci:lint:md:rumdl" = {
-        description = mkDefault "🔍 Lint 📝Markdown files with rumdl";
-        exec = mkDefault ''
-          cd "''${DEVENV_ROOT}"
-          ${rumdlCommand} check
-        '';
-      };
+    tasks =
+      (optionalAttrs cfg.tasks {
+        "ci:lint:md:rumdl" = {
+          description = mkDefault "🔍 Lint 📝Markdown files with rumdl";
+          exec = mkDefault ''
+            cd "''${DEVENV_ROOT}"
+            ${rumdlCommand} check
+          '';
+        };
 
-      "ci:format:md:rumdl" = {
-        description = mkDefault "🎨 Format 📝Markdown files with rumdl";
-        exec = mkDefault ''
-          cd "''${DEVENV_ROOT}"
-            ${treefmtCommand} --formatters='rumdl-format'
-        '';
+        "ci:format:md:rumdl" = {
+          description = mkDefault "🎨 Format 📝Markdown files with rumdl";
+          exec = mkDefault ''
+            cd "''${DEVENV_ROOT}"
+              ${treefmtCommand} --formatters='rumdl-format'
+          '';
+        };
+      })
+      // mkGitIgnoreTask {
+        name = "rumdl";
+        namespace = "md:rumdl";
+        ignoredPaths = [ ".rumdl_cache" ];
       };
-    };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:lint:md:rumdl" = patchGoTask {
