@@ -72,6 +72,7 @@ in
     ./checkov.nix
     ./terraform-common.nix
     ./terraform-docs.nix
+    ./terragrunt.nix
     ./tflint.nix
   ];
 
