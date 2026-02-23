@@ -36,7 +36,7 @@ let
   inherit (recipes-lib.go-tasks) patchGoTask;
 
   terraformCfg = config.biapy-recipes.terraform;
-  cfg = terraformCfg.terrascan;
+  cfg = terraformCfg.terragrunt;
 
   inherit (pkgs) terragrunt;
   terragruntCommand = getExe terragrunt;
