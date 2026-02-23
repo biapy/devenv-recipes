@@ -8,12 +8,10 @@
 
   ### 🔨 Tasks
 
-  - `ci:format:tf:terragrunt-fmt`: Format Terragrunt files `terragrunt fmt`.
   - `ci:lint:tf:terragrunt-validate`: Lint Terragrunt files with `terragrunt validate`.
 
   ### 👷 Commit hooks
 
-  - `terragrunt-format`: Format Terragrunt (`.hcl`) and Terraform (`.tf`) files.
   - `terragrunt-validate`: Validates Terragrunt (`.hcl`) and Terraform files (`.tf`).
 
   ## 🛠️ Tech Stack
@@ -60,16 +58,9 @@ in
     # https://devenv.sh/git-hooks/
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
-      terragrunt-format = {
-        enable = mkDefault true;
-        name = mkDefault "Terragrunt format";
-        package = mkDefault terragrunt;
-        pass_filenames = mkDefault false;
-        entry = mkDefault ''${terragruntCommand} "fmt"'';
-      };
       terragrunt-validate = {
         enable = mkDefault true;
-        name = mkDefault "Terragrunt format";
+        name = mkDefault "Terragrunt validate";
         package = mkDefault terragrunt;
         pass_filenames = mkDefault false;
         entry = mkDefault ''${terragruntCommand} "validate"'';
@@ -78,14 +69,6 @@ in
 
     # https://devenv.sh/tasks/
     tasks = optionalAttrs cfg.tasks {
-      "ci:format:tf:terragrunt-fmt" = {
-        description = mkDefault "🎨 Format 🏗️Terragrunt and OpenTofu files";
-        exec = mkDefault ''
-          cd "''${DEVENV_ROOT}"
-          ${terragruntCommand} 'fmt' --recursive
-        '';
-      };
-
       "ci:lint:tf:terragrunt-validate" = {
         description = mkDefault "🔍 Lint 🏗️Terragrunt and OpenTofu files with terragrunt validate";
         exec = mkDefault ''
@@ -96,12 +79,6 @@ in
     };
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
-      "ci:format:tf:terragrunt-fmt" = patchGoTask {
-        aliases = mkDefault [ "tg-fmt" ];
-        desc = mkDefault "🎨 Format 🏗️Terragrunt and OpenTofu files";
-        cmds = mkDefault [ "terragrunt fmt --recursive" ];
-      };
-
       "ci:lint:tf:terragrunt-validate" = patchGoTask {
         aliases = mkDefault [ "tg-validate" ];
         desc = mkDefault "🔍 Lint 🏗️Terragrunt and OpenTofu files with terragrunt validate";
