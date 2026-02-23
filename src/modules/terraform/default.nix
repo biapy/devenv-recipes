@@ -34,7 +34,6 @@
   ## 🙇 Acknowledgements
 
   - [languages.opentofu @ devenv](https://devenv.sh/reference/options/#languagesopentofuenable).
-  - [lib.meta.getExe @ Nixpkgs Reference Manual](https://nixos.org/manual/nixpkgs/stable/#function-library-lib.meta.getExe).
   - [Cloud Development Kit for Terraform](https://developer.hashicorp.com/terraform/cdktf).
 */
 args@{
@@ -44,11 +43,12 @@ args@{
   ...
 }:
 let
-  inherit (lib) types;
-  inherit (lib.options) mkOption;
-  inherit (lib.lists) map;
-  inherit (lib.modules) mkIf mkDefault;
   inherit (lib.attrsets) optionalAttrs;
+  inherit (lib.lists) map;
+  inherit (lib.modules) mkDefault mkIf;
+  inherit (lib.meta) getExe;
+  inherit (lib.options) mkOption;
+  inherit (lib) types;
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.sops) wrapWithSopsExecEnv;
 
@@ -56,7 +56,7 @@ let
   sopsCfg = config.biapy-recipes.secrets.sops;
 
   opentofu = config.languages.opentofu.package;
-  tofuCommand = lib.meta.getExe opentofu;
+  tofuCommand = getExe opentofu;
 
   # Helper to wrap tofu commands with sops exec-env when enabled
   wrapTofu =
@@ -92,27 +92,36 @@ in
 
     devcontainer.settings.customizations.vscode.extensions = [ "OpenTofu.vscode-opentofu" ];
 
+    # https://devenv.sh/scripts/
+    scripts.tf = {
+      description = mkDefault "OpenTofu";
+      packages = mkDefault [ opentofu ];
+      exec = mkDefault ''
+        exec ${tofuCommand} "$@";
+      '';
+    };
+
     # https://devenv.sh/tasks/
     tasks = {
       "ci:format:tf:tofu-fmt" = {
-        description = "🎨 Format 🏗️OpenTofu files";
-        exec = ''
+        description = mkDefault "🎨 Format 🏗️OpenTofu files";
+        exec = mkDefault ''
           cd "''${DEVENV_ROOT}"
           ${wrapTofu "${tofuCommand} fmt --recursive"}
         '';
       };
 
       "ci:lint:tf:tofu-validate" = {
-        description = "🔍 Lint 🏗️OpenTofu files with tofu validate";
-        exec = ''
+        description = mkDefault "🔍 Lint 🏗️OpenTofu files with tofu validate";
+        exec = mkDefault ''
           cd "''${DEVENV_ROOT}"
           ${wrapTofu "${tofuCommand} validate"}
         '';
       };
 
       "reset:tf:tofu" = {
-        description = "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
-        exec = ''
+        description = mkDefault "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
+        exec = mkDefault ''
           echo "Deleting OpenTofu '.terraform.lock.hcl' file"
           if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
             rm "''${DEVENV_ROOT}/.terraform.lock.hcl"
@@ -123,12 +132,12 @@ in
             rm -r "''${DEVENV_ROOT}/.terraform/"
           fi
         '';
-        status = ''test ! -d "''${DEVENV_ROOT}/.terraform/"'';
+        status = mkDefault ''test ! -d "''${DEVENV_ROOT}/.terraform/"'';
       };
 
       "update:tf:tofu" = {
-        description = "⬆️ Update 🏗️OpenTofu modules and providers";
-        exec = ''
+        description = mkDefault "⬆️ Update 🏗️OpenTofu modules and providers";
+        exec = mkDefault ''
           cd "''${DEVENV_ROOT}"
           if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
             ${wrapTofu "${tofuCommand} init -upgrade"}
@@ -151,20 +160,20 @@ in
 
     biapy.go-task.taskfile.tasks = optionalAttrs cfg.go-task {
       "ci:format:tf:tofu-fmt" = patchGoTask {
-        aliases = [ "tf-fmt" ];
-        desc = "🎨 Format 🏗️OpenTofu files";
-        cmds = [ "${wrapTofu "tofu fmt --recursive"}" ];
+        aliases = mkDefault [ "tf-fmt" ];
+        desc = mkDefault "🎨 Format 🏗️OpenTofu files";
+        cmds = mkDefault [ "${wrapTofu "tofu fmt --recursive"}" ];
       };
 
       "ci:lint:tf:tofu-validate" = patchGoTask {
-        aliases = [ "tf-validate" ];
-        desc = "🔍 Lint 🏗️OpenTofu files with tofu validate";
-        cmds = [ "${wrapTofu "tofu validate"}" ];
+        aliases = mkDefault [ "tf-validate" ];
+        desc = mkDefault "🔍 Lint 🏗️OpenTofu files with tofu validate";
+        cmds = mkDefault [ "${wrapTofu "tofu validate"}" ];
       };
 
       "reset:tf:tofu" = patchGoTask {
-        desc = "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
-        preconditions = [
+        desc = mkDefault "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
+        preconditions = mkDefault [
           {
             sh = ''test -d "''${DEVENV_ROOT}/.terraform/"'';
             msg = "Project's '.terraform' folder does not exist, skipping.";
@@ -174,7 +183,7 @@ in
             msg = "Project's '.terraform.lock.hcl' file does not exist, skipping.";
           }
         ];
-        cmds = [
+        cmds = mkDefault [
           ''echo "Deleting OpenTofu '.terraform.lock.hcl' file"''
           "[[ -e './.terraform.lock.hcl' ]] && rm -r './.terraform.lock.hcl' || true"
           ''echo "Deleting OpenTofu '.terraform' folder"''
@@ -183,14 +192,14 @@ in
       };
 
       "update:tf:tofu" = patchGoTask {
-        desc = "⬆️ Update 🏗️OpenTofu modules and providers";
-        preconditions = [
+        desc = mkDefault "⬆️ Update 🏗️OpenTofu modules and providers";
+        preconditions = mkDefault [
           {
             sh = ''test -e "''${DEVENV_ROOT}/.terraform.lock.hcl"'';
             msg = "Project's .terraform.lock.hcl does not exist, skipping.";
           }
         ];
-        cmds = [ "${wrapTofu "tofu init -upgrade"}" ];
+        cmds = mkDefault [ "${wrapTofu "tofu init -upgrade"}" ];
       };
     };
   };

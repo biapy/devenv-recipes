@@ -25,9 +25,6 @@ in
       # Security & compliance
       open-policy-agent # General-purpose policy engine
 
-      # Testing & Verification
-      terragrunt # Thin wrapper for Terraform that supports locking for Terraform state and enforces best practices
-
       # Cost optimization
       infracost
 
@@ -38,13 +35,14 @@ in
       # Visualization & Understanding
       inframap # generate a graph specific for each provider, showing only the resources that are most important/relevant
 
-      # Docs & Workflow management
-      atlantis # Terraform Pull Request Automation
       # tenv # OpenTofu, Terraform, Terragrunt and Atmos version manager written in Go
-      terramate # Adds code generation, stacks, orchestration, change detection, data sharing and more to Terraform
       tfproviderdocs # Terraform Provider Documentation Tool
       # tfswitch # A command line tool to switch between different versions of terraform
       # tgswitch # Command line tool to switch between different versions of terragrunt
+
+      # Web apps
+      # atlantis # Terraform Pull Request Automation
+      # terramate # Adds code generation, stacks, orchestration, change detection, data sharing and more to Terraform
     ];
 
     devcontainer.settings.customizations.vscode.extensions = [ "ms-azuretools.vscode-azureterraform" ];
