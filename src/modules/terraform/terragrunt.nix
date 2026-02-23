@@ -62,6 +62,7 @@ in
         enable = mkDefault true;
         name = mkDefault "Terragrunt validate";
         package = mkDefault terragrunt;
+        files = "\\.(hcl|tf)$";
         pass_filenames = mkDefault false;
         entry = mkDefault ''${terragruntCommand} "validate"'';
       };
