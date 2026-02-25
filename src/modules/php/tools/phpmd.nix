@@ -38,7 +38,7 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.modules) mkDefault mkIf;
   inherit (recipes-lib.go-tasks) patchGoTask;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (php-recipe-lib) mkPhpToolTasks mkPhpToolGoTasks;
@@ -67,9 +67,9 @@ in
 
   config = mkIf cfg.enable {
     scripts = {
-      phpmd = mkDefault {
-        description = "PHP Mess Detector";
-        exec = ''
+      phpmd = {
+        description = mkDefault "PHP Mess Detector";
+        exec = mkDefault ''
           if [[ ! -e '${phpmdCommand}' ]]; then
             echo "PHP Mess Detector is not installed."
             exit 1
@@ -79,9 +79,9 @@ in
         '';
       };
 
-      pdepend = mkDefault {
-        description = "PHP Depend";
-        exec = ''
+      pdepend = {
+        description = mkDefault "PHP Depend";
+        exec = mkDefault ''
           if [[ ! -e '${pdependCommand}' ]]; then
             echo "PHP Depend is not installed."
             exit 1
@@ -99,11 +99,11 @@ in
     tasks =
       (mkPhpToolTasks toolConfiguration)
       // optionalAttrs cfg.tasks {
-        "ci:lint:php:phpmd" = mkDefault {
-          description = "🔍 Lint 🐘PHP files with PHP Mess Detector";
-          exec = ''
+        "ci:lint:php:phpmd" = {
+          description = mkDefault "🔍 Lint 🐘PHP files with PHP Mess Detector";
+          exec = mkDefault ''
             cd "''${DEVENV_ROOT}"
-            phpmd {src,tests} 'ansi' 'phpmd.xml'
+            phpmd analyze --ruleset='phpmd.xml' {src,tests}
           '';
         };
       };
@@ -111,25 +111,23 @@ in
     biapy.go-task.taskfile.tasks =
       optionalAttrs cfg.go-task {
         "ci:lint:php:phpmd" = mkDefault (patchGoTask {
-          aliases = [ "phpmd" ];
-          desc = "🔍 Lint 🐘PHP files with PHP Mess Detector";
-          cmds = [ "phpmd {src,tests} 'ansi' 'phpmd.xml'" ];
+          aliases = mkDefault [ "phpmd" ];
+          desc = mkDefault "🔍 Lint 🐘PHP files with PHP Mess Detector";
+          cmds = mkDefault [ "phpmd analyze --ruleset='phpmd.xml' {src,tests}" ];
         });
       }
       // mkPhpToolGoTasks toolConfiguration;
 
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
-      phpmd = mkDefault {
+      phpmd = {
         enable = mkDefault true;
-        name = "PHP Mess Detector";
+        name = mkDefault "PHP Mess Detector";
         inherit (config.languages.php) package;
-        files = "\\.php$";
-        require_serial = true;
+        files = mkDefault "\\.php$";
+        require_serial = mkDefault true;
         # Using bash to pipeline the filenames to phpmd stdin
-        entry = ''
-          bash -c 'printf -v files "%s," "''${0}" "''${@}" && phpmd "''${files%,}" "ansi" "${root}/phpmd.xml"'
-        '';
+        entry = mkDefault "phpmd analyze --no-progress --ruleset='${root}/phpmd.xml'";
       };
     };
 

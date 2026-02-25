@@ -1,6 +1,7 @@
 {
   "license": "MIT",
   "require-dev": {
-    "phpmd/phpmd": "@stable"
+    "pdepend/pdepend": "3.x-dev",
+    "phpmd/phpmd": "3.x-dev"
   }
 }
