@@ -48,7 +48,7 @@ let
   semgrepCommand = lib.meta.getExe' semgrep "semgrep";
 in
 {
-  options.biapy-recipes.security.semgrep = mkToolOptions securityCfg "Semgrep" // {
+  options.biapy-recipes.security.semgrep = mkToolOptions { enable = false; } "Semgrep" // {
     package = mkPackageOption pkgs "semgrep" { };
   };
 
