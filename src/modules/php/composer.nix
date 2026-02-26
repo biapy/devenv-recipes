@@ -44,7 +44,8 @@
 let
   inherit (lib.attrsets) optionalAttrs;
   inherit (lib.lists) optional;
-  inherit (lib.modules) mkDefault mkIf mkOption;
+  inherit (lib.modules) mkDefault mkIf;
+  inherit (lib.options) mkOption;
   inherit (lib.strings) concatStringsSep;
   inherit (lib.types) bool;
   inherit (recipes-lib.modules) mkToolOptions;
