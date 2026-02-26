@@ -67,7 +67,7 @@ let
   composerUpdateArgumentList = [
     "--with-all-dependencies"
   ]
-  + (optional cfg.bump "--bump-after-update");
+  ++ (optional cfg.bump "--bump-after-update");
   composerUpdateArguments = concatStringsSep " " composerUpdateArgumentList;
 in
 {
