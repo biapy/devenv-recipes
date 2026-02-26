@@ -31,7 +31,7 @@
 {
   config,
   lib,
-  pkgs-unstable,
+  pkgs,
   recipes-lib,
   ...
 }:
@@ -45,7 +45,7 @@ let
   cfg = terraformCfg.checkov;
 
   inherit (config.devenv) root;
-  inherit (pkgs-unstable) checkov;
+  inherit (pkgs) checkov;
   checkovCommand = lib.meta.getExe checkov;
 in
 {
