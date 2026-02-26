@@ -43,7 +43,10 @@
 }:
 let
   inherit (lib.attrsets) optionalAttrs;
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.lists) optional;
+  inherit (lib.modules) mkDefault mkIf mkOption;
+  inherit (lib.strings) concatStringsSep;
+  inherit (lib.types) bool;
   inherit (recipes-lib.modules) mkToolOptions;
   inherit (recipes-lib.tasks) mkGitIgnoreTask;
   inherit (recipes-lib.go-tasks) patchGoTask;
@@ -59,9 +62,24 @@ let
   fdCommand = lib.meta.getExe fd;
   parallel = config.biapy-recipes.gnu-parallel.package;
   parallelCommand = lib.meta.getExe parallel;
+
+  composerUpdateArgumentList = [
+    "--with-all-dependencies"
+  ]
+  + (optional cfg.bump "--bump-after-update");
+  composerUpdateArguments = concatStringsSep " " composerUpdateArgumentList;
 in
 {
-  options.biapy-recipes.php.composer = mkToolOptions phpCfg "composer";
+  options.biapy-recipes.php.composer = mkToolOptions phpCfg "composer" // {
+    bump = mkOption {
+      type = bool;
+      default = false;
+      description = ''
+        Increases the lower limit of the composer.json requirements to the
+        currently installed versions after `composer update`.
+      '';
+    };
+  };
 
   config = mkIf cfg.enable {
     biapy-recipes.gnu-parallel.enable = mkDefault true;
@@ -143,7 +161,7 @@ in
           exec = ''
             cd "''${DEVENV_ROOT}"
             if [[ -e "''${DEVENV_ROOT}/composer.json" ]]; then
-              ${composerCommand} --working-dir="''${DEVENV_ROOT}" 'update'
+              ${composerCommand} --working-dir="''${DEVENV_ROOT}" 'update' ${composerUpdateArguments}
             fi
           '';
         };
@@ -202,7 +220,7 @@ in
             msg = "Project's composer.json does not exist, skipping.";
           }
         ];
-        cmds = [ "composer update" ];
+        cmds = [ ("composer update " + composerUpdateArguments) ];
       });
     };
 
