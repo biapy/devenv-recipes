@@ -39,7 +39,8 @@
 }:
 let
   inherit (lib) mkOption types;
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.modules) mkDefault mkIf;
+  inherit (lib.strings) toInt;
   inherit (recipes-lib.go-tasks) patchGoTask;
 
   databaseCfg = config.biapy-recipes.database;
@@ -78,15 +79,15 @@ in
     ];
 
     # https://devenv.sh/services/
-    services.postgres = mkDefault {
+    services.postgres = {
       enable = mkDefault true;
 
-      listen_addresses = "127.0.0.1";
-      port = lib.strings.toInt config.env.POSTGRES_PORT;
+      listen_addresses = mkDefault "127.0.0.1";
+      port = mkDefault toInt config.env.POSTGRES_PORT;
 
-      initialDatabases = [ { name = config.env.POSTGRES_DB; } ];
+      initialDatabases = mkDefault [ { name = config.env.POSTGRES_DB; } ];
 
-      initialScript = ''
+      initialScript = mkDefault ''
         CREATE ROLE "${config.env.POSTGRES_USER}"
           WITH SUPERUSER LOGIN PASSWORD '${config.env.POSTGRES_PASSWORD}';
       '';
@@ -95,8 +96,8 @@ in
     # https://devenv.sh/tasks/
     tasks = {
       "reset:database:postgresql" = {
-        description = "🔥 Delete 🗃️PostgreSQL data";
-        exec = ''
+        description = mkDefault "🔥 Delete 🗃️PostgreSQL data";
+        exec = mkDefault ''
           echo "Deleting PostgreSQL data in ''${PGDATA}"
           [[ -e "''${PGDATA}" ]] &&
             rm -r "''${PGDATA}"
@@ -106,13 +107,13 @@ in
 
     biapy.go-task.taskfile.tasks = {
       "reset:database:postgresql" = patchGoTask {
-        aliases = [ "reset:database:pgsql" ];
-        desc = "🔥 Delete 🗃️PostgreSQL data";
-        cmds = [
+        aliases = mkDefault [ "reset:database:pgsql" ];
+        desc = mkDefault "🔥 Delete 🗃️PostgreSQL data";
+        cmds = mkDefault [
           ''echo "Deleting PostgreSQL data in ''${PGDATA}"''
           ''[[ -e "''${PGDATA}" ]] && rm -r "''${PGDATA}"''
         ];
-        requires.vars = [ "PGDATA" ];
+        requires.vars = mkDefault [ "PGDATA" ];
       };
     };
 
