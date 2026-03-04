@@ -80,10 +80,10 @@ in
 
     # https://devenv.sh/services/
     services.postgres = {
-      enable = true;
+      enable = mkDefault true;
 
       listen_addresses = mkDefault "127.0.0.1";
-      port = mkDefault toInt config.env.POSTGRES_PORT;
+      port = mkDefault (toInt config.env.POSTGRES_PORT);
 
       initialDatabases = mkDefault [ { name = config.env.POSTGRES_DB; } ];
 
