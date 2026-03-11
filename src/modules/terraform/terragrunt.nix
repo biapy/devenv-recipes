@@ -56,10 +56,6 @@ in
       '';
     };
 
-    treefmt.config.programs.hclfmt = {
-      enable = mkDefault true;
-    };
-
     # https://devenv.sh/git-hooks/
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
