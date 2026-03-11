@@ -48,12 +48,53 @@ in
     packages = [ terragrunt ];
 
     # https://devenv.sh/scripts/
-    scripts.tg = {
-      description = mkDefault "Terragrunt";
-      packages = mkDefault [ terragrunt ];
-      exec = mkDefault ''
-        exec ${terragruntCommand} "$@";
-      '';
+    scripts = {
+      tg = {
+        description = mkDefault "Terragrunt";
+        packages = mkDefault [ terragrunt ];
+        exec = mkDefault ''
+          exec ${terragruntCommand} "$@";
+        '';
+      };
+      tg-validate = {
+        description = mkDefault "Validate Terragrunt files with terragrunt validate";
+        packages = mkDefault [ terragrunt ];
+        exec = mkDefault ''
+          tg-validate() {
+            if [[ $# -ne 1 ]]; then
+              echo "Usage: tg-validate <file.hcl>"
+              return 1
+            fi
+
+            local file="''${1}"
+
+            if [[ ! -f "$file" ]]; then
+              echo "Error: File ''${file} does not exist."
+              return 1
+            fi
+
+            if [[ ! "''${file}" =~ \.hcl$ ]]; then
+              echo "Warning: File ''${file} is not an .hcl file."
+              return 0
+            fi
+
+            ${terragruntCommand} run -chdir="$(dirname "''${file}")" validate || return 1
+          }
+
+          if [[ $# -eq 0 ]]; then
+            fd --type f "^terragrunt(?:\\.stack)?\\.hcl$" "''${DEVENV_ROOT}" |
+            while read -r 'file'; do
+              tg-validate "''${file}" || exit 1
+            done
+
+            exit 0
+          fi
+
+          for file in "''${@}"; do
+            tg-validate "''${file}" || exit 1
+          done
+        '';
+      };
     };
 
     treefmt.config.programs.hclfmt = {
@@ -67,9 +108,9 @@ in
         enable = mkDefault true;
         name = mkDefault "Terragrunt validate";
         package = mkDefault terragrunt;
-        files = "\\.(hcl|tf)$";
+        files = mkDefault "^terragrunt(?:\\.stack)?\\.hcl$";
         pass_filenames = mkDefault false;
-        entry = mkDefault ''${terragruntCommand} "validate"'';
+        entry = mkDefault "tg-validate";
       };
     };
 
@@ -107,8 +148,7 @@ in
       "ci:lint:tf:terragrunt-validate" = patchGoTask {
         aliases = mkDefault [ "tg-validate" ];
         desc = mkDefault "🔍 Lint 🏗️Terragrunt files with terragrunt validate";
-        files = mkDefault "^terragrunt(?:\\.stack)?\\.hcl$";
-        cmds = mkDefault [ "terragrunt validate" ];
+        cmds = mkDefault [ "tg-validate" ];
       };
 
       "ci:format:tf:hclfmt" = patchGoTask {
