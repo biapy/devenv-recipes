@@ -56,6 +56,10 @@ in
       '';
     };
 
+    treefmt.config.programs.hclfmt = {
+      enable = mkDefault true;
+    };
+
     # https://devenv.sh/git-hooks/
     # https://devenv.sh/git-hooks/
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
@@ -66,10 +70,6 @@ in
         files = "\\.(hcl|tf)$";
         pass_filenames = mkDefault false;
         entry = mkDefault ''${terragruntCommand} "validate"'';
-      };
-
-      hclfmt = {
-        enable = mkDefault (!config.git-hooks.hooks.treefmt.enable);
       };
     };
 
