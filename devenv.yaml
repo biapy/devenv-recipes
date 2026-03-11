@@ -1,4 +1,9 @@
 inputs:
+  git-hooks:
+    url: github:cachix/git-hooks.nix
+    inputs:
+      nixpkgs:
+        follows: nixpkgs
   go-task:
     url: github:biapy/devenv-go-task?dir=modules/go-task
     flake: false
