@@ -90,7 +90,7 @@ in
       })
       // mkGitIgnoreTask {
         name = "terragrunt";
-        namespace = "tf";
+        namespace = "tf:terragrunt";
         ignoredPaths = [
           # terragrunt cache directories
           "**/.terragrunt-cache/*"

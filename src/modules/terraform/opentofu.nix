@@ -142,8 +142,8 @@ in
         };
       })
       // mkGitIgnoreTask {
-        name = "terraform";
-        namespace = "tf";
+        name = "OpenTofu";
+        namespace = "tf:opentofu";
         ignoredPaths = [
           "**/.terraform/*"
 
