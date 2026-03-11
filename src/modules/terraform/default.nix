@@ -50,6 +50,7 @@ let
   inherit (lib.options) mkOption;
   inherit (lib) types;
   inherit (recipes-lib.go-tasks) patchGoTask;
+  inherit (recipes-lib.tasks) mkGitIgnoreTask;
   inherit (recipes-lib.sops) wrapWithSopsExecEnv;
 
   cfg = config.biapy-recipes.terraform;
@@ -89,7 +90,7 @@ in
     # https://devenv.sh/languages/
     languages.opentofu.enable = true;
 
-    env.TERRAFORM_BINARY_NAME = tofuCommand;
+    env.TERRAFORM_BINARY_NAME = mkDefault tofuCommand;
 
     devcontainer.settings.customizations.vscode.extensions = [ "OpenTofu.vscode-opentofu" ];
 
@@ -103,52 +104,70 @@ in
     };
 
     # https://devenv.sh/tasks/
-    tasks = {
-      "ci:format:tf:tofu-fmt" = {
-        description = mkDefault "🎨 Format 🏗️OpenTofu files";
-        exec = mkDefault ''
-          cd "''${DEVENV_ROOT}"
-          ${wrapTofu "${tofuCommand} fmt --recursive"}
-        '';
-      };
+    tasks =
+      (optionalAttrs cfg.tasks {
+        "ci:format:tf:tofu-fmt" = {
+          description = mkDefault "🎨 Format 🏗️OpenTofu files";
+          exec = mkDefault ''
+            cd "''${DEVENV_ROOT}"
+            ${wrapTofu "${tofuCommand} fmt --recursive"}
+          '';
+        };
 
-      "ci:lint:tf:tofu-validate" = {
-        description = mkDefault "🔍 Lint 🏗️OpenTofu files with tofu validate";
-        exec = mkDefault ''
-          cd "''${DEVENV_ROOT}"
-          ${wrapTofu "${tofuCommand} validate"}
-        '';
-      };
+        "ci:lint:tf:tofu-validate" = {
+          description = mkDefault "🔍 Lint 🏗️OpenTofu files with tofu validate";
+          exec = mkDefault ''
+            cd "''${DEVENV_ROOT}"
+            ${wrapTofu "${tofuCommand} validate"}
+          '';
+        };
 
-      "reset:tf:tofu" = {
-        description = mkDefault "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
-        exec = mkDefault ''
-          echo "Deleting OpenTofu '.terraform.lock.hcl' file"
-          if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
-            rm "''${DEVENV_ROOT}/.terraform.lock.hcl"
-          fi
+        "reset:tf:tofu" = {
+          description = mkDefault "🔥 Delete 🏗️OpenTofu lock file and '.terraform' folder";
+          exec = mkDefault ''
+            echo "Deleting OpenTofu '.terraform.lock.hcl' file"
+            if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
+              rm "''${DEVENV_ROOT}/.terraform.lock.hcl"
+            fi
 
-          echo "Deleting OpenTofu '.terraform' folder"
-          if [[ -d "''${DEVENV_ROOT}/.terraform/" ]]; then
-            rm -r "''${DEVENV_ROOT}/.terraform/"
-          fi
-        '';
-        status = mkDefault ''test ! -d "''${DEVENV_ROOT}/.terraform/"'';
-      };
+            echo "Deleting OpenTofu '.terraform' folder"
+            if [[ -d "''${DEVENV_ROOT}/.terraform/" ]]; then
+              rm -r "''${DEVENV_ROOT}/.terraform/"
+            fi
+          '';
+          status = mkDefault ''test ! -d "''${DEVENV_ROOT}/.terraform/"'';
+        };
 
-      "update:tf:tofu" = {
-        description = mkDefault "⬆️ Update 🏗️OpenTofu modules and providers";
-        exec = mkDefault ''
-          cd "''${DEVENV_ROOT}"
-          if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
-            ${wrapTofu "${tofuCommand} init -upgrade"}
-          fi
-        '';
+        "update:tf:tofu" = {
+          description = mkDefault "⬆️ Update 🏗️OpenTofu modules and providers";
+          exec = mkDefault ''
+            cd "''${DEVENV_ROOT}"
+            if [[ -e "''${DEVENV_ROOT}/.terraform.lock.hcl" ]]; then
+              ${wrapTofu "${tofuCommand} init -upgrade"}
+            fi
+          '';
+        };
+      })
+      // mkGitIgnoreTask {
+        name = "terraform";
+        namespace = "tf";
+        ignoredPaths = [
+          "**/.terraform/*"
+
+          # .tfstate files
+          "*.tfstate.*"
+
+          # Crash log files
+          "crash.log"
+          "crash.*.log"
+
+          # Include tfplan files to ignore the plan output of command: terraform plan -out=tfplan
+          "*tfplan*"
+        ];
       };
-    };
 
     # https://devenv.sh/git-hooks/
-    git-hooks.hooks = {
+    git-hooks.hooks = optionalAttrs cfg.git-hooks {
       terraform-format = {
         enable = mkDefault true;
         inherit (config.languages.opentofu) package;
