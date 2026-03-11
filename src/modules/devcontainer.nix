@@ -22,7 +22,7 @@
   ...
 }:
 let
-  inherit (lib.modules) mkIf mkDefault;
+  inherit (lib.modules) mkDefault mkIf;
   inherit (lib.options) mkEnableOption mkPackageOption;
 
   cfg = config.biapy-recipes.devcontainer;
@@ -46,12 +46,12 @@ in
 
     # https://devenv.sh/tasks/
     tasks = {
-      "dx:devcontainer:build" = {
+      "dx:devcontainer:build" = mkDefault {
         description = "Build devcontainer";
         exec = ''${devcontainerCommand} build --workspace-folder="''${DEVENV_ROOT}"'';
       };
 
-      "biapy-recipes:enterTest:devcontainer-version" = {
+      "biapy-recipes:enterTest:devcontainer-version" = mkDefault {
         description = "Test available devcontainer command version match devenv devcontainer package";
         before = [ "devenv:enterTest" ];
         exec = ''
