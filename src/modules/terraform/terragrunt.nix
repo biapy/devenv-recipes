@@ -78,21 +78,16 @@ in
               return 0
             fi
 
-            ${terragruntCommand} run -chdir="$(dirname "''${file}")" validate || return 1
+            echo "Validating ''${file}..."
+            ${terragruntCommand} --working-dir "$(dirname "''${file}")" run validate || return 1
           }
-
-          if [[ $# -eq 0 ]]; then
-            fd --type f "^terragrunt(?:\\.stack)?\\.hcl$" "''${DEVENV_ROOT}" |
-            while read -r 'file'; do
-              tg-validate "''${file}" || exit 1
-            done
-
-            exit 0
-          fi
 
           for file in "''${@}"; do
             tg-validate "''${file}" || exit 1
           done
+
+          echo "Usage: tg-validate <file.hcl>"
+          exit 1
         '';
       };
     };
@@ -121,7 +116,7 @@ in
           description = mkDefault "🔍 Lint 🏗️Terragrunt and OpenTofu files with terragrunt validate";
           exec = mkDefault ''
             cd "''${DEVENV_ROOT}"
-            ${terragruntCommand} 'validate'
+            ${terragruntCommand} run --all -- 'validate'
           '';
         };
       })
@@ -148,7 +143,20 @@ in
       "ci:lint:tf:terragrunt-validate" = patchGoTask {
         aliases = mkDefault [ "tg-validate" ];
         desc = mkDefault "🔍 Lint 🏗️Terragrunt files with terragrunt validate";
-        cmds = mkDefault [ "tg-validate" ];
+        cmds = mkDefault [ "terragrunt run --all -- validate" ];
+      };
+
+      "update:tf:terragrunt" = patchGoTask {
+        aliases = mkDefault [
+          "update:terragrunt"
+          "up:tg"
+          "up:tf:terragrunt"
+          "up:tf:tg"
+          "tg-upgrade"
+          "tg-up"
+        ];
+        desc = mkDefault "⬆️ Update 🏗️Terragrunt stacks";
+        cmds = mkDefault [ "terragrunt run --all -- init --upgrade" ];
       };
 
       "ci:format:tf:hclfmt" = patchGoTask {
