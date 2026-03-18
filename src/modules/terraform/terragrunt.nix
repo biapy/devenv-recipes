@@ -1,8 +1,8 @@
 /**
   # Terragrunt
 
-   Terragrunt is a flexible orchestration tool that allows Infrastructure as Code written in
-   OpenTofu/Terraform to scale.
+  Terragrunt is a flexible orchestration tool that allows Infrastructure as Code written in
+  OpenTofu/Terraform to scale.
 
   ## 🧐 Features
 
@@ -101,11 +101,11 @@ in
     git-hooks.hooks = optionalAttrs cfg.git-hooks {
       terragrunt-validate = {
         enable = mkDefault true;
-        name = mkDefault "Terragrunt validate";
+        name = mkDefault "terragrunt-validate";
         package = mkDefault terragrunt;
-        files = mkDefault "^terragrunt(?:\\.stack)?\\.hcl$";
+        files = mkDefault "*\\.(tf|hcl)$";
         pass_filenames = mkDefault false;
-        entry = mkDefault "tg-validate";
+        entry = mkDefault "${terragruntCommand} run --all -- 'validate'";
       };
     };
 
