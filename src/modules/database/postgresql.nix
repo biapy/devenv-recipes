@@ -72,10 +72,10 @@ in
 
     # https://devenv.sh/packages/
     packages = with pkgs; [
-      dblab
-      harlequin
+      # dblab
+      # harlequin
       lazysql
-      rainfrog
+      # rainfrog
     ];
 
     # https://devenv.sh/services/
